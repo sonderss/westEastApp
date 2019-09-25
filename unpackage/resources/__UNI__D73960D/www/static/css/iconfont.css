@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'iconfont';  /* project id 1434283 */
+  src: url('https://at.alicdn.com/t/font_1434283_f3cubt8epsr.eot');
+  src: url('https://at.alicdn.com/t/font_1434283_f3cubt8epsr.eot?#iefix') format('embedded-opentype'),
+  url('https://at.alicdn.com/t/font_1434283_f3cubt8epsr.woff2') format('woff2'),
+  url('https://at.alicdn.com/t/font_1434283_f3cubt8epsr.woff') format('woff'),
+  url('https://at.alicdn.com/t/font_1434283_f3cubt8epsr.ttf') format('truetype'),
+  url('https://at.alicdn.com/t/font_1434283_f3cubt8epsr.svg#iconfont') format('svg');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-62:before {
+  content: "\e64b";
+}
+
+.icon-lingdang:before {
+  content: "\e623";
+}
+
+.icon-kefu:before {
+  content: "\e604";
+}
+.icon-icon_kefu:before{
+  content:"\e65a";
+}
+.icon-kefu1:before{
+  content:"\e610";
+}
+.icon-yuyin:before{
+  content: "\e618"
+}
+.icon-jianpan:before{
+  content: "\e608"
+}

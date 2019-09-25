@@ -1,0 +1,113 @@
+<template>
+	<view class="uni-container">
+		<view class="uni-panel" v-for="item in lists" :key="item.url">
+			<view class="uni-panel-h" @click="goDetailPage(item.url)">
+				<text class="uni-panel-text">{{item.name}}</text>
+				<text class="uni-panel-icon uni-icon">&#xe470;</text>
+			</view>
+		</view>
+	</view>
+</template>
+<script>
+	export default {
+		data() {
+			return {
+				navigateFlag: false,
+				lists: [{
+						name: "修改账户",
+						url: "edit_user"
+					},
+					{
+						name: "修改登录密码",
+						url: "edit_login_pwd"
+					},
+					{
+						name: "绑定手机",
+						url: "phone"
+					},
+				]
+			};
+		},
+		onLoad() {},
+		onReady() {},
+
+		methods: {
+			goDetailPage(path) {
+				if (this.navigateFlag) {
+					return;
+				}
+				this.navigateFlag = true;
+				uni.navigateTo({
+					url: '/pages/set_up/' + path
+				});
+				setTimeout(() => {
+					this.navigateFlag = false;
+				}, 200)
+			}
+		}
+	}
+</script>
+
+<style>
+	page {
+		min-height: 100%;
+		height: auto;
+	}
+
+	.uni-icon {
+		font-family: uniicons;
+		font-weight: normal;
+	}
+
+	.uni-container {
+		/* padding: 15px 0 0 0; */
+		background-color: #fff;
+	}
+
+	.uni-panel {
+		height: 104upx;
+		/* margin-bottom: 12px; */
+	}
+
+	.uni-panel-h {
+		background-color: #ffffff;
+		flex-direction: row;
+		align-items: center;
+		height: 100upx;
+		padding: 0upx 25upx;
+		border-bottom: 1px solid #dcdcdc;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.uni-panel-text {
+		flex: 1;
+		color: #000000;
+		font-size: 14px;
+		font-weight: normal;
+	}
+
+	.uni-panel-icon {
+		margin-left: 15px;
+		color: #999999;
+		font-size: 14px;
+		font-weight: normal;
+		transform: rotate(0deg);
+		transition-duration: 0s;
+		transition-property: transform;
+	}
+
+	.uni-navigate-text {
+		flex: 1;
+		color: #000000;
+		font-size: 14px;
+		font-weight: normal;
+	}
+
+	.uni-navigate-icon {
+		margin-left: 15px;
+		color: #999999;
+		font-size: 14px;
+		font-weight: normal;
+	}
+</style>

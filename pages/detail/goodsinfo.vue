@@ -1,0 +1,486 @@
+<template>
+	<view class="content">
+		<view class="index-goods" v-if="loadGoods">
+			<view class="goods-info">
+				<view class="swiper" v-if="goods.picture.length > 0">
+					<swiper	class="swiper-container" :autoplay="true" :interval="3000" :circular="true" :indicator-dots="true" indicator-active-color="#de0303" indicator-color="#fdfdfd">
+						<block v-for="item in goods.picture" :key="item">
+							<swiper-item class="swiper-wrapper">
+								<image lazy-load :src="item" mode="widthFix" class="is-response"></image>
+							</swiper-item>
+						</block>
+					</swiper>
+				</view>
+				<view class="goods-resources">
+					<text class="price">￥{{goods.price}}</text>
+					<text class="title text-overflow_1-xzh">{{goods.title}}</text>
+				</view>	
+			</view>	
+			<view class="category" v-if="goods.choice">
+				<view class="choice uni-flex" @click="togglePopup('choice')">
+					<text class="sele">{{goods.choice.title}}</text>
+					<view class="classification uni-flex uni-column">
+						<text>{{goods.choice.cation}}</text>
+						<view class="choiceSle uni-flex">
+							<view v-for="(item,index) in goods.choice.imgTotal" :key="item"><image :src="item" v-if="index <=2" lazy-load mode="widthFix"></image></view>							
+							<text>{{goods.choice.total}}</text>
+						</view>
+					</view>
+					<image src="/static/img/goods/more.png"></image>
+				</view>
+				<view class="choice uni-flex para" @click="togglePopup('parameter')">
+					<text class="sele">{{goods.parameter.title}}</text>
+					<text class="parameter text-overflow_1-xzh">{{goods.parameter.describe}}</text>
+					<image src="/static/img/goods/more.png"></image>
+				</view>
+			</view>	
+			<view class="evaluate" @click="evaluate">
+				<view class="title uni-flex">
+					<text class="comment">商品评论（188）</text>
+					<text class="more">查看全部</text>
+					<image src="/static/img/goods/redMore.png"></image>
+				</view>
+				<view class="repercussion" v-if="goods.repercussion.length > 0">
+					<block v-for="(item,index) in goods.repercussion" :key="index">
+						<text>{{item.title}}({{item.num}})</text>
+					</block>					
+				</view>
+				<view class="yelp">
+					<view class="header uni-flex">
+						<image src="/static/img/goods/header.png"></image>
+						<text class="text-overflow_1-xzh">张三</text>
+					</view>
+					<text class="txt">根据需求定做的柜子和榻榻米，最大限度利用了空间，9平米的房间做出了超大空间感。必须好评! </text>
+				</view>
+			</view>
+			<view class="goods_reco goods_nobor">
+				<view class="goods-info-title">商品详情</view>
+				<view class="imglist" v-if="goods.goodsinfo.length > 0">
+					<block v-for="(item,index) in goods.goodsinfo" :key="index">
+						<image lazy-load :src="item" mode="widthFix" class="is-response"></image>
+					</block>
+				</view>
+			</view>
+			<guess-like v-if="goods.like.length > 0" :content="goods.like" @jump="jumpUri"></guess-like>
+			</view>
+			<text class="noshop">已经到底啦~</text>
+			<!-- 底部悬浮块 -->
+			<view class="goods_shop_cart shadow-xzh">
+				<view class="cent uni-flex">
+					<view class="shop uni-flex uni-column">
+						<image class="shopIncon" src="/static/img/goods/shopInco.png"></image>
+						<text>店铺</text>
+					</view>
+					<view class="shop uni-flex uni-column">
+						<image class="kefuIncon" src="/static/img/goods/kefuIcon.png"></image>
+						<text>客服</text>
+					</view>
+					<view class="shop uni-flex uni-column" @click="collection(goods.title,goods.picture[0],goods.price)">
+						<image v-if="!iscollection" class="shouIncon" src="/static/img/goods/shouIcon.png"></image>
+						<image v-if="iscollection" class="shouIncon" src="/static/img/goods/yishouIcon.png"></image>					
+						<text v-text="iscollection ?'已收藏':'收藏'"></text>
+					</view>
+					<view class="purchase uni-flex">
+						<text class="join-cat" @click="joinCat">加入购物车</text>
+						<text class="buy-immediately" @click="buyImmediately">立即购买</text>
+					</view>
+				</view>	
+			</view>
+			<!-- 底部弹出弹窗 -->
+			<uni-popup ref="popup" type="bottom" :custom="false" @change="change">
+				<view class="uni-choie" v-if="isSelect">
+					<view class="uni-choie-title uni-flex">
+						<text>{{goods.goodsPara.title}}</text>
+						<view class="close uni-flex" @click="close"><image src="/static/img/goods/close.png"></image></view>
+					</view>
+					<view class="uni-choie-content">
+						<view class="uni-choie-rank" v-for="(item,index) in goods.goodsPara.list" :key="index">
+							<text class="other text-overflow_1-xzh">{{item.title}}</text>
+							<text class="explain text-overflow_1-xzh">{{item.miao}}</text>
+						</view>			
+					</view>
+					<view class="complete" @click="close">完成</view>
+				</view>
+				<view class="uni-choie" v-else>
+					<view class="shop-info uni-flex">
+						<view class="shop-info-img"><image mode="widthFix" src="/static/img/goods/shop-img.png"></image></view>
+						<view class="surplus uni-flex uni-column">
+							<text class="money">￥{{goods.price}}</text>
+							<text class="stock">库存：{{stock}}</text>
+						</view>
+						<view class="close uni-flex" @click="close"><image src="/static/img/goods/close.png"></image></view>
+					</view>
+					<view class="uni-choie-contentbox">
+						<view class="cationOne" v-if="goods.goods_parameter.length > 0">
+							<view class="box" v-for="(item,index1) in goods.goods_parameter" :key="index1">
+								<view class="title">{{item.title}}</view>
+								<block v-for="(item2,index2) in item.list" :key="index2">
+									<text  @tap="select_parameter(index1,index2)"  :class="{addclass:parameter_arr[index1]==index2}">{{item2.type}}</text>
+								</block>
+								
+							</view>
+							<text class="insufficient" v-if="insufficient">库存不足!!!</text>
+						</view>
+						<view class="cationTwo uni-flex">
+							<text class="purchaseNum">购买数量</text>
+							<view class="number uni-flex">
+								<image @click="reduce" src="/static/img/goods/reduce.png"></image>
+								<text>{{number}}</text>
+								<image @click="add" src="/static/img/goods/add.png"></image>
+							</view>
+						</view>
+					</view>
+					<view class="buy uni-flex" v-if="!buy_now">
+						<text @tap="addToCart(goods.id,goods.picture[0],goods.name,goods.title,goods.price,parameter_arr,number)" class="join" v-text="warp?'确定':'加入购物车' "></text>
+					</view>
+					<view class="buy uni-flex" v-else>
+						<text class="join" @tap="addToCart(goods.id,goods.picture[0],goods.name,goods.title,goods.price,parameter_arr,number)">确定</text>
+					</view>
+				</view>
+			</uni-popup>
+		</view>
+	</view>
+</template>
+
+<script>
+	import uniPopup from '@/components/uni-popup/uni-popup.vue'
+	import GuessLike from '@/components/guess-like/guess-like.vue'
+	import {mapState} from 'vuex'
+	export default {
+		components: {
+			uniPopup,
+			GuessLike
+		},
+		data() {
+			return {
+				buy_now:false,
+				loadGoods: false,
+				itemid:'',
+				warp:false,
+				isSelect:'false',
+				currentTab: -1,
+				number:1,
+				stock:'2000',
+				insufficient:false,
+				iscollection:false,
+				parameter_arr:[],
+				shopName:'谁谁的店',
+				shop_id:'2',
+				goods:{
+					"id":"1",
+					"picture":["/static/img/goods/detail.jpg","/static/img/goods/detail.1.jpg","/static/img/goods/detail.2.jpg","/static/img/goods/detail.3.jpg"],
+					"name":"现代简约双人床",
+					"title":"床 现代简约双人床 实木北欧小户型榻榻米床1.8米",
+					"price":715,
+					"choice":{
+						"title":"选择",
+						"cation":"颜色分类",
+						"imgTotal":["/static/img/goods/colir.png","/static/img/goods/colir.1.png","/static/img/goods/colir.2.png","/static/img/goods/colir.3.png"],
+						"total":"共有4种颜色选择"
+					},
+					"parameter":{
+						"title":"参数",
+						"describe":"饰面材料 人造板饰面工艺饰面材料 人造板饰面工艺人造板饰面工艺人造板饰面工艺人造板饰面工艺"
+					},
+					"goodsinfo":["/static/img/goods/detail.jpg","/static/img/goods/detail.1.jpg","/static/img/goods/detail.2.jpg","/static/img/goods/detail.3.jpg"],
+					"goodsPara":{"title":"产品参数","list":[{"title":"品牌","miao":"XXXXXX"},{"title":"品牌品牌","miao":"人造板饰面工艺饰面材料"},{"title":"饰面材料","miao":"人造板饰面工艺饰面材料"}]},
+					"goods_parameter":[
+						{"title":"颜色","list":[{"type":"白色","stock":456},{"type":"蓝色","stock":789},{"type":"红色","stock":987},{"type":"灰色","stock":423},{"type":"黄色","stock":369},{"type":"玫红","stock":365}]},
+						{"title":"尺寸","list":[{"type":"1.2米","stock":100},{"type":"1.5米","stock":200},{"type":"1.8米","stock":300},{"type":"2米","stock":400}]}
+					],
+					"repercussion":[{"title":"好设计","num":52},{"title":"质量很好","num":152},{"title":"服务不错","num":352},{"title":"版型不错","num":522}],
+					"like":[{
+						"good_id":2,
+						"img":"/static/img/goods/shopImg.jpg",
+						"title":"实木床1.8米现代简约双人床",
+						"price":"1200",
+						"payment":"12",
+						"add":"广州",
+						"supply":"供货商"
+					},{
+						"good_id":4,
+						"img":"/static/img/goods/shopImg.jpg",
+						"title":"实木床1.8米现代简约双人床",
+						"price":"2200",
+						"payment":"8",
+						"add":"深圳",
+						"supply":"供货商"
+					},{
+						"good_id":5,
+						"img":"/static/img/goods/shopImg.jpg",
+						"title":"实木床1.8米现代简约双人床",
+						"price":"3200",
+						"payment":"5",
+						"add":"湖北",
+						"supply":"供货商"
+					}]
+					},
+			}
+		},
+		onLoad(e) {
+			if (e.itemid) { //商品ID
+				this.itemid = e.itemid;
+				this.loadGoods = true;
+				this.loadGoodsInfo();
+			} else {
+				this.onBack();
+			} 
+		},
+		computed:{
+			...mapState(['collections','buy_now_obj'])
+		},
+		onNavigationBarButtonTap(e){
+			//console.log(e); 
+			if(e.type === 'back'){
+				this.onBack();
+			}else if(e.type === 'share'){
+				console.log("分享");
+			}
+		},
+		methods: {
+			buy_now_fun(id,img,name,title,price,parameter,number){
+				
+			},
+			addToCart(id,img,name,title,price,parameter,number){
+				let _shop_index=-1;
+				let _goods_index=-1;
+				console.log(parameter)
+				var _parameter_index=0;
+				let _select_all=true
+				if(parameter.length<this.goods.goods_parameter.length && this.goods.goods_parameter.length>0){
+					_select_all=false
+				}
+				for(let k=0;k<this.goods.goods_parameter.length;k++){
+					if(parameter[k]==undefined){
+						_select_all=false
+						_parameter_index=k;
+						break;
+					}
+				}
+				if(!_select_all){
+					this.help.toast('请选择'+this.goods.goods_parameter[_parameter_index].title);
+					return
+				}
+				
+				let _num=0
+				let all_obj=this.help.load('userCart')
+				if(this.is_empty(all_obj)){
+					all_obj=[]
+				}
+				
+				let _id=id
+				let _parameter={}
+				for(let i=0;i<this.goods.goods_parameter.length;i++ ){
+					_parameter[this.goods.goods_parameter[i].title]=this.goods.goods_parameter[i].list[parameter[i]].type
+				}
+				for(let j in _parameter){
+					_id+=_parameter[j]
+				}
+				let obj={}
+				
+				for(let i in all_obj){
+					if(all_obj[i].shop_id==this.shop_id){
+						_shop_index=i
+						break;
+					}
+				}
+				// if(_shop_index<0){
+				// 	_shop_index=all_obj.length;
+				// }
+				
+				if(_shop_index>-1){
+					obj=all_obj[_shop_index]
+				}
+				
+				console.log(obj)
+				if(this.buy_now){
+					obj={}
+				}
+				
+				if(this.is_empty(obj)){
+					obj={}
+					obj['shop_id']=this.shop_id
+					obj['shopname']=this.shopName
+					obj['freight']='10.00'
+					obj['haschecked']= true
+					obj['goods_list']=[]
+					_num=number
+					_goods_index=0
+				}else{
+					console.log('111')
+					for(let i in obj['goods_list']){
+						if(obj['goods_list'][i]._id==_id){
+							console.log('吻合')
+							_goods_index=i
+							break;
+						}
+					}
+					console.log(_goods_index)
+					// if(_goods_index<0){
+					// 	_goods_index=obj['goods_list'].length;
+					// }
+					
+					console.log(obj['goods_list'].length)
+					console.log(_goods_index)
+					
+					if(!this.is_empty(obj['goods_list'][_goods_index])){
+						_num=Number(obj['goods_list'][_goods_index].good_num)
+						_num+=number
+					}else{
+						_num=number
+					}
+				}
+				
+				let _goods_obj={
+					"_id":_id,
+					"checked":true,
+					"goods_id":id,
+					"good_num":_num,
+					"img":img,
+					"name":name,
+					"title":title,
+					"price":price,
+					"checked": true,
+					"parameter":_parameter
+				}
+				if(_goods_index>-1){
+					obj['goods_list'][_goods_index]=_goods_obj
+				}else{
+					obj['goods_list'].unshift(_goods_obj)
+				}
+				
+				if(_shop_index>-1){
+					all_obj[_shop_index]=obj;
+				}else{
+					all_obj.unshift(obj)
+				}
+				this.show_price_parameter=false;
+				
+				if(this.buy_now){
+					all_obj=[]
+					all_obj[0]=obj
+					this.$store.dispatch('save',{'buy_now_obj':all_obj})
+					uni.navigateTo({
+					    url: '../confirmationOrder/confirmationOrder?buy_now=true'
+					});
+				}else{
+					this.help.save('userCart',all_obj)
+					this.userCart=this.help.load('userCart')
+					console.log(JSON.stringify(this.help.load('userCart')))
+					this.join_success()
+				}
+				// help.remove('userCart')
+			},
+			
+			select_parameter: function(i,j){
+				this.$set(this.parameter_arr,i,j)
+			},
+			loadGoodsInfo:function(){
+				//请求数据，如果返回有数据loadGoods:true,如果没有loadGoods:false
+				this.loadGoods = true;
+			},
+			onBack:function(){
+				uni.navigateBack();
+			},
+			togglePopup(open,type) {
+				if(open === 'choice'){
+					this.isSelect = false;
+				}else if(open === 'parameter'){
+					this.isSelect = true;
+				}
+				if(type==1){
+					this.warp = true;
+				}else{
+					this.warp = false;
+				}
+				this.$refs.popup.open();
+			},
+			close:function(){
+				this.$refs.popup.close();
+			},
+			joinCat:function(){
+				this.warp = true;
+				this.buy_now = false;
+				this.togglePopup('choice',1);
+			},
+			change:function(e) {
+				//console.log(e.show)
+			},
+			reduce:function(){
+				if(this.number < 2){
+					return false;
+				}
+				this.number--;
+			},
+			add:function(){
+				if(this.number >= this.stock){
+					return false;
+				}
+				this.number++;
+			},
+			check:function(current,number){
+				if (this.currentTab == current) {
+					return false;
+				} else {
+					this.currentTab = current;
+					if(number == ''){
+						this.stock = 0;
+						this.insufficient = true;
+						this.number = 0;
+						return false;
+					}
+					this.insufficient = false;
+					this.stock = number;
+					this.number = 1;
+				}
+			},
+			join_success:function(){
+				this.$refs.popup.close();
+				uni.showToast({
+					title:"添加购物车成功",
+					image:"/static/img/goods/success.png",
+					duration: 2000
+				});
+			},
+			evaluate:function(){
+				uni.navigateTo({
+				    url: '../comment/comment?itemid='+5
+				});
+			},
+			buyImmediately:function(){
+				this.warp = true;
+				this.buy_now = true;
+				this.togglePopup('choice',1);
+				return
+				uni.navigateTo({
+				    url: '../confirmationOrder/confirmationOrder?itemid='+5
+				});
+			},
+			jumpUri:function(e){
+				uni.navigateTo({
+				    url: 'goodsinfo?itemid='+e
+				});
+			},
+			collection:function(title,img,price){ //收藏
+				let date = {goodsId:this.itemid,title:title,img:img,price:price};
+				let collections = [];
+				if(this.iscollection){
+					for(let i=0;i<this.collections.length;i++){
+						if(date.goodsId == this.collections[i].goodsId){
+							this.collections.splice(i,1);
+						}
+					}					
+					this.$store.dispatch("save",{'collections':this.collections});
+				}else{	
+					collections = this.collections.concat(date);
+					this.$store.dispatch("save",{'collections':collections});
+				}
+				this.iscollection = !this.iscollection;
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	@import "../../static/css/goodsinfo.css";
+</style>

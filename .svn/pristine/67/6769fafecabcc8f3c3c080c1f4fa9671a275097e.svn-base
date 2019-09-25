@@ -1,0 +1,28 @@
+.uni-input{font-size:26upx;flex:1;}
+.login-form {width:70.1333%;margin:0 auto;height:100%;overflow:hidden;}
+
+.logo{width:150upx;height:150upx;display:block;margin:232upx auto 0;}
+.form-item {display: flex;align-items: center;border-bottom:1px solid #dedbdb;padding:0 12upx 0 17upx;height:65upx;margin-top:45upx;}
+.from-items{margin-top:74upx;}
+.icon{width:24upx;height:32upx;margin-right:26upx;}
+.icon1{width:27upx;height:30upx;}
+.icon2{width:31upx;height:34upx;}
+.icon3{width:27upx;height:31upx;}
+.huocode{color:#fff;font-size:26upx;background:#de0303;height:54upx;line-height:54upx;padding:0 26upx;border-radius:27upx;}	
+.item-submit {width:100%;margin:42upx 0 37upx;}	
+button {height:80upx;padding:0upx;border-radius:80upx;background:#de0303;color:#fff;font-size:30upx;}
+.reg{display:block;text-align:center;font-size:20upx;color:#f00;}
+.quick{width:100%;position:fixed;left:0;bottom:76upx;}
+.quick image{width:93upx;height:93upx;display:block;margin:0 auto;}
+.quick text{font-size:24upx;color:#686869;text-align:center;display:block;line-height:46upx;}
+.ispass{width:30upx;height:12upx;}
+.ispass1{width:37upx;height:22upx;}
+.forget{font-size:20upx;color:#575757;display:block;text-align:right;padding-top:26upx;}
+.readCode{width:120upx;height:58upx;background:#de0303;}
+
+.box{width:100%;height:70upx;align-items: center;border-bottom:1px solid #dedbdb;padding:0 29upx;}
+.arrow{width:17upx;height:32upx;}
+.box text{color:#636363;font-size:30upx;flex:1;text-align:center;margin-left:-23upx;}
+.tip{height:22upx;align-items:center;margin-top:40upx;padding:0 12upx 0 17upx;}
+.tip image{width:22upx;height:22upx;margin-right:8upx;}
+.tip text{color:#686869;font-size:20upx;}

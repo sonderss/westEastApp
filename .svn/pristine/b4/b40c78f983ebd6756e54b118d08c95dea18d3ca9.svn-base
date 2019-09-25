@@ -1,0 +1,114 @@
+<template>
+  <view>
+    <view class="tab_message">
+      <view class="tab_message2"></view>
+      <view
+        class="tab_message1"
+        v-for="item in newsList"
+        :key="item.pid"
+        @tap="to_detail(item.pid)"
+      >
+        <view class="one">
+          <img :src="item.img" style="margin-right:36upx" v-if="showImg" />
+          <text>{{item.title}}</text>
+        </view>
+        <view>{{item.date}}</view>
+      </view>
+    </view>
+    <view class="show_404" v-if="show_404">
+      <img src="../../../static/img/message/kong.png" style="width:100upx;" />
+      <text>数据没有呀</text>
+      <button type="warn" size="mini" style="margin-top:15upx" @click="reDate(title)">重新加载</button>
+    </view>
+    <loading v-if="show_loading"></loading>
+  </view>
+</template>
+
+<script>
+import loading from "../../../components/loading-show/loading-show.vue";
+export default {
+  components: { loading },
+  onLoad: function(option) {
+    this.title = option.title
+    uni.setNavigationBarTitle({
+      title: option.title
+    });
+    this.show_loading = true;
+    if (option.title == "系统通知") {
+      uni.request({
+        url: "http://www.baidu.com/api2",
+        success: res => {
+          this.newsList = res.data.list;
+          console.log(this.newsList);
+          this.show_404 = false;
+          this.show_loading = false;
+        },
+        fail: erro => {
+          console.log("没有请求到系统通知的数据");
+          this.show_404 = true;
+          this.show_loading = false;
+        }
+      });
+    }
+    if (option.title == "互动消息") {
+      this.showImg = true;
+      uni.request({
+        url: "http://www.baidu.com/api3",
+        success: res => {
+          console.log(res.data.list);
+          this.newsList = res.data.list;
+          this.show_loading = false;
+        },
+        fail: erro => {
+          console.log("没有请求到互动消息的数据");
+          this.show_404 = true;
+          this.show_loading = false;
+        }
+      });
+    }
+    if (option.title == "客服小白") {
+      setTimeout(() => {
+        this.show_loading = false;
+      }, 2000);
+    }
+  },
+  data() {
+    return {
+      newsList: "",
+      showImg: false,
+      show_404: false,
+      // show_loading:true
+      show_loading: false,
+      title:''
+    };
+  },
+  methods: {
+    to_detail(id) {
+      //这里的id是新闻资讯的标识，用于请求详情该资讯的详情
+      console.log("查看了标识为" + id + "的新闻详情");
+    },
+    reDate(title){
+        uni.redirectTo({
+          url:'/pages/message/systemMessage/index?title='+title
+        })
+    }
+  }
+};
+</script>
+
+<style scoped lang="scss">
+@import "../index.scss";
+.one {
+  display: flex;
+  align-items: center;
+}
+.show_404 {
+  width: 100%;
+  height: 400upx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 30upx;
+}
+</style>

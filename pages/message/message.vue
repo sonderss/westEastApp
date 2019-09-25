@@ -1,0 +1,68 @@
+<template>
+  <view>
+    <view class="tab_message">
+      <view class="tab_message2"></view>
+      <view class="tab_message1" @tap="to1('系统通知')">
+        <view >
+          <text class="iconfont icon-lingdang self"  ></text>
+          <!-- <image src="../../static/img/message/lingdang.png" style="margin-right:30upx;width:30upx;height:30upx;	display: inline-block;" /> -->
+          <text>系统通知</text>
+        </view>
+        <view>
+          <image src="../../static/img/confirmation/addArrow.png"  style="width:10px;height:10px" />
+        </view>
+      </view>
+      <view class="tab_message1" @tap="to1('互动消息')">
+        <view>
+          <text class="iconfont icon-62 self"  style="font-weight:bold"></text>
+          <!-- <image src="../../static/img/message/xinxi.png" style="margin-right:30upx;width:30upx;height:30upx;display: inline-block;" /> -->
+          <text>互动消息</text>
+        </view>
+        <view>
+          <image src="../../static/img/confirmation/addArrow.png" style="width:10px;height:10px" />
+        </view>
+      </view>
+      <view class="tab_message1" @tap="to2('客服小白')">
+        <view>
+          <text class="iconfont icon-kefu1 self"  style="font-weight:500"></text>
+          <!-- <image src="../../static/img/message/erji.png" style="margin-right:30upx;width:30upx;height:30upx;display: inline-block;" /> -->
+          <text>东装西购客服-小白</text>
+        </view>
+        <view>
+          <image src="../../static/img/confirmation/addArrow.png" style="width:10px;height:10px" />
+        </view>
+      </view>
+      
+    </view>
+  </view>
+</template>
+
+<script>
+import '../../static/css/iconfont.css'
+export default {
+  data() {
+    return {};
+  },
+  methods: {
+    to1(title) {
+      uni.navigateTo({
+        url: "./systemMessage/index?title=" + title
+      });
+    },
+    to2(title){
+      uni.navigateTo({
+        url:'../chat/chat?title='+title
+      })
+    }
+  }
+};
+</script>
+
+<style scoped lang="scss">
+@import "index.scss";
+.self{
+  color: red;
+  margin-right:30upx;
+  font-size:35upx;
+}
+</style>

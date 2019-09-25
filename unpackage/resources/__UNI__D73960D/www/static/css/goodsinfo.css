@@ -1,0 +1,105 @@
+image{display:block;}
+.content{width:100%;background:#f1f1f1;}
+.goods-info,.index-goods,.swiper-wrapper,.choice,.yelp,.goods_reco{width:100%;}
+.goods-info,.category,.evaluate,.goods_reco{background:#fff;margin-bottom:9upx;}
+.swiper-container{min-height:732upx;}
+.is-response{display:block;width:100%;max-width:100%;height:auto;}
+.goods-resources{width:92%;padding:16upx 4%;}
+.goods-resources text{display:block;line-height:44upx;}
+.goods-resources text.price{color:#f00;font-size:30upx;}
+.goods-resources text.title{color:#333;font-size:24upx;width:100%;}
+.category,.evaluate{/* width:93%; */padding:20upx 3.5%;}
+.choice .sele,.classification text{color:#949494;font-size:22upx;}
+.classification{flex:1;margin-left:44upx;}
+.choice image,.evaluate .title image{width:14upx;height:27upx;}
+.choiceSle{width:100%;margin-top:25upx;}
+.choiceSle image{width:59upx;height:59upx;border-radius:10upx;overflow:hidden;margin-right:12upx;}
+.choiceSle text{height:59upx;line-height:59upx;border-radius:10upx;background:#eee;font-size:22upx;color:#818181;padding:0 28upx;}
+.para{padding:40upx 0 10upx;}
+.choice .parameter{color:#494949;font-size:22upx;flex:1;margin:0 200upx 0 45upx;}
+.evaluate .title{width:100%;align-items:center;}
+.evaluate .title text{font-size:26upx;}
+.evaluate .title text.comment{color:#494949;}
+.evaluate .title text.more{color:#f00;flex:1;text-align:right;margin-right:36upx;}
+.repercussion{width:100%;margin:30upx 0;}
+.repercussion text{background:#ffe4e4;color:#404040;font-size:22upx;height:50upx;line-height:50upx;padding:0 20upx;margin-right:20upx;border-radius: 20upx;display:inline-block;}
+.yelp{font-size:0upx;}
+.yelp .txt{color:#000;font-size:22upx;}
+.yelp .header{align-items:center;margin-bottom:10upx;}
+.yelp .header image{width:49upx;height:49upx;border-radius:50%;overflow:hidden;}
+.yelp .header text{font-size:22upx;color:#7a7a7a;margin-left:8upx;width:80%;}
+.goods_reco{padding:24upx 0;}
+.goods_nobor{padding:24upx 0 0;}
+.goods-info-title{color:#494949;font-size:30upx;margin:0 0 40upx 0;text-align:center;}
+.imglist{max-width: 100%;}
+.goods_qi{background:#f1f1f1;margin-bottom:0;}
+.like{padding:0 4%;font-size:0upx;}
+.likeShop{width:48.7%;border-radius:10upx;background:#fdfdfd;overflow:hidden;display:inline-block;margin-right:2.6%;margin-bottom:20upx;font-size:0upx;}
+.likeShop:nth-child(2n){margin-right:0}
+.likeShop .shopImg{width:100%;max-width:100%;}
+.likeShop .shopImg image{width:100%;max-width:100%;display:block;}
+.likeShop .shopName{color:#333;width:92%;margin:24upx auto 12upx;font-size:24upx;display:block;}
+.likeShop .shopDescribe{width:92%;margin:0 auto 24upx;align-items:baseline;}
+.likeShop .shopDescribe .shopPrice{color:#f00;font-size:24upx;}
+.likeShop .shopDescribe .shopPayment{color:#7e7e7e;font-size:20upx;flex:1;margin:0 10upx;text-align:right;;}
+.likeShop .shopDescribe .shopAdd{color:#333;font-size:20upx;}
+.noshop{display:block;font-size:22upx;color:#616161;text-align:center;padding:30upx 0 160upx;}
+.goods_shop_cart,.navTop{position:fixed;zoom:1;z-index:500;left:0;width:100%;}
+.goods_shop_cart{bottom:0;}
+.goods_shop_cart .cent{padding:0 16upx 0 16upx;height:118upx;background:#fff;align-items:center;justify-content: space-between;}
+.goods_shop_cart .cent .shop{justify-content:center;align-items:center;width:166upx;}
+.goods_shop_cart .cent .shop .shopIncon{width:40upx;height:39upx;}
+.goods_shop_cart .cent .shop .kefuIncon{width:40upx;height:41upx;}
+.goods_shop_cart .cent .shop .shouIncon{width:40upx;height:37upx;}
+.goods_shop_cart .cent .shop text{color:#000;font-size:20upx;margin-top:8upx;}
+.purchase{width:400upx;height:76upx;}
+.purchase text{display:block;width:200upx;height:76upx;line-height:76upx;text-align:center;color:#fff;font-size:26upx;}
+.purchase .join-cat{border-radius:38upx 0 0 38upx;background:#fd6e6e;}
+.purchase .buy-immediately{border-radius:0 38upx 38upx 0;background:#f00;}
+.uni-choie{width:100%;padding:30upx 0 14upx;height:754upx;}
+.uni-choie-title{padding:0 41upx 0 69upx;align-items: center;}
+.uni-choie-title text{font-size:24upx;color:#454545;flex:1;text-align:center;}
+.shop-info .close,.uni-choie-title .close{width:50upx;height:50upx;justify-content: flex-end;}
+.uni-choie-title .close{justify-content: center;align-items:center;}
+.uni-choie-title image,.shop-info .close image{width:28upx;height:28upx;}
+.uni-choie-content{width:100%;height:555upx;margin-top:22upx;overflow-x:hidden;overflow-y:auto;}
+.uni-choie-rank{width:92%;height:74upx;border-bottom:1px solid #e9e9e9;padding:0 4%;}
+.uni-choie-rank text{font-size:20upx;display:inline-block;line-height:74upx;}
+.uni-choie-rank .other{width:27%;color:#939393;margin-right:3%;}
+.uni-choie-rank .explain{width:70%;color:#3b3b3b}
+.complete{width:91%;margin:0 auto;height:72upx;line-height:72upx;text-align:center;font-size:26upx;color:#fff;background:#fd6e6e;border-radius:36upx;}
+.shop-info{padding:0 41upx 33upx 28upx;border-bottom:1px solid #e9e9e9;height:180upx;}
+.shop-info-img{width:180upx;height:180upx;border-radius:20upx;overflow:hidden;}
+.shop-info-img image{width:100%;max-width:100%;}
+.surplus{justify-content:flex-end;margin-left:20upx;flex:1;}
+.surplus .money{color:#f00;font-size:24upx;margin-bottom:5upx;}
+.surplus .stock{color:#333;font-size:22upx;}
+.uni-choie-contentbox{height:400upx;width:100%;overflow-x:hidden;overflow-y:auto;}
+.cationOne{border-bottom:1px solid #e9e9e9;padding:50upx 27upx;}
+.cationOne .title{color:#454545;font-size:24upx;}
+.cationOne .box{width:100%;overflow:hidden;margin-bottom:40upx}
+.cationOne .box text{padding:0 30upx;height:36upx;line-height:36upx;background:#ebebeb;font-size:22upx;color:#5b5b5b;display:inline-block;border-radius:5upx;margin-right:37upx;border:1px solid #ebebeb;margin-top:24upx;}
+.cationOne .box text.addclass{border:1px solid #e78585;background:#ffd4d4;color:#f00;}
+.cationOne .box text:nth-child(5n){margin-right:0;}
+.cationTwo{padding:50upx 27upx;align-items:center;justify-content:space-between;}
+.cationTwo .number{align-items:center;}
+.cationTwo .number image{width:28upx;height:28upx;}
+.cationTwo .number text{font-size:26upx;color:#454545;width:68upx;text-align:center;display:inline-block;}
+.purchaseNum{color:#454545;font-size:24upx;}
+.buy{width:91%;margin:62upx auto 0;height:72upx;border-radius:36upx;}
+.buy text{width:100%;line-height:72upx;text-align:center;font-size:26upx;color:#fff;border-radius:36upx;background:#f00;}
+.insufficient{color:#f00;font-size:20upx;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

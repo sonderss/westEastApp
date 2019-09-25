@@ -1,0 +1,57 @@
+<template>
+  <view>
+    <view class="tab_message">
+      <view class="tab_message2"></view>
+      <view class="tab_message1" v-for="item in newsList" :key="item.pid">
+        <view class="one">
+          <img :src="item.img" style="margin-right:36upx" v-if="showImg" />
+          <text>{{item.title}}</text>
+        </view>
+        <view>{{item.date}}</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+export default {
+  onLoad: function(option) {
+    uni.setNavigationBarTitle({
+      title: option.title
+    });
+    if (option.title == "系统通知") {
+      uni.request({
+        url: "http://www.baidu.com/api2",
+        success: res => {
+          this.newsList = res.data.list;
+          console.log(this.newsList);
+        }
+      });
+    }
+    if (option.title == "互动消息") {
+      this.showImg = true;
+      uni.request({
+        url: "http://www.baidu.com/api3",
+        success: res => {
+          console.log(res.data.list);
+          this.newsList = res.data.list;
+        }
+      });
+    }
+  },
+  data() {
+    return {
+      newsList: "",
+      showImg: false
+    };
+  }
+};
+</script>
+
+<style scoped lang="scss">
+@import "../index.scss";
+.one {
+  display: flex;
+  align-items: center;
+}
+</style>

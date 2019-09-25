@@ -1,0 +1,49 @@
+.list_box{
+	padding: 0 20upx;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	.list{
+		width: 49%;
+		height: 406upx;
+		border-radius: 10upx;
+		background: #fff;
+		box-shadow: 0 10upx 20upx #efefef;
+		overflow: hidden;
+		margin-bottom:21upx;
+		.img{
+			height: 300upx;
+			width: 100%;
+		}
+		.title{
+			color: #333333;
+			font-size: 30upx;
+			margin: 13upx 0;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			padding: 0 10upx;
+		}
+		.parameter{
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 0 10upx;
+			white-space: nowrap;
+			.price{
+				font-size: 28upx;
+				color: #ff0000;
+			}
+			.buy_num{
+				color:#7e7e7e;
+				font-size: 22upx;;
+				margin-left: 5upx;
+			}
+			.address,.from{
+				color:#333333;
+				font-size: 23upx;;
+				margin-left: 10upx;
+			}
+		}
+	}
+}

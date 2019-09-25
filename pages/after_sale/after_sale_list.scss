@@ -1,0 +1,92 @@
+uni-page-body,uni-page-wrapper{
+	background: #f2f2f2;
+	min-height: 100%;
+}
+.cont{
+	padding: 0 24upx 30upx ;
+	box-sizing: border-box;
+	background: #f2f2f2;
+	.item{
+		background: #fff;
+		border-radius: 10upx;
+		padding: 35upx 18upx;
+		box-sizing: border-box;
+		margin-bottom:30upx;
+		.shopName{font-size:26upx;color:#4e4e4e;width:100%;padding:36upx 0;}
+		.shopInfo{align-items:center;width:100%;margin-bottom:30upx;}
+		.shopInfo-img{width:180upx;height:auto;border-radius:20upx;overflow:hidden;margin-right:14upx;}
+		.is-response{width:100%;height:auto;max-width:100%;display:block;}
+		.shopInfo-introduce{justify-content:space-between;width:70%;}
+		.detail{font-size:24upx;color:#333;flex:1;}
+		.detail text{line-height:36upx;width:100%;}
+		.detail text.detailColor{color:#797979;}
+		.details{text-align:right;margin-top: -50upx;}
+		.num_price{
+			text-align: right;
+		}
+		.real_num{color: #8e8e8e;font-size: 24upx;}
+		.real_price{color: #333333;font-size: 28upx;margin-left: 20upx;}
+		.xian{border: 1upx solid #f2f2f2;width: 110%;margin-left: -5%; height: 0;}
+		.state_btn{
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding-top: 30upx;
+		}
+		.btn_list{
+			display: flex;
+			color: #ff0000;
+			font-size: 24upx;
+			.btn{
+				font-size: 24upx;
+				padding: 15upx 22upx;
+				border: 1px solid #ff0000;
+				border-radius: 10upx;
+				margin-left: 14upx;
+			}
+			
+		}
+		.state1{
+			color:#333333;
+			font-size: 24upx;
+			&:before{
+				content: '';
+				display: inline-block;
+				width: 27upx;
+				height: 27upx;
+				background: url(/static/img/icon_reslove.png) 0 0/100% 100% no-repeat;;
+				margin-right: 10upx;
+				position: relative;
+				top: 4upx;
+			}
+		}
+		.state2{
+			color:#333333;
+			font-size: 24upx;
+			&:before{
+				content: '';
+				display: inline-block;
+				width: 27upx;
+				height: 27upx;
+				background: url(/static/img/icon_reject.png) 0 0/100% 100% no-repeat;;
+				margin-right: 10upx;
+				position: relative;
+				top: 4upx;
+			}
+		}
+		.state3{
+			color:#333333;
+			font-size: 24upx;
+			&:before{
+				content: '';
+				display: inline-block;
+				width: 27upx;
+				height: 27upx;
+				background: url(/static/img/icon_wait.png) 0 0/100% 100% no-repeat;;
+				margin-right: 10upx;
+				position: relative;
+				top: 4upx;
+			}
+		}
+	}
+}

@@ -1,0 +1,21 @@
+uni-page-body{background:#fff;width:100%;height:100%;}
+.content,.newlyBox{width:100%;}
+.newly-date{border-bottom:1px solid #ececec;align-items:center;padding:6upx 25upx 0;}
+.newly-date text,.newly-date input{font-size:28upx;color:#000;margin:35upx 0;}
+.newly-date text{width:22%;}
+.newly-date input,.newly-date text.where{flex:1;}
+.newly-date image{width:31upx;height:39upx;}
+.newly-date.default{justify-content: space-between;border-top:7upx solid #f1f1f1;border-bottom:7upx solid #f1f1f1;}
+.newly-date.default text{width:40%;}
+.newly-date.default.dele{border-top:0;}
+.newly-date.default text.del{color:#f00;width:100%;}
+switch{transform:scale(0.7);}
+.btn{margin:62upx 25upx 0;height:76upx;color:#fff;font-size:30upx;border-radius:38upx;background:#f00;}
+.addressBox{padding:36upx 24upx;}
+.addressContent{padding:0 19upx 0 12upx;height:auto;background:#fff;border-radius:10upx;margin-bottom:20upx;overflow:hidden;}
+.addressInfo{font-size:26upx;color:#4e4e4e;padding:20upx 0;}
+.addressInfo .phone{font-size:24upx;color:#9d9d9d;margin-left:12upx;}
+.addressDetail{font-size:24upx;color:#4e4e4e;}
+.edit{height:50upx;width:98upx;border:1px solid #737373;color:#4e4e4e;font-size:24upx;align-items:center;justify-content:center;border-radius:25upx;margin:22upx 0;float:right;}
+.addressDetail .default{color:#f00;background:#f1dede;padding:2upx 8upx;margin-right:16upx;}
+.addAddress{margin:62upx auto 0;}

@@ -1,0 +1,89 @@
+<template>
+	<view class="content">
+		<view class="myselfBox">
+			<view class="muselfInfo">
+				<view class="setUp uni-flex">
+					<view class="uni-flex"><image src="/static/img/myself/setUp.png"></image></view>				
+				</view>
+				<view class="info uni-flex">
+					<image src="/static/img/myself/myselfHeadImg.png"></image>
+					<view class="information uni-flex uni-column">
+						<view class="uni-flex mation"><text class="name">张三</text><text class="type">供货商</text></view>
+						<text class="phone">13088888888</text>
+					</view>
+				</view>
+				<view class="category uni-flex">
+					<view class="detail uni-flex uni-column">
+						<text>12</text>
+						<text>收藏夹</text>
+					</view>
+					<view class="detail uni-flex uni-column">
+						<text>12</text>
+						<text>关注店铺</text>
+					</view>
+					<view class="detail uni-flex uni-column" data-uri="aftersalelist" @click="submenu($event)">
+						<text>12</text>
+						<text>退款售后</text>
+					</view>
+					<view class="detail uni-flex uni-column">
+						<text>12</text>
+						<text>已购商品</text>
+					</view>
+				</view>
+			</view>
+			<view class="submenu">
+				<view class="nav uni-flex" data-uri="myorder" @click="submenu($event)"><text>我的订单</text></view>
+				<view class="nav uni-flex"><text>我的店铺</text></view>
+				<view class="nav uni-flex"><text>我的邀约</text></view>
+				<view class="nav uni-flex"><text>我的团队</text></view>
+				<view class="nav uni-flex" data-uri="address" @click="submenu($event)"><text>收货地址</text></view>
+				<view class="nav uni-flex"><text>商家入驻</text></view>
+				<view class="nav uni-flex"><text>联系客服</text></view>
+				<view class="nav uni-flex"><text>意见反馈</text></view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				pages:{
+					address: "../address/address",
+					myorder:"../myorder/myorder",
+					aftersalelist:"../after_sale/after_sale_list"
+				},
+			}
+		},
+		methods: {
+			submenu:function(evt){
+				let uri = evt.currentTarget.dataset.uri;
+				uni.navigateTo({url:this.pages[uri]});
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	uni-page-body{background:#fff;width:100%;height:100%;}
+	.content,.myselfBox{width:100%;}
+	.muselfInfo{height:574upx;background:linear-gradient(top,#fc660b,#e70303);padding:0 20upx;}
+	.setUp{align-items:center;justify-content:flex-end;}
+	.setUp view{width:54upx;height:98upx;align-items:center;justify-content:center;}
+	.setUp view image{width:38upx;height:38upx;display:block;}
+	.info{width:100%;align-items:center;}
+	.info image{width:129upx;height:129upx;border-radius:50%;overflow:hidden;}
+	.information{flex:1;margin-left:28upx;}
+	.information .mation{align-items:center;}
+	.information .mation text.name{color:#fefefe;font-size:30upx;}
+	.information .mation text.type{font-size:20upx;color:#fefefe;height:40upx;line-height:40upx;padding:0 15upx;background:#ff7200;border-radius:20upx;display:inline-block;margin-left:21upx;}
+	.information .phone,.detail text{font-size:26upx;color:#fefefe;margin-top:20upx;}
+	.category{width:100%;align-items:center;justify-content: space-between;}
+	.detail{padding:0 18upx;align-items:center;margin-top:50upx;}
+	.detail text{margin-top:10upx;}
+	.submenu{margin-top:-180upx;background:#fff;border-radius:48upx 48upx 0 0;height:auto;padding-top:46upx;}
+	.submenu .nav{height:88upx;border-bottom:1px solid #dcdcdc;align-items:center;}
+	.submenu .nav:last-child{border-bottom:0;}
+	.submenu .nav text{padding-left:38upx;color:#424242;font-size:26upx;}
+</style>

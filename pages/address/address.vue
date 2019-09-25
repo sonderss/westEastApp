@@ -1,0 +1,46 @@
+<template>
+	<view class="content">
+		<view class="addressBox" v-if="address">
+			<block v-for="item in address" :key="item.address_id">
+				<view class="addressContent">
+					<view class="addressInfo"><text>{{item.name}}</text><text class="phone">{{item.phone}}</text></view>
+					<view class="addressDetail"><text class="default" v-if="item.default">默认</text><text>{{item.city+item.addDetail}}</text></view>
+					<view class="edit uni-flex" @click="edit(item)"><text>编辑</text></view>
+				</view>
+			</block>			
+			<button class="btn addAddress" @click="addAddress">添加地址</button>
+		</view>
+	</view>
+</template>
+
+<script>
+	import {mapState} from 'vuex'
+	export default {
+		data() {
+			return {
+				address:[{"address_id":0,"name":"张三","phone":"13049632587","city":"北京市-市辖区-西城区","addDetail":"天安科技园","default":true,"address_code":[0, 0, 1]},{"address_id":1,"name":"张三","phone":"13049632587","city":"辽宁省-沈阳市-沈河区","addDetail":"天安科技园","default":false,"address_code":[5, 0, 2]},{"address_id":2,"name":"张三","phone":"13049632587","city":"黑龙江省-鸡西市-滴道区","addDetail":"天安科技园","default":false,"address_code":[7, 2, 2]},{"address_id":3,"name":"张三","phone":"13049632587","city":"福建省-三明市-梅列区","addDetail":"天安科技园","default":false,"address_code":[12, 3, 0]}]
+			}
+		},
+		computed:{
+			...mapState(['editAddress'])
+		},
+		methods: {
+			addAddress:function(){
+				uni.navigateTo({
+				    url: 'newlyAdded'
+				});
+			},
+			edit:function(address){
+				this.$store.dispatch("save",{'editAddress':address});
+				uni.navigateTo({
+				    url: 'newlyAdded?type=add&&addressid='+address.address_id
+				});
+			}
+		}
+	}
+</script>
+
+<style>
+	@import "../../static/css/address.css";
+	uni-page-body,.content{background:#f1f1f1;width:100%;height:100%;}
+</style>
