@@ -2,7 +2,7 @@
 	<view class="ed-content">
 		<view class="info-form">
 			<view class="uni-flex info-text">
-				<text class="ed-text">手机账号</text>
+				<text class="ed-text">新账号</text>
 				<input v-model="phone" @blur="judge" type="number" placeholder="请输入手机号" />
 			</view>
 		</view>
@@ -66,7 +66,7 @@
 			cancel: function(order_id, index) {
 				uni.showModal({
 					title: '提示',
-					content: '修改密码成功,请重新登录',
+					content: '修改账号成功,请重新登录',
 					confirmText: '确定',
 					confirmColor: '#f00',
 					showCancel: false
