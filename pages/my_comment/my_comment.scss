@@ -1,0 +1,132 @@
+uni-page-body,
+	uni-page-wrapper {
+		background: #f2f2f2;
+		min-height: 100%;
+	}
+
+	.cont {
+		padding: 0 24upx 30upx;
+		box-sizing: border-box;
+		background: #f2f2f2;
+
+		.item {
+			background: #fff;
+			border-radius: 10upx;
+			padding: 35upx 18upx;
+			box-sizing: border-box;
+			margin-bottom: 30upx;
+
+			.shopName {
+				font-size: 32upx;
+				color: #4e4e4e;
+				width: 100%;
+				padding: 25upx 0;
+			}
+
+			.shopInfo {
+				align-items: center;
+				width: 100%;
+				margin-top: 30upx;
+			}
+
+			.shopInfo-img {
+				width: 100px;
+				height: 100px;
+				height: auto;
+				border-radius: 20upx;
+				overflow: hidden;
+				margin-right: 14upx;
+			}
+
+			.is-response {
+				width: 100%;
+				height: auto;
+				max-width: 100%;
+				display: block;
+			}
+
+			.shopInfo-introduce {
+				justify-content: space-between;
+				width: 70%;
+			}
+
+			.detail {
+				font-size: 24upx;
+				color: #333;
+				flex: 1;
+			}
+
+			.detail text {
+				line-height: 36upx;
+				width: 100%;
+			}
+
+			.detail text.detailColor {
+				color: #797979;
+			}
+
+			.details {
+				text-align: right;
+				margin-top: -50upx;
+			}
+
+			.num_price {
+				text-align: right;
+			}
+
+			.real_num {
+				color: #8e8e8e;
+				font-size: 24upx;
+			}
+
+			.real_price {
+				color: #333333;
+				font-size: 28upx;
+				margin-left: 20upx;
+			}
+
+			.xian {
+				border: 1upx solid #f2f2f2;
+				width: 110%;
+				margin-left: -5%;
+				height: 0;
+			}
+
+			.state_btn {
+				// display: flex;
+				// justify-content: space-between;
+				align-items: center;
+				padding-bottom: 25upx;
+
+				.ed-content-img {
+					image {
+						width: 150upx;
+						height: 150upx;
+						border-radius: 10upx;
+						margin-right: 18upx;
+						margin-bottom: 20upx;
+					}
+				}
+			}
+
+			.btn_list {
+				display: flex;
+				color: #ff0000;
+				font-size: 24upx;
+
+				.btn {
+					font-size: 24upx;
+					padding: 8upx 22upx;
+					border: 1px solid #ff0000;
+					border-radius: 10upx;
+					margin-left: 14upx;
+				}
+			}
+			.ed-date {
+				text{
+					font-size: 24upx;
+					color: #888888;
+				}
+			}
+		}
+	}

@@ -18,8 +18,7 @@
 .goods_flex {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	padding:0 10upx;
+	justify-content: flex-start
 }
 .aa{
 	div{
@@ -31,11 +30,31 @@
 	padding:0 20upx
 }
 .goods_title{
-	font-size: 24upx;
+	width: 600upx;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 26upx;
+	color:#525252;
+	button{
+		width: 140upx;
+		font-size: 24upx;
+		height: 40upx;
+		line-height:40upx;
+		white-space:nowrap;
+		text{		
+			margin-left:-6upx;
+		}
+	}
+}
+.goods_address{
+	font-size:24upx;
+	padding-top:20upx;
+	color:#525252
 }
 .goods_price{
-	font-size: 28upx;
-	color:#ff0000;
+	font-size: 19upx;
+	color:#acacac;
 }
 .cancel{
 	overflow: hidden;

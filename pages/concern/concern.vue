@@ -4,18 +4,26 @@
 		<view class="content" v-show="isEmpty">
 			<view style="padding: 14upx 0;" v-for="(item,index) in list" :key="index">
 			<checkbox-group @change="checkboxChange($event,index)">			
-					<view  class="goods_flex">
+					<view  class="goods_flex" style="padding:0 34upx">
 						<label class="goods_flex">
 							<checkbox v-if="flag" :checked="shop_select_all[index]" color="#d81e06" :value="'v'+index" />
 							<view class="ximg" :style="{'background':'url('+item.img+') center center/cover no-repeat'}"></view>
 						</label>
 						<view class="goods_attribute">
-							<view class="goods_title">{{item.title}}</view>			
+							<view class="goods_title">
+								<text>{{item.name}}{{item.id}}</text>
+								<button v-if="flag" size="mini" type="warn" @tap="cancel_collect(index)">
+									<text>
+										取消关注
+									</text>
+								</button>
+							</view>
+							<view class="goods_address">{{item.adress}}</view>	
 							<view class="cancel">
-								<text class="goods_price">￥{{item.price}}</text>
-								<button v-if="flag" size="mini" type="warn" @tap="cancel_collect(index)">取消收藏</button>
+								<text class="goods_price">{{item.dec}}</text>
 							</view>
 						</view>
+						
 					</view>									
 			</checkbox-group>
 			</view>
@@ -32,7 +40,7 @@
 					</label>
 				</checkbox-group>
 				<view class="footer_cancel" @tap="all_cancel">
-					取消收藏
+					取消关注
 				</view>
 			</view>
 		</view>
@@ -44,7 +52,7 @@
 	export default{
 		data(){
 			return{
-				list:this.$store.state.collections,
+				list:[],
 				flag:false,
 				shop_select_all:[],
 				isAll:'yes'
@@ -93,7 +101,7 @@
 				            console.log('用户点击取消');
 				        }
 				    }
-				})		
+				})			
 			},
 			all_cancel(){
 				uni.showModal({
@@ -116,18 +124,26 @@
 				        }
 				    }
 				})
+				
 			}
 		},
 		created(){
-			let _arr=[]
-			for(let i=0;i<this.list.length;i++){
-				let _select=true
-				if(!this.list[i].checked){
-					_select=false
+			uni.request({
+				url:'https://www.wang.com/api',
+				success:res=>{
+					this.list=res.data.list;
+					for(let i=0;i<this.list.length;i++){
+						let _select=true
+						if(!this.list[i].checked){
+							_select=false
+						}
+						this.shop_select_all.push(_select)
+					}
+				},
+				fail() {
+					console.log(123123)
 				}
-				this.shop_select_all.push(_select)
-			}
-			console.log(this.list)
+			})		
 		},
 		computed:{
 			total_all_select(){
@@ -151,5 +167,5 @@
 </script>
 
 <style lang="scss" scoped>
-	@import 'collect.scss'
+	@import 'concern.scss'
 </style>
