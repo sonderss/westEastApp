@@ -1,0 +1,205 @@
+.title{
+    border-top: 1px solid #dcdcdc;
+    height:106upx;
+    font-size: 30upx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 7px solid #f1f1f1;
+    .text{
+        margin-left: 24upx
+    }
+}
+.typeChoice_head{
+    width: 100%;
+    height: 72upx;
+    font-size: 24upx;
+    line-height: 72upx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    .img_close{
+        width:27upx;
+        height:27upx;
+       position: absolute;
+       left: 20upx;
+    }
+    
+}
+.list-a{
+    height: 108upx;
+    border-bottom: 1px solid #dcdcdc;
+    font-size: 24upx
+}
+.parent:last-child{
+    background: red
+}
+.btn{
+    width: 700upx;
+    height: 75upx;
+    background: #ff0000;
+    color: #fff;
+    margin-bottom: 40upx;
+    margin-top: 16upx;
+    border-radius:20px;
+    line-height: 75upx;
+}
+.text_input{
+    width: 708upx;
+    height: 200upx;
+    border:1px solid #dcdcdc;
+    margin: 21upx auto;
+    border-radius: 5px;
+    padding:0 10px;
+}
+
+.show_img{
+    display: flex
+}
+.set_up{
+    margin-top: 100px
+}
+    @font-face {
+    	font-family: uniicons;
+    	font-weight: normal;
+    	font-style: normal;
+    	src: url('https://img-cdn-qiniu.dcloud.net.cn/fonts/uni.ttf') format('truetype');
+    }
+    page {
+        background-color: #fff;
+    }
+    view{
+        font-size: 28upx;
+    }
+    .input-view {
+        font-size: 28upx;
+    }
+    .close-view{
+        text-align: center;line-height:14px;height: 16px;width: 16px;border-radius: 50%;background: #FF5053;color: #FFFFFF;position: absolute;top: -6upx;right: -4px;font-size: 12px;
+    }
+    .uni-uploader-head {
+    	display: flex;
+    	flex-direction: row;
+    	justify-content: space-between;
+    }
+    .uni-uploader-info {
+    	color: #B2B2B2;
+    }
+    .uni-uploader-body {
+    	margin-top: 16upx;
+    }
+    .uni-uploader__files {
+    	display: flex;
+    	flex-direction: row;
+    	flex-wrap: wrap;
+    }
+    .uni-uploader__file {
+    	margin: 10upx;
+    	width: 210upx;
+    	height: 210upx;
+    }
+    .uni-uploader__img {
+    	display: block;
+    	width: 210upx;
+    	height: 210upx;
+    }
+    .uni-uploader__input-box {
+    	position: relative;
+    	margin:10upx;
+    	width: 208upx;
+    	height: 208upx;
+    	border: 2upx solid #D9D9D9;
+    }
+    .uni-uploader__input-box:before,
+    .uni-uploader__input-box:after {
+    	content: " ";
+    	position: absolute;
+    	top: 50%;
+    	left: 50%;
+    	-webkit-transform: translate(-50%, -50%);
+    	transform: translate(-50%, -50%);
+    	background-color: #D9D9D9;
+    }
+    .uni-uploader__input-box:before {
+    	width: 4upx;
+    	height: 79upx;
+    }
+    .uni-uploader__input-box:after {
+    	width: 79upx;
+    	height: 4upx;
+    }
+    .uni-uploader__input-box:active {
+    	border-color: #999999;
+    }
+    .uni-uploader__input-box:active:before,
+    .uni-uploader__input-box:active:after {
+    	background-color: #999999;
+    }
+    .uni-uploader__input {
+    	position: absolute;
+    	z-index: 1;
+    	top: 0;
+    	left: 0;
+    	width: 100%;
+    	height: 100%;
+    	opacity: 0;
+    }
+    
+    /*问题反馈*/
+    .feedback-title {
+    	display: flex;
+    	flex-direction: row;
+    	justify-content: space-between;
+    	align-items: center;
+    	padding: 20upx;
+    	color: #8f8f94;
+    	font-size: 28upx;
+    }
+    .feedback-star-view.feedback-title {
+    	justify-content: flex-start;
+    	margin: 0;
+    }
+    .feedback-quick {
+    	position: relative;
+    	padding-right: 40upx;
+    }
+    .feedback-quick:after {
+    	font-family: uniicons;
+    	font-size: 40upx;
+    	content: '\e581';
+    	position: absolute;
+    	right: 0;
+    	top: 50%;
+    	color: #bbb;
+    	-webkit-transform: translateY(-50%);
+    	transform: translateY(-50%);
+    }
+    .feedback-body {
+    	background: #fff;
+    }
+    .feedback-textare {
+    	height: 200upx;
+    	font-size: 34upx;
+    	line-height: 50upx;
+    	width: 100%;
+    	box-sizing: border-box;
+    	padding: 20upx 30upx 0;
+    }
+    .feedback-star {
+    	font-family: uniicons;
+    	font-size: 40upx;
+    	margin-left: 6upx;
+    }
+    .feedback-star-view {
+    	margin-left: 20upx;
+    }
+    .feedback-star:after {
+    	content: '\e408';
+    }
+    .feedback-star.active {
+    	color: #FFB400;
+    }
+    .feedback-star.active:after {
+    	content: '\e438';
+    }
