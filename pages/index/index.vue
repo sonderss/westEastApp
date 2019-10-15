@@ -257,7 +257,7 @@ export default {
 			home_banner_list: ['/static/img/home/banner/1.png', '/static/img/home/banner/2.png', '/static/img/home/banner/3.png'],
 			typelistup: [
 				{
-					imgurl: 'https://i.loli.net/2019/10/15/76BbNVE51UjRhuQ.png',
+					imgurl: '/static/img/home/indexicon/up/01.png',
 					text: '我要装修'
 				},
 				{
