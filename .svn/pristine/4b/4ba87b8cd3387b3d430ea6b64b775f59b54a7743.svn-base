@@ -138,23 +138,6 @@
 					</view>
 				</view>
 			</uni-popup>
-			<!-- 分享 -->
-			<uni-popup ref='isShare' type="bottom" :custom="false">
-				<view class="cont">
-					<view class="weixin">
-					
-						<image @click="share_weixin" src='https://i.loli.net/2019/10/15/TUuka4rKxyYC1Lb.jpg'/>
-							<text style="padding-top:15upx">微信好友</text>
-					</view>
-					<view class="pengyou">
-						
-						<image @click="share_pyquan" src='https://i.loli.net/2019/10/15/AoOa9qEk5rKGeXR.jpg'/>
-						<text  style="padding-top:15upx">朋友圈</text>
-					</view>
-				</view>
-				<view class="btn" @click="hidePop">取  消</view>
-			</uni-popup>
-			
 		</view>
 	</view>
 </template>
@@ -235,7 +218,6 @@
 			}
 		},
 		onLoad(e) {
-		
 			if (e.itemid) { //商品ID
 				this.itemid = e.itemid;
 				this.loadGoods = true;
@@ -252,14 +234,57 @@
 			if(e.type === 'back'){
 				this.onBack();
 			}else if(e.type === 'share'){
-				//console.log('分享')  
-				this.$refs.isShare.open()
+				// console.log("分享"); 
+			// var pages = getCurrentPages();
+			// var page = pages[pages.length - 1];
+			// // #ifdef APP-PLUS
+			// var currentWebview = page.route();
+			// console.log(currentWebview)
+				// var pages = 
+				uni.share({
+					provider: 'weixin', //服务商
+					scene: "WXSceneSession", //聊天场景，这里是分享到聊天界面
+					type: 0, //对方打开时，图文
+					href: 'http://192.168.1.174:8080/pages/detail/goodsinfo?itemid=2', //对方点击跳转的页面这里的路径是需要动态改变的
+					summary: "这里是东装西购", //副标题
+					imageUrl: 'https://i.loli.net/2019/10/10/iTlXILpdY8Dtqnh.jpg', //type为0 2 5时必填
+					title: '精美装修风格', //标题
+					// miniProgram: {
+					// 	id: 'wx6e3082413feac4bc', //微信小程序原始ID
+					// 	path: 'pages/index/index', //点击链接进入的页面
+					// 	type: 1, //微信小程序版本，0为正式版
+					// 	webUrl: 'http://uniapp.dcloud.io' //兼容低版本网页链接
+					// },
+					success: ret => {
+						console.log(JSON.stringify(ret));
+					},
+					fail: err => {
+						console.log(JSON.stringify(err))
+					}
+					
+				});      
+				// uni.share({
+				// 	provider: 'weixin',
+				// 	scene: "WXSceneSession",
+				// 	type: 5,//分享到小程序
+				// 	imageUrl: 'https://i.loli.net/2019/10/10/iTlXILpdY8Dtqnh.jpg',
+				// 	title: '精美装修风格',
+				// 	miniProgram: {
+				// 		id: 'gh_a052a07884ba',//gh_516f4b722cdd  wxf9a4b6e22b5929fc   c632d946366588be96dacabe55da6dc3   gh_81ab097eae6e
+				// 		path: 'pages/detail/goodsinfo?itemid=2',
+				// 		type: 2,
+				// 		webUrl: 'http://uniapp.dcloud.io'
+				// 	},
+				// 	success: ret => {
+				// 		console.log(JSON.stringify(ret));
+				// 	},
+				// 	fail: err => {
+				// 		console.log(JSON.stringify(err))
+				// 	}
+				// });
 			}
 		},
 		methods: {
-			hidePop(){
-				this.$refs.isShare.close();
-			},
 			buy_now_fun(id,img,name,title,price,parameter,number){
 				
 			},
@@ -498,76 +523,6 @@
 					this.$store.dispatch("save",{'collections':collections});
 				}
 				this.iscollection = !this.iscollection;
-			},
-			share_weixin:function(){
-				// console.log('分享为微信好友')
-					// 这里调用详情接口 this.itemid
-				uni.share({
-					provider: 'weixin', //服务商
-					scene: "WXSceneSession", //聊天场景，这里是分享到聊天界面
-					type: 0, //对方打开时，图文
-					href: 'http://192.168.1.174:8080/pages/detail/goodsinfo?itemid='+this.itemid, //对方点击跳转的页面这里的路径是需要动态改变的
-					summary: "这里是东装西购", //副标题
-					imageUrl: 'https://i.loli.net/2019/10/10/iTlXILpdY8Dtqnh.jpg', //type为0 2 5时必填
-					title: '精美装修风格', //标题
-					// miniProgram: {
-					// 	id: 'wx6e3082413feac4bc', //微信小程序原始ID
-					// 	path: 'pages/index/index', //点击链接进入的页面
-					// 	type: 1, //微信小程序版本，0为正式版
-					// 	webUrl: 'http://uniapp.dcloud.io' //兼容低版本网页链接
-					// },
-					success: ret => {
-						console.log(JSON.stringify(ret));
-					},
-					fail: err => {
-						console.log(JSON.stringify(err))
-					}
-					
-				})
-				// uni.share({
-				// 	provider: 'weixin',
-				// 	scene: "WXSceneSession",
-				// 	type: 5,//分享到小程序
-				// 	imageUrl: 'https://i.loli.net/2019/10/10/iTlXILpdY8Dtqnh.jpg',
-				// 	title: '精美装修风格',
-				// 	miniProgram: {
-				// 		id: 'gh_a052a07884ba',//gh_516f4b722cdd  wxf9a4b6e22b5929fc   c632d946366588be96dacabe55da6dc3   gh_81ab097eae6e
-				// 		path: 'pages/detail/goodsinfo?itemid=2',
-				// 		type: 1,
-				// 		webUrl: 'http://uniapp.dcloud.io'
-				// 	},
-				// 	success: ret => {
-				// 		console.log(JSON.stringify(ret));
-				// 	},
-				// 	fail: err => {
-				// 		console.log(JSON.stringify(err))
-				// 	}
-				// });
-			},
-			share_pyquan:function(){
-				// console.log('分享到朋友圈')
-				uni.share({
-					provider: 'weixin', //服务商
-					scene: "WXSenceTimeline", //聊天场景，这里是分享到聊天界面
-					type: 0, //对方打开时，图文
-					href: 'http://192.168.1.174:8080/pages/detail/goodsinfo?itemid='+this.itemid, //对方点击跳转的页面这里的路径是需要动态改变的
-					summary: "快来围观啦...", //副标题
-					imageUrl: 'https://i.loli.net/2019/10/10/iTlXILpdY8Dtqnh.jpg', //type为0 2 5时必填
-					title: '这里是东装西购', //标题
-					// miniProgram: {
-					// 	id: 'wx6e3082413feac4bc', //微信小程序原始ID
-					// 	path: 'pages/index/index', //点击链接进入的页面
-					// 	type: 1, //微信小程序版本，0为正式版
-					// 	webUrl: 'http://uniapp.dcloud.io' //兼容低版本网页链接
-					// },
-					success: ret => {
-						console.log(JSON.stringify(ret));
-					},
-					fail: err => {
-						console.log(JSON.stringify(err))
-					}
-					
-				})
 			}
 		}
 	}
