@@ -1,0 +1,65 @@
+{
+	"list": [{
+			"id": 100,
+			"image": "/static/img/home/sayspace/1.png",
+			"title": "客厅墙面硅藻泥1",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},
+		{
+			"id": 120,
+			"image": "/static/img/home/sayspace/2.png",
+			"title": "客厅墙面硅藻泥2",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 229
+		},
+		{
+			"id": 130,
+			"image": "/static/img/home/sayspace/3.png",
+			"title": "客厅墙面硅藻泥3",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},
+		{
+			"id": 140,
+			"image": "/static/img/home/sayspace/4.png",
+			"title": "客厅墙面硅藻泥4",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},
+		{
+			"id": 150,
+			"image": "/static/img/home/sayspace/5.png",
+			"title": "客厅墙面硅藻泥5",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},
+		{
+			"id": 160,
+			"image": "/static/img/home/sayspace/5.png",
+			"title": "客厅墙面硅藻泥6",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},{
+			"id":180,
+			"image": "/static/img/home/sayspace/5.png",
+			"title": "客厅墙面硅藻泥7",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},{
+			"id": 190,
+			"image": "/static/img/home/sayspace/5.png",
+			"title": "客厅墙面硅藻泥8",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		}
+	]
+}
