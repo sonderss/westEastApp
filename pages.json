@@ -1,5 +1,6 @@
 {
 	"pages": [
+	
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -10,11 +11,35 @@
 			
 		},
 		{
+
+			"path": "pages/auth/start/start",
+			"style":{
+				"app-plus":{
+					"titleNView":false
+				}
+			}
+	        
+	    },
+		
+		{
 			"path": "pages/fix/fix",
 			"style": {
 				"navigationBarBackgroundColor":"#fff",
 				"navigationBarTitleText":"装修",
 				"scrollIndicator": "none"
+			},
+			"app-plus":{
+				"titleNView":{
+					"splitLine":{"color":"#f1f1f1","height":"1px"}
+				}
+			}
+		},
+		{
+			"path": "pages/lose/lose",
+			"style": {
+				"navigationBarBackgroundColor":"#fff",
+				"scrollIndicator": "none",
+				"navigationBarTitleText":""
 			}
 		},
 		{

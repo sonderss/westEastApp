@@ -29,20 +29,20 @@
 					>
 						<swiper-item class="swiper-items"><image src="/static/img/home/banner/1.png" style="width: 100%" mode="widthFix"></image></swiper-item>
 						<swiper-item class="swiper-items">
-							<image src="/static/img/home/banner/2.png" style="width: 100%;height: 100%"></image>
-							<view>
+							<image src="/static/img/home/banner/02.png" style="width: 100%" mode="widthFix"></image>
+							<!-- <view>
 								<text>家给我们幸福</text>
 								<text>幸福提高我们生活品质</text>
 								<text class="e_ad">HOME GIVES US HAPPINESS</text>
-							</view>
+							</view> -->
 						</swiper-item>
 						<swiper-item class="swiper-items">
-							<image src="/static/img/home/banner/3.png" style="width: 100%;height: 100%"></image>
-							<view>
+							<image src="/static/img/home/banner/03.png" style="width: 100%" mode="widthFix"> </image>
+							<!-- <view>
 								<text>只有你想不到,&nbsp;没有做不到</text>
 								<text class="e_ad">ONLY YOU CAN'T THINK OF IT.</text>
 								<text class="e_ad">NOT IMPOSSINLE</text>
-							</view>
+							</view> -->
 						</swiper-item>
 						<!--  -->
 					</swiper>
@@ -149,7 +149,7 @@
 		<view class="span_list_fitment">
 			<view>
 				<scroll-view class="show_scroll" scroll-x="true" show-scrollbar="false">
-					<view>
+					<view @tap="aaa">
 						<text>生活馆</text>
 						<image src="/static/img/home/eastshow/01.png"></image>
 					</view>
@@ -188,7 +188,7 @@
 			</scroll-view>
 		</view>
 		<view class="span_list" >
-			<waterfall-flow v-show="isRouterAlive" ref="child" :list="list" :isReload.sync="isReload"  @click="choose"  :Sheight="windowHeight"></waterfall-flow> <!-- :isReload.sync="isReload" -->
+			<waterfall-flow v-show="isRouterAlive" ref="child" :list="list" :loading="loading" :isReload.sync="isReload"  @click="choose"  :Sheight="windowHeight"></waterfall-flow> <!-- :isReload.sync="isReload" -->
 		</view>
 		<!-- <view class="ad">
 			<view>
@@ -254,8 +254,8 @@ export default {
 			title: '首页',
 			city_id: {},
 			wendu: '',
-			titleNViewBackground: 'yello',
-			carouselList: ['#c17b7d', '#0b5dd0', '#6575f9'],
+			titleNViewBackground: 'c17b7d',
+			carouselList: ['#c17b7d', '#549dac', '#afa291'],
 			home_banner_list: ['/static/img/home/banner/1.png', '/static/img/home/banner/2.png', '/static/img/home/banner/3.png'],
 			typelistup: [
 				{
@@ -364,6 +364,7 @@ export default {
 		WaterfallFlow
 	},
 	onLoad() {
+		
 		data.list.forEach(item=>{
 			item.show=false;
 			item.height=uni.upx2px(item.height*2)
@@ -387,9 +388,17 @@ export default {
 		// 获取屏幕宽度
 		windowWidth = uni.getSystemInfoSync().windowWidth;
 		this.windowHeight = uni.getSystemInfoSync().windowHeight;
+		console.log(this.windowHeight)
 		this.loadTabbars();
 		this.getList();
 		// console.log(5555)
+		setTimeout(()=>{
+			uni.showTabBar({
+				success(){
+					console.log('')
+				}
+			})
+		},5000)
 	},
 	onReachBottom() {
 		if(this.isReload){
@@ -582,20 +591,19 @@ export default {
 				// 	tabItem.loaded = true;
 				// }
 			}, 0);
+			// 子组件重置
+			this.$refs.child.boxHeight= [];
+			this.$refs.child.newList= [];
+			this.$refs.child.top= [];
+			this.$refs.child.left= [];
+			// this.$refs.child.loadingTop=0;
 			// 父组件重置
 			this.page=1;
 			this.start= 0;
 			this.end= 0;		
 			this.list= [];// 列表
-			// this.loading= true;
+			this.loading= true;
 			// this.isReload= false;
-			// this.windowHeight = uni.getSystemInfoSync().windowHeight;
-			// 子组件重置
-			// this.$refs.child.newList= [];
-			this.$refs.child.boxHeight= [];
-			this.$refs.child.top= [];
-			this.$refs.child.left= [];
-			// this.$refs.child.loadingTop=0;
 			if(this.tabBars[e].name=="全部"){
 				data=data3
 			}else{
@@ -605,9 +613,7 @@ export default {
 			this.isRouterAlive = false
 			this.$nextTick(() => (this.isRouterAlive = true))
 			this.$nextTick(() => {this.getList()})
-			setTimeout(()=>{
-				this.$refs.child.fun()
-			},150)
+
 			// this.$nextTick(() => {})
 			
 		},
@@ -635,25 +641,41 @@ export default {
 		// 选中
 		choose(item) {
 			// item 返回选中 JSON 对象
-			console.log(item)
+			console.log(item);
+			uni.navigateTo({
+				url: '/pages/detail/goodsinfo?itemid='+item.id,
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			})
+		},
+		aaa(){
+			uni.navigateTo({
+				url: '/pages/lose/lose',
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			})
 		},
 		// 模拟加载数据
-		getList(res) {
+		getList() {
 			if (this.list.length < data.list.length) {
+				
 				setTimeout(() => {
 					this.end = this.page * 10;					
 					this.list = this.list.concat(data.list.slice(this.start, this.end));
 					// console.log(this.list)
 					this.start = this.end;
-					console.log(this.list)
 					// 延迟 120 毫秒隐藏加载动画，为了跟组件里面的 100 毫秒定位有个平缓过度
-					// setTimeout(() => {
-					// 	this.loading = false;
-					// 	this.$refs.child.waterFall()
-					// }, 120);
-				}, 120)
+					setTimeout(() => {
+						
+						this.loading = false;
+						
+						// this.$refs.child.waterFall()
+					}, 120);
+				}, 1000)
 			} else {
-				// this.loading = false;
+				this.loading = false;
 			}
 		}
 	}

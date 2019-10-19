@@ -2,6 +2,26 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			
+			uni.removeStorage({
+				key: 'isGuide',
+				success: function (res) {
+					console.log('success');
+				}
+			});
+			var isGuide = uni.getStorageSync('isGuide');
+			if(!isGuide){
+				
+				uni.reLaunch({
+					url: './pages/auth/start/start'
+				// this.$router.push('./pages/auth/start/start.vue')
+				});
+				// uni.navigateTo({
+				// 		url: './pages/auth/start/start'
+				// });
+				return false;
+
+			}
 		},
 		onShow: function() {
 			console.log('App Show')

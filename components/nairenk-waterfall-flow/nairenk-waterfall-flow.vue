@@ -7,20 +7,20 @@
 			:data-index="index"
 			 @click="choose">
 			 <!-- <image class="image" :class="{lazy:!item.show}" :data-index="index" @load="imageLoad" :src="item.show?item.src:''" /> -->
-			<view class="pic" :style="{background:!item.show?'url(/static/img/lazyload.gif) no-repeat center 20%':''}">
+			<view class="pic" :style="{background:!item.show?'url(/static/img/timg.gif) no-repeat 10px 10px center 20%':''}">
 				<image :class="{image:true,lazy:!item.show}" :data-index="index"  :src="item.show?item.image:''"  style="width: 100%; display: block;" :style="{height:item.height+'px'}"></image>
 			</view>
 			<view class="contents">
 				<text class="title">{{item.title}}</text>
 				<view class="lazy_txzt">
 					<text>￥{{item.price}}</text>
-					<text class="shop">{{item.address}}</text>
+					<text style="font-size: 20upx;" class="shop">{{item.address}}</text>
 				</view>
 			</view>
 		</view>
-		<!-- <view class="loading" v-show="loading" :style="'top: ' + loadingTop + 'px'" >
+		<view class="loading" v-show="loading" :style="{top:list.length==0? 0+'px' : loadingTop +'px'}" >
 			<image src="/static/nairenk-waterfall-flow/loading.gif" style="width: 80upx; height: 80upx;"></image>
-		</view> -->
+		</view>
 	</view>
 </template>
 
@@ -64,10 +64,9 @@
 				if (newVal != oldVal ) {
 					this.newList = this.list;
 					this.$nextTick(function () {
-						// setTimeout(() => {
+						setTimeout(() => {
 							this.waterFall();
-							console.log(123)
-						// }, 120)
+						}, 120)
 					})
 				}
 			}
@@ -76,21 +75,16 @@
 			console.log("5474")
 		},
 		methods: {
-			fun(){
-				// console.log("执行了瀑布流")
-				this.$nextTick(()=>{
-					uni.createSelectorQuery().selectAll('.lazy').boundingClientRect((images) => {
-						images.forEach((image, index) => {
-							if (image.top <= this.Sheight-150) {
-								console.log(image.top, this.Sheight-150)
-								console.log(55555)
-								let num=parseInt(image.dataset.index)
-								this.newList[num].show = true;
-							}
-						})
-					}).exec()		
-				})
-												
+			//懒加载
+			fun(){				
+				uni.createSelectorQuery().in(this).selectAll('.lazy').boundingClientRect((images) => {
+					images.forEach((image, index) => {
+						if (image.top <= this.Sheight-150) {
+							let num=parseInt(image.dataset.index)
+							this.newList[num].show = true;
+						}
+					})
+				}).exec()													
 			},
 			// 瀑布流定位
 			waterFall() {
@@ -123,13 +117,18 @@
 						}
 					}
 				}).exec();
-				// console.log(this.list)
-				this.$emit("update:isReload",true)
+				//定位之后就执行懒加载
+				this.$nextTick(()=>{
+					this.fun()
+				})
+				//防止数据还没加载完再次执行触底刷新
+				this.$emit("update:isReload",true)			
 			},
 			// 选中
 			choose(e) {
 				let index = e.currentTarget.dataset.index;
 				this.$emit('click', this.newList[index]);
+				
 			}
 		}
 	}

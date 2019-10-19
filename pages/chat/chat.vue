@@ -46,11 +46,11 @@
 			</scroll-view>
 		</view>
 		<!-- 表情栏 -->
-		<view class="emoji-box"  :class="showEmji"  :style="{ display: activeColor}" v-show="sure" @touchmove.stop.prevent="discard" >
+		<view class="emoji-box"  :class="showEmji"   v-show="sure" @touchmove.stop.prevent="discard" >
 			<swiper class="swiper" indicator-dots="true" duration="150" v-if="sure">
 				<swiper-item v-for="(page,pid) in emojiList" :key="pid">
 					<view v-for="(em,eid) in page" :key="eid" @tap="addEmoji(em)">
-						<image :lazy-load="true" mode="widthFix" :src="'/static/img/emoji/'+em.url"></image>
+						<image  style="width:7vw;height:7vw" :src="'/static/img/emoji/'+em.url"></image>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -177,21 +177,19 @@ import loading from '../../components/nairenk-waterfall-flow/nairenk-waterfall-f
 			// 	// }
 			// 	console.log('表情加载')
 			// },500)
-			uni.setStorage({
-				key: 'emoji_key',
-				data: this.emojiList,
-				success: function () {
-					console.log('success');
-				}
-			});
-			uni.getStorage({
-				 key: 'emoji_key',
-					success: function (res) {
-						
-					
-						console.log(res.data);
-					}
-			})
+			// uni.setStorage({
+			// 	key: 'emoji_key',
+			// 	data: this.emojiList,
+			// 	success: function () {
+			// 		console.log('success');
+			// 	}
+			// });
+			// uni.getStorage({
+			// 	 key: 'emoji_key',
+			// 		success: function (res) {
+			// 			console.log(res.data);
+			// 		}
+			// })
 		},
 		// onPullDownRefresh(e){
 		// 		console.log(e)
@@ -216,26 +214,21 @@ import loading from '../../components/nairenk-waterfall-flow/nairenk-waterfall-f
 				this.recordEnd(e);
 			})
 			// #endif
-			// this.showLoading = true
-			// this.isLoading = true
-			// setTimeout(()=>{
-			// 	 this.sure = true
-				
-			// },500)
 			uni.getSystemInfo({
                 success(res) {
                     console.log(res.screenHeight); //获取手机设备屏幕高度
-                    // that.clientHight = res.screenHeight;
-					// that.footerHight = that.clientHight * 0.1;
 					this.windowHeight = res.screenHeight
                 }
 			})
 		},
 		mounted() {
 				console.log('加载完成')
-			
-			   
 		},
+	// onPullDownRefresh: function() {
+	// 	    //下拉刷新的时候请求一次数据  这里禁止了下拉刷新
+	// 		// 在pages里配置的style 中配置  "enablePullDownRefresh": true,//就是这个 把Pull删掉就不会触发下拉刷新
+	// 	   console.log('213')
+	// 	},
 		methods:{
 			isFocus(e){
 				//检测获取到焦点时，键盘弹出然后在操作键盘外空间时，键盘隐藏
@@ -249,8 +242,7 @@ import loading from '../../components/nairenk-waterfall-flow/nairenk-waterfall-f
 				uni.getSystemInfo({
 					success(res) {
 						console.log(res.screenHeight); //获取手机设备屏幕高度
-						// that.clientHight = res.screenHeight;
-						// that.footerHight = that.clientHight * 0.1;
+
 					}
            		 })
 
@@ -325,6 +317,8 @@ import loading from '../../components/nairenk-waterfall-flow/nairenk-waterfall-f
 			hideEmoji(){
 				
 				this.showEmji = this.showEmji=='showEmoji'?'hideEmoji':'';
+			
+
 			},
 			//添加表情
 			addEmoji(em){
@@ -350,8 +344,6 @@ import loading from '../../components/nairenk-waterfall-flow/nairenk-waterfall-f
 						for(let j=0;j<row.length;j++){
 							let EM = row[j];
 							if(EM.alt==item){
-							    // let onlinePath = 'https://s2.ax1x.com/2019/04/12/'
-								// let imgstr = '<img src="'+onlinePath+this.onlineEmoji[EM.url]+'">';
 								let imgstr = '<img src="'+'./static/img/emoji/'+EM.url+'">';
 								// console.log("imgstr: " + imgstr);
 								return imgstr;
@@ -544,53 +536,6 @@ page{
 	0% {transform: translateY(0);}
 	100% {transform: translateY(-42vw);}
 }
-// @keyframes hideEM {
-// 	0% {transform: translateY(0);}
-// 	100% {transform: translateY(0);}
-// }
-// @keyframes fousEm0 {
-// 	0% {
-// 		height: 0;
-// 		// -webkit-transform: translateX(500px) translateZ(0);
-// 		// transform: translateX(500px) translateZ(0);
-// 	}
-// 	100% {
-// 		height:  0;
-// 		// -webkit-transform: translateX(0) translateZ(0);
-// 		// transform: translateX(0) translateZ(0);
-// 	}
-// }
-// .emoji-box{
-// 	&.hideEmoji{animation: hideEM .15s linear both;}
-// 	&.showEmoji{animation: showEM .15s linear both;}
-// 	&.fousEm00{animation: fousEm0 .05s  ;}
-// 	width: 96%;
-// 	// height: 42vw;
-// 	padding: 20upx 2%;
-// 	background-color: #f3f3f3;
-// 	border-top: solid 1upx #ddd;
-// 	position: absolute;
-// 	z-index: 20;
-// 	bottom:-42vw;
-// 	.swiper{
-// 		width: 100%;
-// 		swiper-item{
-// 			float: left;
-// 			// display: flex;
-// 			// flex-wrap: wrap;
-// 			view{
-// 				float: left;
-// 				width: 12vw;
-// 				height: 12.1vw;
-// 				// display: flex;
-// 				// justify-content: center;
-// 				image{
-// 					width: 60%;
-// 				}
-// 			}
-// 		}
-// 	}
-// }
 .emoji-box{
 	&.hideEmoji{animation: hideEM .15s linear both;}
 	&.showEmoji{animation: showEM .15s linear both;}

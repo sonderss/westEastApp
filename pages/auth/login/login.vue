@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		 <view class="login-form">
-			<image class="logo" src="/static/img/auth/logo.png"></image>
+			<image class="logo" src="/static/logo.png"></image>
 		 	<view class="form-item from-items">
 		 		<image class="icon" src="/static/img/auth/phono.png"></image>
 				<input class="uni-input" type="number" @blur="judge" v-model="account" placeholder="请输入手机号" /><!-- focus -->

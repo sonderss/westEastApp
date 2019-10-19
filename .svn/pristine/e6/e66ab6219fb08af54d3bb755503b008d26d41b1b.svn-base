@@ -1,0 +1,686 @@
+<template>
+	<view class="content">
+		<view class="header" :style="{ backgroundColor: titleNViewBackground }">
+			<view class="add_search_scan">
+				<view class="address">
+					<view class="city">{{ currentDistrict }}</view>
+					<view class="wundu">{{ wendu }}°</view>
+				</view>
+				<view class="search_box" @tap="link_search">
+					<image src="/static/img/home/search_ico.png" class="search_ico"></image>
+					<image src="/static/img/home/camera_ico.png" class="camera_ico"></image>
+					<!-- <input type="text" class="search_input" confirm-type="search"> -->
+				</view>
+				<view class="scan" @tap="link_message"><image src="/static/img/home/message_ico.png" class="scan_ico"></image></view>
+			</view>
+			<view class="home_banner">
+				<view style="height:100%;overflow: hidden;border-radius: 7px;">
+					<swiper
+						style="width: 100%;height: 100%;"
+						class=""
+						circular="true"
+						:autoplay="autoplay"
+						:interval="interval"
+						:indicator-dots="indicatorDots"
+						:duration="duration"
+						indicator-active-color="#fff"
+						indicator-color="rgba(255, 255, 255, 0.5)"
+						@change="swiperChange"
+					>
+						<swiper-item class="swiper-items"><image src="/static/img/home/banner/1.png" style="width: 100%" mode="widthFix"></image></swiper-item>
+						<swiper-item class="swiper-items">
+							<image src="/static/img/home/banner/02.png" style="width: 100%" mode="widthFix"></image>
+							<!-- <view>
+								<text>家给我们幸福</text>
+								<text>幸福提高我们生活品质</text>
+								<text class="e_ad">HOME GIVES US HAPPINESS</text>
+							</view> -->
+						</swiper-item>
+						<swiper-item class="swiper-items">
+							<image src="/static/img/home/banner/03.png" style="width: 100%" mode="widthFix"> </image>
+							<!-- <view>
+								<text>只有你想不到,&nbsp;没有做不到</text>
+								<text class="e_ad">ONLY YOU CAN'T THINK OF IT.</text>
+								<text class="e_ad">NOT IMPOSSINLE</text>
+							</view> -->
+						</swiper-item>
+						<!--  -->
+					</swiper>
+				</view>
+			</view>
+		</view>
+		<view class="icon_list" style="width: 100%;">
+			<swiper style="width: 100%;" class="swiper-box-list" duration="300" @change="changedot">
+				<swiper-item class="swiper_item">
+					<view>
+						<view class="l_item" v-for="(x, index) in typelistup" :key="index" @tap="open_list(x.text)">
+							<image :src="x.imgurl" mode=""></image>
+							<text>{{ x.text }}</text>
+						</view>
+					</view>
+					<view>
+						<view class="l_item" v-for="(x, index) in typelistdown" :key="index" @tap="open_list(x.text)">
+							<image :src="x.imgurl" mode=""></image>
+							<text>{{ x.text }}</text>
+						</view>
+					</view>
+				</swiper-item>
+				<swiper-item class="swiper_item">
+					<view>
+						<view class="l_item" v-for="(x, index) in typelistup2" :key="index" @tap="open_list(x.text)">
+							<image :src="x.imgurl" mode=""></image>
+							<text>{{ x.text }}</text>
+						</view>
+					</view>
+					<view>
+						<view class="l_item" v-for="(x, index) in typelistdown2" :key="index" @tap="open_list(x.text)">
+							<image :src="x.imgurl" mode=""></image>
+							<text>{{ x.text }}</text>
+						</view>
+					</view>
+				</swiper-item>
+			</swiper>
+			<swiper-dot class="swiperdot" :current="currentdot" :list="home_banner_space"></swiper-dot>
+		</view>
+		<view class="span_list_fitment">
+			<view class="recom_list">
+				<view class="recom_list_01">
+					<view>
+						<image  src="/static/img/home/tip/01.png" mode="widthFix"></image>
+						<view class="recom_top_txt"><text>批量拼购</text></view>
+					</view>
+					<view>
+						<image  src="/static/img/home/tip/02.png"  mode="widthFix"></image>
+						<view class="recom_top_txt"><text>装修派对</text></view>
+					</view>
+				</view>
+				<view class="recom_list_02">
+					<view>
+						<image  src="/static/img/home/tip/03.png"  mode="widthFix"></image>
+						<view class="recom_top_txt"><text>签约见礼</text></view>
+					</view>
+					<view>
+						<image src="/static/img/home/tip/04.png"  mode="widthFix"></image>
+						<view class="recom_top_txt"><text>整屋优惠</text></view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<!-- 抽奖 -->
+		<view class="draw">
+			<view>
+				<image src="/static/img/home/draw.png" mode="widthFix"></image>
+				<!-- <view>
+					<text>幸运大抽奖</text>
+					<br />
+					<text>赢取万元装修费</text>
+				</view> -->
+			</view>
+		</view>
+		<view class="span_list_fitment">
+			<view>
+				<view class="box_list_01">
+					<view>
+						<image style="width: 100%;" src="/static/img/home/spantitle/01.png" mode="widthFix"></image>
+						<view class="top_txt">
+							<text>品牌故事</text>
+							<br />
+							<text>了解更多细节</text>
+						</view>
+					</view>
+					<view>
+						<image style="width: 100%;" src="/static/img/home/spantitle/02.png" mode="widthFix"></image>
+						<view class="top_txt">
+							<text>设计大咖</text>
+							<br />
+							<text>设计来源于生活</text>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<!-- 直播 -->
+		<view class="zoo">
+			<view @tap="dataAction"><text>宠物屋</text></view>
+			<view><text>植物园</text></view>
+			<view><text>东装直播</text></view>
+			<view><text>西购直播</text></view>
+		</view>
+		<view class="span_list_fitment">
+			<view>
+				<scroll-view class="show_scroll" scroll-x="true" show-scrollbar="false">
+					<view @tap="aaa">
+						<text>生活馆</text>
+						<image src="/static/img/home/eastshow/01.png"></image>
+					</view>
+					<view>
+						<text>收藏馆</text>
+						<image src="/static/img/home/eastshow/02.png"></image>
+					</view>
+					<view>
+						<text>发现美</text>
+						<image src="/static/img/home/eastshow/03.png"></image>
+					</view>
+					<view>
+						<text>谈天说地</text>
+						<image src="/static/img/home/eastshow/04.png"></image>
+					</view>
+					<view style="margin-right: 0;">
+						<text>智能家居</text>
+						<image src="/static/img/home/eastshow/05.png"></image>
+					</view>
+				</scroll-view>
+			</view>
+		</view>
+		<!-- 分类 -->
+		<view style="padding: 0 22upx;margin-top:15upx">
+			<scroll-view id="nav-bar" class="nav-bar" show-scrollbar="false" scroll-x scroll-with-animation :scroll-left="scrollLeft">
+				<view
+					v-for="(item, index) in tabBars"
+					:key="item.id"
+					class="nav-item"
+					:class="{ current: index === tabCurrentIndex }"
+					:id="'tab' + index"
+					@click="changeTab(index)"
+				>
+					{{ item.name }}
+				</view>
+			</scroll-view>
+		</view>
+		<view class="span_list" >
+			<waterfall-flow v-show="isRouterAlive" ref="child" :list="list" :loading="loading" :isReload.sync="isReload"  @click="choose"  :Sheight="windowHeight"></waterfall-flow> <!-- :isReload.sync="isReload" -->
+		</view>
+		<!-- <view class="ad">
+			<view>
+				<image src="/static/img/home/ad.png" mode="widthFix"></image>
+				<text>改造设计，听听大师们怎么说</text>
+			</view>
+		</view> -->
+		<view class="tips_login" v-if="!token" :class="total_box_margin ? 'margin100' : ''">
+			<text>登录后获得更好的体验</text>
+			<view class="login_btn" @tap="link_login">立即登录</view>
+		</view>
+		<view class="offer_search" :class="total_box_margin ? (token ? 'margin100' : 'margin200') : token ? '' : 'margin100'">
+			<view v-if="show_search_btn" class="show_search_btn">
+				<view class="btn_box">
+					<view class="offer_btn">报价</view>
+					<view class="search_btn" @tap="link_search">搜索</view>
+				</view>
+				<view @tap="show_search_btn = false">
+					<image src="/static/img/up_tips.png" class="offer_search_up_tips"></image>
+					<view class="hide_btn">收起</view>
+				</view>
+			</view>
+			<!-- <view v-else class="offer_tips" @tap="show_search_btn = true">报价</view> -->
+		</view>
+	</view>
+</template>
+
+<script>
+// 瀑布流组件
+import WaterfallFlow from '../../components/nairenk-waterfall-flow/nairenk-waterfall-flow.vue';
+// 模拟 JSON 数据
+let data = require('@/common/json/data.json');
+let data3 = require('@/common/json/data.json');
+let data2 = require('@/common/json/data2.json');
+import { mapState, mapMutations, mapActions } from 'vuex';
+import city_id from './city_id.js';
+import json from '@/json';
+import swiperDot from '@/components/swiperDot/swiperDot.vue';
+let windowWidth = 0,
+	scrollTimer = false,
+	tabBar;
+export default {
+	data() {
+		return {
+			page: 1,
+			start: 0,
+			end: 0,
+			list: [], // 列表
+			loading: true,
+			isReload: false,
+			windowHeight: 0,
+			isRouterAlive:true,
+			show: false,
+			currentdot: 0,
+			scrollLeft: 0,
+			tabCurrentIndex: 0,
+			tabBars: [],
+			tab_num: 1,
+			autoplay: true,
+			interval: 5000,
+			duration: 300,
+			indicatorDots: true,
+			title: '首页',
+			city_id: {},
+			wendu: '',
+			titleNViewBackground: 'c17b7d',
+			carouselList: ['#c17b7d', '#549dac', '#afa291'],
+			home_banner_list: ['/static/img/home/banner/1.png', '/static/img/home/banner/2.png', '/static/img/home/banner/3.png'],
+			typelistup: [
+				{
+					imgurl: '/static/img/home/indexicon/up/01.png',
+					text: '我要装修'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/up/02.png',
+					text: '我懂装修'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/up/03.png',
+					text: '装修公司'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/up/04.png',
+					text: '建筑公司'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/up/05.png',
+					text: '设计公司'
+				}
+			],
+			typelistdown: [
+				{
+					imgurl: '/static/img/home/indexicon/down/01.png',
+					text: '软装商城'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/down/02.png',
+					text: '硬装商城'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/down/03.png',
+					text: '家具摆件'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/down/04.png',
+					text: '家装电器'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/down/05.png',
+					text: '五金工具'
+				}
+			],
+			typelistup2: [
+				{
+					imgurl: '/static/img/home/indexicon/up/06.png',
+					text: '验收监理'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/up/07.png',
+					text: '清洁维修'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/up/08.png',
+					text: '运输送货'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/up/09.png',
+					text: '家居风水'
+				},
+				{
+					imgurl: '',
+					text: ''
+				}
+			],
+			typelistdown2: [
+				{
+					imgurl: '/static/img/home/indexicon/down/06.png',
+					text: '附材水电'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/down/07.png',
+					text: '户外建材'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/down/08.png',
+					text: '智能家居'
+				},
+				{
+					imgurl: '/static/img/home/indexicon/down/09.png',
+					text: '进口建材'
+				},
+				{
+					imgurl: '',
+					text: ''
+				}
+			],
+			
+			home_banner_space: ['/static/img/home/sayspace/01.png', '/static/img/home/sayspace/01.png', '/static/img/home/sayspace/01.png', '/static/img/home/sayspace/01.png'],
+			swiper_list: ['/static/img/home/swiper_img1.png', '/static/img/home/swiper_img1.png', '/static/img/home/swiper_img1.png'],
+			headerTop: 0,
+			opacity: 1,
+			home_animation_top: 0,
+			show_search_btn: false,
+			total_box_margin: false,
+			small_header: false,
+			small_header_Y: 0,
+			content_height: 0,
+			temp_content_height: null
+		};
+	},
+	components: {
+		swiperDot,
+		WaterfallFlow
+	},
+	onLoad() {
+		
+		data.list.forEach(item=>{
+			item.show=false;
+			item.height=uni.upx2px(item.height*2)
+		})
+		data2.list.forEach(item=>{
+			item.show=false;
+			item.height=uni.upx2px(item.height*2)
+		})
+		data3.list.forEach(item=>{
+			item.show=false;
+			item.height=uni.upx2px(item.height*2)
+		})
+		// this.help.remove('token')
+		if (this.is_empty(this.help.load('token', true))) {
+		} else {
+			this.$store.dispatch('save', { token: this.help.load('token', true) });
+		}
+		// #ifdef H5
+		this.total_box_margin = true;
+		// #endif
+		// 获取屏幕宽度
+		windowWidth = uni.getSystemInfoSync().windowWidth;
+		this.windowHeight = uni.getSystemInfoSync().windowHeight;
+		console.log(this.windowHeight)
+		this.loadTabbars();
+		this.getList();
+		// console.log(5555)
+		setTimeout(()=>{
+			uni.showTabBar({
+				success(){
+					console.log('')
+				}
+			})
+		},5000)
+	},
+	onReachBottom() {
+		if(this.isReload){
+			this.page++;
+			this.loading = true;
+			this.getList();
+			this.isReload=false
+		}
+	},
+	mounted() {
+		let view = uni.createSelectorQuery().select('.home_animation');
+		view.boundingClientRect(data => {
+			// console.log(JSON.stringify(data));
+			// this.content_height = data.height;
+			// this.temp_content_height = data.height;
+		}).exec();
+		this.get_wendu(
+			city_id[
+				String(this.currentDistrict)
+					.replace('市', '')
+					.replace('区', '')
+			]
+		)		 
+	},
+	onPageScroll: function(e) {
+		this.dataAction()
+	},
+	watch: {
+		currentCity: {
+			handler(val, oldVal) {
+				this.get_wendu(
+					city_id[
+						String(this.currentDistrict)
+							.replace('市', '')
+							.replace('区', '')
+					]
+				);
+			},
+			deep: true
+		}
+	},
+	computed: {
+		...mapState(['is_ios', 'userPoint', 'currentCity', 'currentDistrict', 'token'])
+	},
+	methods: {
+		dataAction:function(){
+			this.$refs.child.fun()		    
+		},
+		imageLoadleft(e) {
+			this.lazy_load_left[e.target.dataset.index].show = true;
+		},
+		imageLoadright(e) {
+			this.lazy_load_right[e.target.dataset.index].show = true;
+		},
+		link_login() {
+			uni.navigateTo({
+				url: '/pages/auth/login/login',
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			});
+		},
+		open_list(title) {
+			if (title) {
+				uni.navigateTo({
+					url: '../goods_list/goods_list?title=' + title,
+					success: res => {},
+					fail: () => {},
+					complete: () => {}
+				});
+			}
+		},
+		link_search() {
+			// console.log(11)
+			uni.navigateTo({
+				url: '../search/search',
+				animationType: 'slide-in-bottom',
+				animationDuration: 250,
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			});
+		},
+		link_scan() {
+			uni.navigateTo({
+				url: '../scan/scan',
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			});
+		},
+		link_message() {
+			uni.navigateTo({
+				url: '../message/message',
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			});
+		},
+		get_wendu(city_name) {
+			if (city_name) {
+				uni.request({
+					url: 'http://t.weather.sojson.com/api/weather/city/' + city_name,
+					type: 'GET',
+					success: res => {
+						// console.log(JSON.stringify(res.data.data)+"3333333333333333333333");
+						// this.city_id=res.data
+						this.wendu = res.data.data.wendu;
+					},
+					fail: xhr => {
+						console.log('http_post_error:' + params.api);
+						console.log(xhr);
+					}
+				});
+			}
+			// alert('请打开您手机的位置权限')
+		},
+		jump(i) {
+			uni.navigateTo({
+				url: '../detail/goodsinfo?itemid=' + i
+			});
+		},
+		changedot(e) {
+			this.currentdot = e.detail.current;
+		},
+		my_fix(title) {
+			//console.log(123);
+			uni.navigateTo({
+				url: '../myfix/myfix?title=' + title
+			});
+		},
+		loadTabbars() {
+			let tabList = json.tabList;
+			tabList.forEach(item => {
+				item.newsList = [];
+				item.loadMoreStatus = 0; //加载更多 0加载前，1加载中，2没有更多了
+				item.refreshing = 0;
+			});
+			this.tabBars = tabList;
+			// this.loadNewsList('add');
+		},
+		//tab切换
+		async changeTab(e) {
+			if (scrollTimer) {
+				//多次切换只执行最后一次
+				clearTimeout(scrollTimer);
+				scrollTimer = false;
+			}
+			let index = e;
+			//e=number为点击切换，e=object为swiper滑动切换
+			if (typeof e === 'object') {
+				index = e.detail.current;
+			}
+			if (typeof tabBar !== 'object') {
+				tabBar = await this.getElSize('nav-bar');
+			}
+			//计算宽度相关
+			let tabBarScrollLeft = tabBar.scrollLeft;
+			let width = 0;
+			let nowWidth = 0;
+			//获取可滑动总宽度
+			for (let i = 0; i <= index; i++) {
+				let result = await this.getElSize('tab' + i);
+				width += result.width;
+				if (i === index) {
+					nowWidth = result.width;
+				}
+			}
+			if (typeof e === 'number') {
+				//点击切换时先切换再滚动tabbar，避免同时切换视觉错位
+				this.tabCurrentIndex = index;
+			}
+			//延迟300ms,等待swiper动画结束再修改tabbar
+			scrollTimer = setTimeout(() => {
+				if (width - nowWidth / 2 > windowWidth / 2) {
+					//如果当前项越过中心点，将其放在屏幕中心
+					this.scrollLeft = width - nowWidth / 2 - windowWidth / 2;
+				} else {
+					this.scrollLeft = 0;
+				}
+				if (typeof e === 'object') {
+					this.tabCurrentIndex = index;
+				}
+				this.tabCurrentIndex = index;
+
+				//第一次切换tab，动画结束后需要加载数据
+				// let tabItem = this.tabBars[this.tabCurrentIndex];
+				// if(this.tabCurrentIndex !== 0 && tabItem.loaded !== true){
+				// 	this.loadNewsList('add');
+				// 	tabItem.loaded = true;
+				// }
+			}, 0);
+			// 子组件重置
+			this.$refs.child.boxHeight= [];
+			this.$refs.child.newList= [];
+			this.$refs.child.top= [];
+			this.$refs.child.left= [];
+			// this.$refs.child.loadingTop=0;
+			// 父组件重置
+			this.page=1;
+			this.start= 0;
+			this.end= 0;		
+			this.list= [];// 列表
+			this.loading= true;
+			// this.isReload= false;
+			if(this.tabBars[e].name=="全部"){
+				data=data3
+			}else{
+				data=data2
+			}		
+			
+			this.isRouterAlive = false
+			this.$nextTick(() => (this.isRouterAlive = true))
+			this.$nextTick(() => {this.getList()})
+
+			// this.$nextTick(() => {})
+			
+		},
+		//获得元素的size
+		getElSize(id) {
+			return new Promise((res, rej) => {
+				let el = uni.createSelectorQuery().select('#' + id);
+				el.fields(
+					{
+						size: true,
+						scrollOffset: true,
+						rect: true
+					},
+					data => {
+						res(data);
+					}
+				).exec();
+			});
+		},
+		//轮播图切换修改背景色
+		swiperChange(e) {
+			const index = e.detail.current;
+			this.titleNViewBackground = this.carouselList[index];
+		},
+		// 选中
+		choose(item) {
+			// item 返回选中 JSON 对象
+			console.log(item);
+			uni.navigateTo({
+				url: '/pages/detail/goodsinfo?itemid='+item.id,
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			})
+		},
+		aaa(){
+			uni.navigateTo({
+				url: '/pages/lose/lose',
+				success: res => {},
+				fail: () => {},
+				complete: () => {}
+			})
+		},
+		// 模拟加载数据
+		getList() {
+			if (this.list.length < data.list.length) {
+				
+				setTimeout(() => {
+					this.end = this.page * 10;					
+					this.list = this.list.concat(data.list.slice(this.start, this.end));
+					// console.log(this.list)
+					this.start = this.end;
+					// 延迟 120 毫秒隐藏加载动画，为了跟组件里面的 100 毫秒定位有个平缓过度
+					setTimeout(() => {
+						
+						this.loading = false;
+						
+						// this.$refs.child.waterFall()
+					}, 120);
+				}, 1000)
+			} else {
+				this.loading = false;
+			}
+		}
+	}
+};
+</script>
+<style scoped lang="scss">
+@import 'index.scss';
+</style>

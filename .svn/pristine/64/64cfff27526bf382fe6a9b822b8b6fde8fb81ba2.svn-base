@@ -1,0 +1,91 @@
+<template>
+    <view class="tewst" style="width:100vw;height: 100vh;">
+        <!-- <view class="right_tips" @click="toIndex">
+            <text>跳过</text>
+        </view> -->
+        <!-- <view style="background: url('../../../static/img/drawable-xxhdpi/splash_1080.png')no-repeat;background-size: cover"></view> -->
+        <image ref='image'  style="width:100%;height: 100%;"  :src='srcImg' />
+       
+
+    </view>
+</template>
+<script>
+export default {
+    onLoad(){
+           uni.hideTabBar({
+            success(){
+                console.log('成功')
+            }
+           })
+           this.widthImg = uni.getSystemInfoSync().windowHeight;
+          console.log(this.widthImg)
+    },
+    data(){
+        return{
+            widthImg:0,
+            srcImg:'../../../static/img/drawable-xxhdpi/splash_1080.png'
+        }
+    },
+    mounted() {
+        // setTimeout(()=>{
+        //       uni.switchTab({
+        //             url: '/pages/index/index'
+        //         });
+        // },2000)
+        setTimeout(()=>{
+         uni.setStorage({key: 'isGuide',data: true});
+            uni.switchTab({  url: '/pages/index/index' }); //关闭所有页面，跳转首页
+        // history.back()
+        // uni.navigateBack({
+        //         delta: 1
+        // });
+            
+              
+        },5000)
+       // console.log(this.widthImg)
+        if(750 < this.widthImg && this.widthImg === 812){
+
+             this.srcImg = '../../../static/img/drawable-xxhdpi/1483077766218_556214.jpeg'
+        }
+     
+      
+    },
+    // methods: {
+    //     toIndex(){
+    //         setTimeout(()=>{
+    //             // this.$router.push('../../index/index')
+    //             uni.switchTab({
+    //                 url: '/pages/index/index'
+    //             });
+    //         },1500)
+          
+    //     }
+      
+    // },
+}
+</script>>
+<style scoped>
+/* .tewst{
+    background: url('../../../static/img/drawable-xxhdpi/splash_1080.png')no-repeat;
+    background-size: cover
+} */
+.right_tips{
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    position: absolute;
+    right: 15upx;
+    top: 20upx;
+    z-index: 999;
+    background: #000000;
+    opacity: 0.3;
+    border-radius: 50%;
+    font-size: 25upx;
+    text-align: center;
+    line-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+</style>
