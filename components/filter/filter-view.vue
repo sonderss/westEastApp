@@ -1,0 +1,478 @@
+<template>
+	<view>
+		<view style="padding: 0upx 0upx;">
+			<view class="filter-content" v-for="(item, index) in menuList" :key="index" v-if="menuIndex == index">
+				<view  v-if="item.isSort">
+					<view>
+						<view class="seltitle">房型</view>
+						<view class="filter-content-detail">
+							<text v-for="(detailItem,idx) in selectDetailList" :key="idx"  
+							class="filter-content-detail-item-default" 
+							:style="{'background-color':detailItem.isSelected?'#FFF1F1':themeColor,'color':detailItem.isSelected?'#B8696B':'#3B3B3B'}"
+							 @tap="itemTap(idx,selectDetailList,item.isMutiple,item.key)">
+								{{detailItem.title}}
+							</text>
+						</view>
+					</view>
+					<view>
+						<view class="seltitle">风格</view>
+						<view class="filter-content-detail">
+							<text v-for="(detailItem,idx) in selectDetailList2" :key="idx"  
+							class="filter-content-detail-item-default" 
+							:style="{'background-color':detailItem.isSelected?'#FFF1F1':themeColor,'color':detailItem.isSelected?'#B8696B':'#3B3B3B'}"
+							 @tap="itemTap(idx,selectDetailList2,item.isMutiple,menuList[3].key)">
+								{{detailItem.title}}
+							</text>
+						</view>
+					</view>				
+				</view>
+				<view v-else>
+					<!-- <view class="filter-content-title" v-if="item.detailTitle && item.detailTitle.length">
+						<text>{{item.detailTitle}}</text>
+					</view> -->
+					<view class="filter-content-detail">
+						<text v-for="(detailItem,idx) in selectDetailList" :key="idx"  
+						:class="{'filter-content-detail-item-default':index==0?true:false,'filter-content-detail-item-default-two':index==1?true:false,'ftSelected':index==1&&detailItem.isSelected?true:false}" 
+						:style="{'background-color':detailItem.isSelected?'#FFF1F1':themeColor,'color':detailItem.isSelected?'#B8696B':'#3B3B3B'}"
+						 @tap="sortTap(idx,selectDetailList,item.key)">
+							{{detailItem.title}}
+						</text>
+					</view>				
+				</view>
+				<view class="filter-content-footer" v-if="index==2">
+					<view  @tap="resetClick(menuList)">
+						<text>重置</text>
+					</view>
+					<view @tap="sureClick">
+						<text>确定</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				selectArr: [],
+				result: {},
+				menuIndex: 0,
+				selectDetailList: [],
+				selectDetailList2: [],
+				independenceObj: {},
+				selectedKey: '',
+				selectedKey2: '',
+				cacheSelectedObj: {},
+				defaultSelectedTitleObj: {}
+			};
+		},
+		props: {
+			themeColor: {
+				type: String,
+				default () {
+					return '#D1372C'
+				}
+			},
+			menuList: {
+				type: Array,
+				default () {
+					return []
+				}
+			},
+			independence: {
+				type: Boolean,
+				default: false
+			}
+		},
+		computed: {
+			selectedTitleObj() {
+				let obj = {}
+				for (let i = 0; i < this.menuList.length; i++) {
+					let item = this.menuList[i];
+					obj[item.key] = item.title;
+				}
+				// console.log(obj)
+				return obj;
+			},
+			defaultSelectedObj() { // 保存初始状态
+				return this.getSelectedObj()
+			},
+			selectedObj: {
+				get() {
+					return this.getSelectedObj()
+				},
+				set(newObj) {
+					return newObj;
+				}
+
+			}
+		},
+		methods: {
+			getSelectedObj() {
+				let obj = {}
+				for (let i = 0; i < this.menuList.length; i++) {
+					let item = this.menuList[i];
+					if (!this.independence && item.defaultSelectedIndex != null && item.defaultSelectedIndex.toString().length > 0) { // 处理并列菜单默认值						
+						if (item.isMutiple) {
+							obj[item.key] = [];
+							item.detailList[0].isSelected = false;
+							if (!Array.isArray(item.defaultSelectedIndex)) { // 如果默认值不是数组
+								item.defaultSelectedIndex = [item.defaultSelectedIndex];
+							}
+							for (let j = 0; j < item.defaultSelectedIndex.length; j++) { // 将默认选中的值放入selectedObj
+								item.detailList[item.defaultSelectedIndex[j]].isSelected = true;
+								obj[item.key].push(item.detailList[item.defaultSelectedIndex[j]].value)
+							}
+
+						} else {
+							obj[item.key] = item.detailList[item.defaultSelectedIndex].value;
+							// this.selectedTitleObj[item.key] = item.detailList[item.defaultSelectedIndex].title;
+							this.defaultSelectedTitleObj[item.key] = item.detailList[item.defaultSelectedIndex].title;
+							item.detailList[0].isSelected = false;
+							item.detailList[item.defaultSelectedIndex].isSelected = true;
+						}
+					} else {
+						if (item.isMutiple) {
+							obj[item.key] = [];
+						} else {
+							obj[item.key] = '';
+						}
+					}
+				}
+				// console.log(obj)
+				this.result = obj;
+				return obj;
+			},
+			// getUnDefaultSelectedIndex(menuListItem) { // 获取非默认项
+			// 	let tempDefault = menuListItem.defaultSelectedIndex;
+			// 	if (!Array.isArray(tempDefault)) {
+			// 		tempDefault = [tempDefault];
+			// 	}
+			// 	// 获取所有项的下标 组成新的数组
+			// 	let all = [];
+			// 	for (let i = 0; i < menuListItem.detailList.length; i++) {
+			// 		all.push(i)
+			// 	}
+			// 	// 将默认选中的数组与所有项的数组的不同值合并为一个新数组
+			// 	var unDefaultSelectedIndex = tempDefault.filter(function(v) {
+			// 		return !(all.indexOf(v) > -1)
+			// 	}).concat(all.filter(function(v) {
+			// 		return !(tempDefault.indexOf(v) > -1)
+			// 	}));
+			// 	return unDefaultSelectedIndex;
+			// },
+			resetMenuList(val) {
+				this.menuList = val;
+				this.$emit('update:menuList', val)
+			},
+			menuTabClick(index) {
+				this.menuIndex = index;
+				if(index===2){
+					this.selectDetailList2 = this.menuList[index+1].detailList;
+					this.selectedKey2 = this.menuList[index+1].detailList;
+				}
+				this.selectDetailList = this.menuList[index].detailList;
+				this.selectedKey = this.menuList[index].key;
+				// 如果是独立菜单
+				if (this.independence && !this.menuList[index].isSort) {
+					console.log(5555)
+					if (JSON.stringify(this.independenceObj) == '{}') {
+						this.initIndependenceObj(index);
+					} else {
+						for (let key in this.independenceObj) {
+							if (key != this.selectedKey) {
+								this.initIndependenceObj(index);
+								this.resetSelected(this.menuList[index].detailList, this.selectedKey);
+							}
+						}
+					}
+
+				}
+				if (this.independence && this.menuList[index].isSort) {
+					this.independenceObj = {};
+				}
+				if (this.independence) {
+					let idx = this.menuList[index].defaultSelectedIndex;
+					if (idx != null && idx.toString().length > 0) { // 处理独立菜单默认值
+						if (this.menuList[index].isMutiple) {
+							for (let i = 0; i < idx.length; i++) {
+								if (this.menuList[index].detailList[idx[i]].isSelected == false) {
+									this.itemTap(idx[i], this.menuList[index].detailList, true, this.selectedKey);
+								}
+
+							}
+						} else {
+							if (this.menuList[index].detailList[idx].isSelected == false) {
+
+								this.itemTap(idx, this.menuList[index].detailList, false, this.selectedKey);
+
+							}
+						}
+
+					}
+				}
+				// #ifdef H5
+				this.selectedObj = this.selectedObj;
+				this.$forceUpdate();
+				// #endif
+			},
+			initIndependenceObj(index) {
+				this.independenceObj = {};
+				if (this.menuList[index].isMutiple) {
+					this.independenceObj[this.selectedKey] = [];
+				} else {
+					this.independenceObj[this.selectedKey] = '';
+				}
+			},
+			itemTap(index, list, isMutiple, key) {
+				if (isMutiple == true) {
+					list[index].isSelected = !list[index].isSelected;
+					if (index == 0) {
+						this.resetSelected(list, key)
+						if (!this.independence) {
+							this.selectedTitleObj[key] = list[index].title;
+						}
+					} else {
+						list[0].isSelected = false
+						if (list[index].isSelected) {
+							if (this.independence) {
+								this.independenceObj[this.selectedKey].push(list[index].value);
+							} else {
+								this.selectedObj[key].push(list[index].value);
+							}
+						} else {
+							list[index].isSelected = false;
+							if (this.independence) {
+								var idx = this.independenceObj[this.selectedKey].indexOf(list[index].value);
+								this.independenceObj[this.selectedKey].splice(idx, 1);
+							} else {
+								var idx = this.selectedObj[key].indexOf(list[index].value);
+								this.selectedObj[key].splice(idx, 1);
+							}
+
+						}
+						if (this.independence) {
+							this.result = this.independenceObj;
+						} else {
+							this.result = this.selectedObj;
+						}
+
+					}
+				} else {
+					if (index == 0) {
+						this.resetSelected(list, key)
+						if (!this.independence) {
+							this.selectedTitleObj[key] = list[index].title;
+						}
+					} else {
+						list[0].isSelected = false
+					
+						this.selectedObj[key] = list[index].value;
+						this.result = this.selectedObj;
+						this.selectedTitleObj[key] = list[index].title;
+
+						for (let i = 0; i < list.length; i++) {
+							if (index == i) {
+								list[i].isSelected = true
+							} else {
+								list[i].isSelected = false
+							}
+						}
+					}
+				}
+				// #ifdef H5
+				this.$forceUpdate();
+				// #endif
+			},
+			resetSelected(list, key) {
+				if (typeof this.result[key] == 'object') {
+					this.result[key] = [];
+					this.selectedTitleObj[key] = list[0].title;
+				} else {
+					this.result[key] = '';
+					this.selectedTitleObj[key] = list[0].title;
+				}
+				for (let i = 0; i < list.length; i++) {
+					if (i == 0) {
+						list[i].isSelected = true;
+					} else {
+						list[i].isSelected = false;
+					}
+				}
+				// #ifdef H5
+				this.$forceUpdate();
+				// #endif
+			},
+			sortTap(index, list, key) {
+				// console.log(index, list, key)
+				this.selectedObj[key] = list[index].value;
+				this.result = this.selectedObj;
+				this.selectedTitleObj[key] = list[index].title;
+				// console.log(this.selectedTitleObj)
+				for (let i = 0; i < list.length; i++) {
+					if (index == i) {
+						list[i].isSelected = true;
+					} else {
+						list[i].isSelected = false;
+					}
+				}
+				let obj = {
+					'result': this.result,
+					'titles': this.selectedTitleObj,
+					'isReset': false
+				}
+				this.$emit("confirm", obj);
+			},
+			sureClick() {
+				let obj = {
+					'result': this.result,
+					'titles': this.selectedTitleObj,
+					'isReset': false
+				}
+				this.$emit("confirm", obj);
+			},
+			resetClick(list) {
+				list.forEach((item)=>{
+					for (let i = 0; i < item.detailList.length; i++) {
+						if (0 == i) {
+							item.detailList[i].isSelected = true;
+						} else {
+							item.detailList[i].isSelected = false;
+						}
+					}
+				})
+				
+				this.$set(this.selectedTitleObj,"city",'广州')
+				this.$set(this.selectedTitleObj,"sort",'综合排序')
+				this.$set(this.selectedTitleObj,"hometype",'筛选')
+				this.$set(this.selectedTitleObj,"style",'全部')
+				
+				this.$set(this.result,"city",'全城')
+				this.$set(this.result,"sort",'综合优先')
+				this.$set(this.result,"hometype",'全部')
+				this.$set(this.result,"style",'全部')
+				let obj = {
+					'result': this.result,
+					'titles': this.selectedTitleObj,
+					'isReset': true
+				}				
+
+				this.$emit("confirm", obj);
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	.seltitle{
+		font-size:26upx;
+		margin:10upx 30upx
+	}
+	// .filter-content-title {
+	// 	border-bottom: #EEEEEE 1px solid;
+	// 	padding: 10upx 15upx;
+	// 	font-size: 13upx;
+	// 	color: #999999;
+	// }
+
+	.filter-content-detail {
+		width: 750upx;
+		margin:0upx 0upx;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start
+	}
+	.filter-content-detail-item-default {
+		color: #666666;
+		width: 148upx;
+		margin: 10upx 19upx;
+		padding: 10upx 0;
+		text-align: center;
+		border-radius: 6upx;
+		display: inline-block;
+		font-size: 26upx;
+	}
+	.filter-content-detail-item-default-two{
+		width: 100%;
+		font-size: 26upx;
+		background: #ffffff !important;
+		padding: 20upx 50upx;
+	}
+	.ftSelected:after{
+		content: '✓';
+		font-size: 26upx;
+		float: right;
+	}
+	.filter-content-footer {
+		display: flex;
+		// justify-content: space-between;
+		width: 100%;
+		height: 80upx;
+		// margin-top: 10upx;
+		margin:50upx 0upx;
+		>view:nth-child(1){
+			flex:3;
+			background: #ECECEC;
+			line-height: 80upx;
+			text-align: center;
+			border-radius: 10px;
+			margin:0 10upx;
+			font-size: 30upx;
+			color: #3E3E3E;
+		}
+		>view:nth-child(2){
+			flex: 5;
+			background: #C17B7D;
+			line-height: 80upx;
+			text-align: center;
+			border-radius: 10px;
+			margin:0 24upx;
+			color: #ffffff;
+			font-size: 30upx;
+		}
+	}
+
+	.filter-content-footer-item {
+		width: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 24upx;
+	}
+
+	.filter-content-list {
+
+		padding: 5upx 15upx;
+	}
+
+	.filter-content-list-item-default {
+		color: #666666;
+		width: 100%;
+		padding: 10upx 0upx;
+	}
+
+	.filter-content-list-item-default text {
+		width: 90%;
+		font-size: 14upx;
+		display: inline-block;
+	}
+
+	.filter-content-list-item-active {
+		color: #D1372C;
+		width: 100%;
+		padding: 10upx 0upx;
+	}
+
+	.filter-content-list-item-active text {
+		font-size: 14upx;
+		width: 90%;
+		display: inline-block;
+	}
+
+	.filter-content-list-item-active:after {
+		content: '✓';
+	}
+</style>

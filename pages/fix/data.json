@@ -1,0 +1,75 @@
+{
+	"list": [
+		{
+			"id": 1,
+			"image": "/static/img/myfix/list01.png",
+			"title": "居众装饰有限公司",
+			"distance": "13.2km",
+			"start" :4,
+			"total" : 123,
+			"design":9.2,
+			"server":6.5,
+			"build":"5.0",
+			"prefer":["延期保赔","样板间","免费看房"]
+		},
+		{
+				"id": 2,
+				"image": "/static/img/myfix/list02.png",
+				"title": "居众装饰有限公司",
+				"distance": "13.2km",
+				"start" :3,
+				"total" : 123,
+				"design":9.2,
+				"server":6.5,
+				"build":"5.0",
+				"prefer":["延期保赔","样板间","免费看房"]
+		},
+		{
+				"id": 3,
+				"image": "/static/img/myfix/list03.png",
+				"title": "居众装饰有限公司",
+				"distance": "13.2km",
+				"start" :5,
+				"total" : 123,
+				"design":9.2,
+				"server":6.5,
+				"build":"5.0",
+				"prefer":["延期保赔","样板间","免费看房"]
+		},
+		{
+				"id": 4,
+				"image": "/static/img/myfix/list04.png",
+				"title": "居众装饰有限公司",
+				"distance": "13.2km",
+				"start" :4,
+				"total" : 123,
+				"design":9.2,
+				"server":6.5,
+				"build":"5.0",
+				"prefer":["延期保赔","样板间","免费看房"]
+		},
+		{
+				"id": 5,
+				"image": "/static/img/myfix/list01.png",
+				"title": "居众装饰有限公司",
+				"distance": "13.2km",
+				"start" :4,
+				"total" : 123,
+				"design":9.2,
+				"server":6.5,
+				"build":"5.0",
+				"prefer":["延期保赔","样板间","免费看房"]
+		},{
+				"id": 6,
+				"image": "/static/img/myfix/list02.png",
+				"title": "居众装饰有限公司",
+				"distance": "13.2km",
+				"start" :3,
+				"total" : 123,
+				"design":9.2,
+				"server":6.5,
+				"build":"5.0",
+				"prefer":["延期保赔","样板间","免费看房"]
+		}
+	]
+}

@@ -1,0 +1,302 @@
+<template>
+	<view class="content">
+		<view :style="{height: tabHeight + 1 +'px'}">
+			<view :class="topFixed?'select-tab-fixed-top':'select-tab'" :style="{height: tabHeight+'px'}">
+				<view class="select-tab-item"  v-for="(item,index) in titleList" :key="index" @tap="showMenuClick(index)" :style="{'width': itemWidth,'color':selectedIndex===index?'#C17B7D':'#3E3E3E'}">
+					<text>{{item.title}}</text>
+					<text class="arrows sl-font" :class="statusList[index].isActive?up:down"></text>
+				</view>
+			</view>
+		</view>
+		<popup-layer ref="popupRef" :direction="'bottom'" @close="close" :isTransNav="isTransNav" :navHeight="navHeight"
+		 :tabHeight="tabHeight">
+			<sl-filter-view :ref="'slFilterView'" :independence="independence" :themeColor="themeColor" :menuList.sync="menuListTemp"
+			 ref="slFilterView" @confirm="filterResult"></sl-filter-view>
+		</popup-layer>
+	</view>
+
+</template>
+
+<script>
+	import popupLayer from './popup-layer.vue';
+	import slFilterView from './filter-view.vue';
+	export default {
+		components: {
+			popupLayer,
+			slFilterView
+		},
+		props: {
+			menuList: {
+				type: Array,
+				default () {
+					return []
+				}
+			},
+			themeColor: {
+				type: String,
+				default () {
+					return '#000000'
+				}
+			},
+			independence: {
+				type: Boolean,
+				default: false
+			},
+			isTransNav: {
+				type: Boolean,
+				default: false
+			},
+			navHeight: {
+				type: Number,
+				default: 0
+			},
+			topFixed: {
+				type: Boolean,
+				default: false
+			}
+		},
+
+		computed: {
+			itemWidth() {
+				return 'calc(100%/2)'
+			},
+			menuListTemp: {
+				get() {
+					return this.getMenuListTemp();
+				},
+				set(newObj) {
+					return newObj;
+				}
+			}
+		},
+		// onReady: function() {
+		// 	let arr = [];
+		// 	let titleArr = [];
+		// 	let r = {};
+		// 	for (let i = 0; i < this.menuList.length; i++) {
+		// 		arr.push({
+		// 			'isActive': false
+		// 		});
+		// 		// titleArr.push({
+		// 		// 	'title': this.menuList[i].title,
+		// 		// 	'key': this.menuList[i].key
+		// 		// })
+
+		// 		r[this.menuList[i].key] = this.menuList[i].title;
+
+		// 		if (this.menuList[i].reflexTitle && this.menuList[i].defaultSelectedIndex > -1) {
+		// 			titleArr.push({
+		// 				'title': this.menuList[i].detailList[this.menuList[i].defaultSelectedIndex].title,
+		// 				'key': this.menuList[i].key
+		// 			})
+		// 		} else {
+		// 			titleArr.push({
+		// 				'title': this.menuList[i].title,
+		// 				'key': this.menuList[i].key
+		// 			})
+		// 		}
+
+		// 	}
+		// 	this.statusList = arr;
+		// 	this.titleList = titleArr;
+		// 	this.tempTitleObj = r;
+		// },
+
+		created: function() {
+			let arr = [];
+			let titleArr = [];
+			let r = {};
+			for (let i = 0; i < this.menuList.length-1; i++) {
+				arr.push({
+					'isActive': false
+				});
+				// titleArr.push({
+				// 	'title': this.menuList[i].title,
+				// 	'key': this.menuList[i].key
+				// });
+				r[this.menuList[i].key] = this.menuList[i].title;
+
+				if (this.menuList[i].reflexTitle && this.menuList[i].defaultSelectedIndex > -1) {
+					titleArr.push({
+						'title': this.menuList[i].detailList[this.menuList[i].defaultSelectedIndex].title,
+						'key': this.menuList[i].key
+					})
+				} else {
+					titleArr.push({
+						'title': this.menuList[i].title,
+						'key': this.menuList[i].key
+					})
+				}
+
+			}
+			this.statusList = arr;
+			this.titleList = titleArr;
+			this.tempTitleObj = r;
+			// console.log(this.titleList,this.tempTitleObj)
+		},
+
+		data() {
+			return {
+				down: 'sl-down',
+				up: 'sl-up',
+				tabHeight: 50,
+				statusList: [],
+				selectedIndex: '',
+				titleList: [],
+				tempTitleObj: {}
+			};
+		},
+		methods: {
+			getMenuListTemp() {
+				let arr = this.menuList;
+				for (let i = 0; i < arr.length; i++) {
+					let item = arr[i];
+					for (let j = 0; j < item.detailList.length; j++) {
+						let d_item = item.detailList[j];
+						if (j == 0) {
+							d_item.isSelected = true
+						} else {
+							d_item.isSelected = false
+						}
+					}
+					// if(item.detailList.constructor==Array){
+					// 	for (let j = 0; j < item.detailList.length; j++) {
+					// 		let d_item = item.detailList[j];
+					// 		if (j == 0) {
+					// 			d_item.isSelected = true
+					// 		} else {
+					// 			d_item.isSelected = false
+					// 		}
+					// 	}
+					// }else{
+					// 	for(let items in item.detailList){
+					// 		for (let j = 0; j < item.detailList[items].length; j++) {
+					// 			let d_item = item.detailList[items][j];
+					// 			if (j == 0) {
+					// 				d_item.isSelected = true
+					// 			} else {
+					// 				d_item.isSelected = false
+					// 			}
+					// 		}
+					// 	}						
+					// }
+					
+				}
+				return arr;
+			},
+			// 重置所有选项，包括默认选项，并更新result
+			resetAllSelect(callback) {
+
+				this.$refs.slFilterView.resetAllSelect(function(e){
+					callback(e);
+				});
+			},
+			// 重置选项为设置的默认值，并更新result
+			resetSelectToDefault(callback) {
+
+				this.$refs.slFilterView.resetSelectToDefault(function(e){
+					callback(e);
+				});
+			},
+			resetMenuList(val) {
+
+				this.menuList = val;
+				this.$emit('update:menuList', val)
+				this.$forceUpdate();
+				this.$refs.slFilterView.resetMenuList(val)
+			},
+			showMenuClick(index) {
+				this.selectedIndex = index;
+				if (this.statusList[index].isActive == true) {
+					this.$refs.popupRef.close();
+					this.statusList[index].isActive = false
+				} else {
+					this.menuTabClick(index);
+					this.$refs.popupRef.show()
+				}
+			},
+			menuTabClick(index) {
+				this.$refs.slFilterView.menuTabClick(index);
+				for (let i = 0; i < this.statusList.length; i++) {
+					if (index == i) {
+						this.statusList[i].isActive = true;
+					} else {
+						this.statusList[i].isActive = false;
+					}
+				}
+			},
+			filterResult(obj) {
+				// console.log(obj)
+				let val = obj.result;
+				let titlesObj = obj.titles;
+				// 处理选项映射到菜单title
+ 				for (let key in titlesObj) {
+					console.log(5555)
+					if (!Array.isArray(titlesObj[key])) {
+						this.tempTitleObj[key] = titlesObj[key];
+					}
+				}
+				for (let key in this.tempTitleObj) {
+					for (let i = 0; i < this.titleList.length; i++) {
+						if (this.titleList[i].key == key) {
+							this.titleList[i].title = this.tempTitleObj[key];
+						}
+					}
+				}
+				this.$refs.popupRef.close()
+				if (obj.isReset) {
+					this.$emit("result", val)
+				} else{
+					this.$emit("result", val)
+				}				
+
+			},
+			close() {
+				for (let i = 0; i < this.statusList.length; i++) {
+					this.statusList[i].isActive = false;
+				}
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	@import 'iconfont/iconfont.css';
+
+	.select-tab {
+		border-bottom: #F7F7F7 1px solid;
+		background-color: #FFFFFF;
+		display: flex;
+		width: 100%;
+	}
+
+	.select-tab-fixed-top {
+		border-bottom: #F7F7F7 1px solid;
+		background-color: #FFFFFF;
+		display: flex;
+		width: 100%;
+		position: fixed;
+		/* #ifdef H5 */
+		top: 88upx;
+		/* #endif */
+		/* #ifndef H5 */
+		top: 0;
+		/* #endif */
+	}
+
+	.arrows {
+		margin-left: 10upx;
+	}
+
+	.select-tab .select-tab-item,
+	.select-tab-fixed-top .select-tab-item {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.select-tab .select-tab-item text,
+	.select-tab-fixed-top .select-tab-item text {
+		font-size: 26upx
+	}
+</style>

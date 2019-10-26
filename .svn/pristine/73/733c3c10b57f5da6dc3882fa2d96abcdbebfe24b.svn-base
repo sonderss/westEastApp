@@ -1,0 +1,155 @@
+<template>
+    <view>
+        <UniPopup  ref='dom' type="bottom" :custom="false" :radius="true">
+             <view class="popTop">
+                   {{list.title}}
+                   <image @click="close" style="width:40upx;height:40upx" src='../../static/img/designTeam/guanbi.png' />
+             </view>
+             <view class="txt">
+                 <text class="txt_1">{{list.title1}}</text>
+                <text class="txt_2">{{list.context}}</text>
+                <text class="txt_3">{{list.context1}}</text>
+                <input  type="text" value='151345468512'/>
+                <button @click="yuyue">立即预约</button>
+             </view>
+        </UniPopup>
+    </view>
+</template>
+<script>
+let data = require('./data.json');
+import UniPopup from '../uni-popup/uni-popup'
+export default {
+    name:'tets',
+    props:{
+        show:{
+            type:String,
+            default:''
+        }
+    },
+    data(){
+        return{
+            isshow:'',
+            list:{}
+        }
+    },
+    components:{UniPopup},
+    watch: {
+        show:function(a,b){
+            this.isshow = a
+            console.log(a)
+            this.$refs.dom.open()
+             
+            if(this.isshow === '3'){
+                console.log('免费报价')
+               this.list = data[a]
+                
+            }
+            if(this.isshow === '1'){
+                    console.log('设计')
+                    this.list = data[a]
+            }
+            if(this.isshow === '0'){
+                console.log('量房')
+                this.list = data[a]
+            }
+            if(this.isshow === '2'){
+                console.log('预约报价')
+                this.list = data[a]
+            }
+            
+        }
+    },
+    mounted() {
+       console.log(this.list)
+    },
+   methods: {
+       close(){
+           this.$refs.dom.close()
+       },
+       yuyue(){
+            uni.showLoading({
+                title: '预约中...'
+            });
+            this.$refs.dom.close()
+            setTimeout(function () {
+                uni.hideLoading();
+                uni.showToast({
+                    title: '预约成功',
+                    duration: 1000
+                    //这里需要跳转预约成功的页面
+                });
+            }, 2000);
+       }
+   },
+}
+</script>
+<style lang="scss" scoped>
+.popTop{
+    width: 100%;
+    height: 105upx;
+    border-bottom: 1px solid #ccc;
+    font-size:36upx;
+    font-family:PingFang SC;
+    font-weight:600;
+    color:rgba(26,26,26,1);
+    text-align: center;
+    position: relative;
+    line-height: 105upx;
+    image{
+        float: right;
+        position: absolute;
+        right: 24upx;
+        top: 35upx;
+        bottom: 30upx;
+    }
+}
+.txt{
+    height: 630upx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    .txt_1{
+            width: 646upx;
+            height: 31upx;
+            font-size:32upx;
+            font-family:PingFang SC;
+            font-weight:500;
+            color:rgba(84,84,84,1);
+    }
+     .txt_2{
+         width: 646upx;
+         height: 65upx;
+        font-size:30upx;
+        font-family:PingFang SC;
+        font-weight:400;
+        color:rgba(100,100,100,1);
+        line-height:20px;
+    }
+     .txt_3{
+         width: 640upx;
+        font-size:26upx;
+        font-family:PingFang SC;
+        font-weight:400;
+        color:rgba(140,140,140,1);
+        line-height:20px;
+    }
+    input{
+        width:636upx;
+        height:80upx;
+        background:rgba(238,238,238,1);
+        border-radius:20upx;
+        padding-left: 33upx
+    }
+    button{
+        width:636upx;
+        height:80upx;
+        background:rgba(193,123,125,1);
+        border-radius:20upx;
+        font-size:30upx;
+        font-family:PingFang SC;
+        font-weight:500;
+        color:rgba(255,255,255,1);
+    }
+}
+</style>
