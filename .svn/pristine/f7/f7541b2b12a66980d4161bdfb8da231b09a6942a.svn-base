@@ -1,0 +1,326 @@
+<template>
+<view>
+         <view class="top_bder">
+            <view class="imgview">
+                <image style="width:100%;height:100%" src='../../static/img/desindex/touxiang.png'/>
+            </view>
+            <view class="comname">
+                <text>{{title}}</text>
+            </view>
+            <view class="comname1">
+                <text class="op">留下您的信息，让TA尽快联系您</text>
+            </view>
+        </view>
+        <!-- 输入框 -->
+        <view class="message_txt">
+            <input type="text" placeholder="您的称呼" v-model="name">
+             <input type="text" placeholder="15836204369" v-model="phone">
+            <text class="input" @tap="chioce">{{city}}</text>
+            <text class="input" @tap="chicePop">{{mouse}}</text>
+            <view class="m2" >
+                 <input type="text"  placeholder="房屋面积" v-model="msize" style="background-color:transparent " />
+            </view>
+              
+        </view>
+        <button class="btn" @tap="submit">提交预约</button>
+        <view class="input1">
+            <text>温馨提示：为了你的利益与隐私，我们将严格保密，请放心填写。</text>
+        </view>
+        <pop ref='pop' type="bottom" class="opo" :custom="false">
+            <view class="top_pop">
+                <text style="margin-left:20upx" @tap="cancel">取消</text>
+                 <text style="margin-right:20upx" @tap="sure">确认</text>
+            </view>
+            <view >
+                <picker-view class="pop" style="" v-if="visible"  :indicator-style="indicatorStyle" @change="change1"  :value="value">
+                        <picker-view-column>
+                            <view class="item" v-for="(item,index) in provinceDataList" :key="index">{{item}}</view>
+                        </picker-view-column>
+                        <picker-view-column>
+                            <view class="item" v-for="(item,index) in cityDataList" :key="index">{{item}}</view>
+                        </picker-view-column>
+                        <picker-view-column>
+                            <view class="item" v-for="(item,index) in areaDataList" :key="index">{{item}}</view>
+                        </picker-view-column>
+                        <picker-view-column>
+                            <view class="item" v-for="(item,index) in areaDataList1" :key="index">{{item}}</view>
+                        </picker-view-column>
+                </picker-view>
+            </view>
+        </pop>
+        
+</view>
+</template>
+
+<script>
+import pop from '../../components/uni-popup/uni-popup'
+import is_phone from '../../common/util'
+export default {
+    components:{pop},
+    onLoad:function(option){
+        this.title = option.name
+         var abc = this.$store.state.mycity
+         console.log(abc)
+    },
+    watch: {
+        city:function(a,b){
+            if(a === '全部'){
+                this.city = '广州' 
+            }
+        }
+    },
+    data() {
+            return {
+                title:'',
+                name:'',
+                phone:'',
+                msize:'',
+                city:'房屋城市',
+                mouse:"房型",
+                list:[[{"type":'一'},{"type":'室'},{"type":'一'},{"type":'厅'}],[{"type":'一'},{"type":'室'},{"type":'er'},{"type":'厅'}]],
+                keyv:'',
+                provinceDataList:["1室","2室","3室","4室","5室"],
+                cityDataList:["0厅","1厅","2厅","3厅","4厅"],
+                areaDataList:["0厨","1厨","2厨","3厨","4厨"],
+                areaDataList1:["0卫","1卫","2卫","3卫","4卫"],
+                pickerValue: [0, 0, 0],
+                visible: true,
+                value: [0,0,0,0],
+                indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth/(750/100))}px;`,
+                arr:[],
+                isChange:0,
+                isNull:false
+            }
+        },
+        methods: {
+            chioce(){
+                uni.navigateTo({
+                    url:'../choosecity/choosecity'
+                })
+            },
+             chicePop(){
+                this.$refs.pop.open()
+                this.visible = true
+             },
+             cancel(){
+                 this.$refs.pop.close()
+                 this.visible = false
+             },
+             sure(){
+                 var  that = this
+                   this.$refs.pop.close()
+                    var  val =""+ that.provinceDataList[that.arr[0]]+that.cityDataList[that.arr[1]]+that.areaDataList[that.arr[2]]+that.areaDataList1[that.arr[3]]
+                   this.visible = false
+                    console.log(val)
+                    if(this.isChange === 1){
+                         this.mouse = val
+                        
+                    }else{
+                         this.mouse  = "1室0厅0厨0卫"
+                    }
+                   
+             },
+             change1:function(e){
+                 this.isChange = 1;
+                 console.log(e.detail.value)
+                 this.arr = e.detail.value
+             },
+            isnull(val) {
+                var str = val.replace(/(^\s*)|(\s*$)/g, '');//去除空格;
+                if (str == '' || str == undefined || str == null) {
+                    return true;
+                  
+                    
+                } else {
+                    return false;
+                  
+                 
+                }
+            },
+            
+             submit(){
+                this.isnull(this.name)
+                this.isnull(this.msize)
+                this.isnull(this.phone)
+                this.isnull(this.city)
+                this.isnull(this.mouse)
+               if( !this.isnull(this.name) &&  !this.isnull(this.msize)  &&  !this.isnull(this.phone) &&  !this.isnull(this.city) &&   !this.isnull(this.mouse)){
+                      var phone =  is_phone.is_phone(this.phone)
+                      console.log(phone)
+                    if(phone){
+                        uni.showLoading({
+                           icon:'loading',
+                            title: '提交中'
+                        });
+                        setTimeout(function () {
+                            uni.hideLoading();
+                            uni.showToast({
+                                title: '提交成功',
+                                duration: 2000,
+                            });
+                            setTimeout(()=>{
+                                 uni.navigateBack({
+                                        delta: 1
+                                    });
+                            },2500)
+                        }, 2000);
+                    }else{
+                            uni.showToast({
+                                icon:'none',
+                                title: '请填入正确的手机号',
+                                duration: 2000,
+                            });
+                    }
+                     
+               }else{
+                    uni.showToast({
+                        icon:"loading",
+                        title: '请补充完整...',
+                        duration: 2000,
+                    });
+               }
+
+             }
+        },  
+}
+</script>
+
+<style lang="scss" scoped>
+.top_bder{
+    height: 240upx;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    border-top: 1px solid #D2D2D2
+}
+.imgview{
+    width: 94upx;
+    height: 94upx;
+    margin-top: 34upx
+}
+.comname{
+font-size:32upx;
+font-family:PingFang SC;
+font-weight:500;
+color:rgba(58,58,58,1);
+line-height:13upx;
+margin-top: 25upx
+}
+    .op{
+        font-size:26upx;
+        font-family:PingFang SC;
+        font-weight:400;
+        color:rgba(108,108,108,1);
+    }
+.message_txt{
+ width: 100%;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-around;
+align-items: center;
+
+ input{
+ width:702upx;
+height:82upx;
+background:rgba(255,255,255,1);
+border:1px solid rgba(191,191,191,1);
+border-radius:10upx;
+margin-top: 50upx;
+padding-left:20upx;
+font-size: 26upx 
+ }
+}
+.input{
+width:702upx;
+height:82upx;
+background:rgba(255,255,255,1);
+border:1px solid rgba(191,191,191,1);
+border-radius:10upx;
+margin-top: 50upx;
+padding-left:20upx;
+font-size:26upx;
+font-family:PingFang SC;
+font-weight:400;
+color:rgba(108,108,108,1);
+line-height: 82upx;
+background: url('../../static/img/confirmation/addArrow.png')no-repeat;
+background-position: 660upx;
+background-size: 15upx 27upx;
+
+}
+.m2{
+    width:100%;
+    background-image: url('../../static/img/desindex/m.png');
+    background-repeat: no-repeat;
+    background-position:680upx 75upx;
+    background-size: 25upx 27upx;
+    margin: 0  auto;
+    display: flex;justify-content: center;
+    align-items: center;
+    input{
+         width:702upx;
+height:82upx;
+background:rgba(255,255,255,1);
+border:1px solid rgba(191,191,191,1);
+border-radius:10upx;
+margin-top: 50upx;
+padding-left:20upx;
+font-size: 26upx 
+    }
+}
+.pop{
+    height:500upx;
+    position: relative;
+    .item{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size:36upx;
+        font-family:PingFang SC;
+        font-weight:500;
+        color:rgba(40,40,40,1);
+    }
+   
+}
+.opo{
+ .top_pop{
+            width: 100%;
+            height:130upx;
+            border-bottom: 1px solid #D2D2D2;
+            position: absolute;
+            top: 0;
+            line-height: 130upx;
+            font-size:32upx;
+            font-family:PingFang SC;
+            font-weight:500;
+           z-index: 9999;
+           display: flex;
+           justify-content: space-between;
+           background: #fff;
+    }
+}
+.btn{
+    width:702upx;
+height:90upx;
+background:rgba(193,123,125,1);
+border-radius:10upx;
+margin-top: 75upx;
+font-size:36upx;
+font-family:PingFang SC;
+font-weight:400;
+color:rgba(255,255,255,1);
+}
+.input1{
+    width:100%;
+height:82upx;
+font-size:24upx;
+font-family:PingFang SC;
+font-weight:400;
+color:rgba(108,108,108,1);
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 30upx
+}
+</style>

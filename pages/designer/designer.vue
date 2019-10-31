@@ -1,0 +1,267 @@
+<template>
+	<view>
+		<view>
+			<n-list ref="slFilterView" :themeColor="themeColor"  :menuList="menuList" @result="result" :cityname="$store.state.changedCity"></n-list>
+		</view>
+		<view class="content">
+			<view style="padding-bottom: 19upx;" v-for="(item,index) in Clist" :key="index" @tap="toMaindesign(item.title)">
+				<view class="item">
+					<view style="margin-right: 22upx;">
+						<image :src="item.image" ></image>
+					</view>
+					<view>
+						<view class="companyName">
+							<text>{{item.title}}</text>
+							<text>{{item.price}}</text>
+						</view>
+						<view style="font-size: 24upx;color: #6D6D6D;">
+							<text style="margin-right: 20upx;">{{item.address}}</text>
+							<text>{{item.city}}</text>
+						</view>
+					</view>
+				</view>
+				<view class="works">
+					<view class="imglist" v-for="(x,index) in item.prefer" :key="index">
+						<image :src="x" mode=""></image>
+					</view>
+				</view>				
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import nList from '../../components/filter/sl-filter.vue';
+	let data = require('./data.json');
+	export default{
+		data(){
+			return{
+				
+				Clist:data.list,
+				themeColor: '#EFEFEF',
+				filterResult: '',
+				menuList: [{
+						'title': '广州',
+						'isMutiple': false,
+						'isjump':true,
+						'defaultSelectedIndex':0,
+						'key': 'city',
+						'detailList': [{
+								'title': '广州',
+								'value': '广州'
+							}
+						]
+				
+					},
+					{
+						'title': '擅长空间',
+						'isMutiple': false,
+						'key': 'space',
+						'ishook':true,
+						'defaultSelectedIndex':0,
+						'detailList': [{
+								'title': '全部',
+								'value': '全部'
+							},
+							{
+								'title': '家庭住宅',
+								'value': '家庭住宅'
+							},
+							{
+								'title': '别墅住宅',
+								'value': '别墅住宅'
+							},
+							{
+								'title': '样板房',
+								'value': '样板房'
+							},
+							{
+								'title': '购物空间',
+								'value': '购物空间'
+							},
+							{
+								'title': '酒店空间',
+								'value': '酒店空间'
+							},{
+								'title': '教育机构',
+								'value': '教育机构'
+							},{
+								'title': '商业展示',
+								'value': '商业展示'
+							},{
+								'title': '办公空间',
+								'value': '办公空间'
+							},{
+								'title': '餐饮空间',
+								'value': '餐饮空间'
+							},{
+								'title': '休闲空间',
+								'value': '休闲空间'
+							},{
+								'title': '娱乐空间',
+								'value': '娱乐空间'
+							},{
+								'title': '售楼空间',
+								'value': '售楼空间'
+							},{
+								'title': '文化艺术',
+								'value': '文化艺术'
+							},{
+								'title': '医疗机构',
+								'value': '医疗机构'
+							},
+							{
+								'title': '运动空间',
+								'value': '运动空间'
+							}
+						]
+				
+					},
+					{
+						'title': '筛选',
+						'isMutiple': false,
+						'isSort': true,
+						'key': 'designtype',
+						'defaultSelectedIndex':0,
+						'detailList': [
+								{
+									'title': '全部',
+									'value': '全部'
+								},
+								{
+									'title': '个人',
+									'value': '个人'
+								},
+								{
+									'title': '公司',
+									'value': '公司'
+								}
+							]						
+					},
+					{
+						'title': '风格',
+						'isMutiple': false,
+						'isSort': true,
+						'key': 'style',
+						'defaultSelectedIndex':0,
+						'detailList': [
+								{
+									'title': '全部',
+									'value': '全部'
+								},
+								{
+									'title': '现代',
+									'value': '现代'
+								},
+								{
+									'title': '美式',
+									'value': '美式'
+								},
+								{
+									'title': '欧式',
+									'value': '欧式'
+								},
+								{
+									'title': '中式',
+									'value': '中式'
+								},
+								{
+									'title': '北欧',
+									'value': '北欧'
+								},
+								{
+									'title': '复古',
+									'value': '复古'
+								},
+								{
+									'title': '混搭',
+									'value': '混搭'
+								},
+								{
+									'title': '简欧',
+									'value': '简欧'
+								},{
+									'title': '后现代',
+									'value': '后现代'
+								},{
+									'title': '工业',
+									'value': '工业'
+								}
+						]								
+					}
+				]
+			}
+		},
+		components:{
+			nList
+		},
+		watch:{
+			// isrenfter(){
+			// 	console.log(this.$refs.slFilterView)
+			// }
+		},
+		computed:{
+			// isrenfter(){
+			// 	return this.$store.state.isrenfer
+			// }
+		},
+		methods:{
+			result(val)
+			{
+				// console.log('filter_result:' + JSON.stringify(val));
+				this.filterResult = JSON.stringify(val, null, 2)
+				console.log(this.filterResult)
+			},
+			toMaindesign(name){
+				uni.navigateTo({
+					url:'/pages/designbigcoffee/index?title='+name
+				})
+			}
+		}
+	}
+</script>
+
+<style scoped lang="scss">
+	.works{
+		display: flex;
+		justify-content: space-between;
+	}
+	.imglist{
+		width: 220upx;
+		image{
+			width: 220upx;
+			height: 220upx;
+		}
+	}
+	.content{
+		padding:0 22upx
+	}
+	.item{
+		display: flex;
+		align-items: center;
+		margin: 32upx 0;
+		>view:nth-child(1){
+			width: 94upx;
+			height: 94upx;
+			image{
+				width: 100%;
+				height: 94upx;
+			}
+		}
+		>view:nth-child(2){
+			flex: 1;
+		}
+	}
+	.companyName{
+		display: flex;
+		justify-content: space-between;
+		>text:nth-child(1){
+			font-size: 30upx;
+			color:#3A3A3A
+		}
+		>text:nth-child(2){
+			font-size: 24upx;
+			color:#696969
+		}
+	}
+</style>

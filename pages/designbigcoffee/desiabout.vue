@@ -1,0 +1,77 @@
+<template>
+<view>
+        <view class="top_bder">
+            <view class="imgview">
+                <image style="width:100%;height:100%" src='../../static/img/desindex/touxiang.png' />
+            </view>
+            <view class="comname">
+                <text>{{title}}</text>
+            </view>
+            <view class="comname1">
+                <text>设计重塑日常</text>
+            </view>
+            <view class="worker">
+                <text>设计师类型：公司</text>
+                 <text style=" margin-left: 46upx">经验：一年以上</text>
+            </view>
+        </view>
+        <!-- 擅长空间 -->
+        <view class="scview" style="margin-top:20upx">
+            <view class="scview_top">
+                <view class="scview_top_imgview"><image style="width:100%;height:100%" src='../../static/img/cjq-about/xingbiao2x.png' /></view>
+                <text>擅长空间</text>
+            </view>
+            <view class="scview_btm">
+                <text>家居住宅/别墅豪宅</text>
+            </view>
+        </view>
+         <view class="scview">
+            <view class="scview_top">
+                <view class="scview_top_imgview"><image style="width:100%;height:100%" src='../../static/img/cjq-about/xingbiao2x.png' /></view>
+                <text>擅长风格</text>
+            </view>
+            <view class="scview_btm">
+                <text>现代/美式/欧式</text>
+            </view>
+        </view>
+        <!-- 自我介绍 -->
+        <view class="scview" >
+            <view class="scview_top">
+                <view class="scview_top_imgview"><image style="width:100%;height:100%" src='../../static/img/cjq-about/zhengshu2x.png' /></view>
+                <text>自我介绍</text>
+            </view>
+            <view class="scview_top_zj ">
+                <text >XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXX</text>
+            </view>
+        </view>
+          <view class="scview" >
+            <view class="scview_top">
+                <view class="scview_top_imgview"><image style="width:100%;height:100%" src='../../static/img/cjq-about/jinlingyingcaiwangtubiao1.png' /></view>
+                <text>证书奖项</text>
+            </view>
+            <view class="scview_top_zj ">
+                <text>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXX</text>
+            </view>
+        </view>
+</view>
+</template>
+
+<script>
+export default {
+    data(){
+        return{
+            title:''
+        }
+    },
+    onLoad:function(option){
+         uni.setNavigationBarTitle({
+        　　title:"关于"+option.name
+        })
+        this.title = option.name
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+ @import './desiabout.scss'
+</style>

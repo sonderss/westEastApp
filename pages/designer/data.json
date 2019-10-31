@@ -1,0 +1,39 @@
+{
+	"list": [
+		{
+			"id": 1,
+			"image": "/static/img/designer/01.png",
+			"title": "广州佳宇设计",
+			"price": "200-600元/㎡",
+			"address" :"广东",
+			"city" : "广州",
+			"prefer":["/static/img/designer/02.png","/static/img/designer/03.png","/static/img/designer/04.png"]
+		},
+		{
+			"id": 2,
+			"image": "/static/img/designer/01.png",
+			"title": "广州佳宇设计",
+			"price": "200-600元/㎡",
+			"address" :"广东",
+			"city" : "广州",
+			"prefer":["/static/img/designer/02.png","/static/img/designer/03.png","/static/img/designer/04.png"]
+		},
+		{
+			"id": 3,
+			"image": "/static/img/designer/01.png",
+			"title": "广州佳宇设计",
+			"price": "200-600元/㎡",
+			"address" :"广东",
+			"city" : "广州",
+			"prefer":["/static/img/designer/02.png","/static/img/designer/03.png","/static/img/designer/04.png"]
+		},{
+			"id": 4,
+			"image": "/static/img/designer/01.png",
+			"title": "广州佳宇设计",
+			"price": "200-600元/㎡",
+			"address" :"广东",
+			"city" : "广州",
+			"prefer":["/static/img/designer/02.png","/static/img/designer/03.png","/static/img/designer/04.png"]
+		}
+	]
+}
