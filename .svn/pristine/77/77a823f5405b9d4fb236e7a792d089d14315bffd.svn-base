@@ -14,7 +14,7 @@
 			<n-list  :themeColor="themeColor"  :menuList="menuList" @result="result" ></n-list>
 		</view>
 		<view class="content">
-			<view class="item" v-for="(item,index) in Clist" :key="index" @click="edFitment(0)">
+			<view class="item" v-for="(item,index) in Clist" :key="index" @click="edFitment(1)">
 				<view style="width: 183upx;" class="content_left">
 					<image :src="item.image" style="width: 100%;" mode="widthFix"></image>
 				</view>
@@ -54,7 +54,7 @@
 	export default{
 		data(){
 			return{
-				imglist:['/static/img/myfix/banner.png','/static/img/myfix/banner.png'],
+				imglist:['/static/img/myfix/banner02.png','/static/img/myfix/banner02.png'],
 				currentdot:0,
 				Clist:data.list,
 				themeColor: '#EFEFEF',
@@ -144,10 +144,10 @@
 				
 					},
 					{
-						'title': '筛选',
+						'title': '建筑类型',
 						'isMutiple': false,
-						'isSort': true,
-						'key': 'hometype',
+						// 'isSort': true,
+						'key': 'buildtype',
 						'defaultSelectedIndex':0,
 						'detailList': [
 									{
@@ -155,92 +155,41 @@
 										'value': '全部'
 									},
 									{
-										'title': '小户型/一房',
-										'value': '小户型/一房'
+										'title': '住宅空间',
+										'value': '住宅空间'
 									},
 									{
-										'title': '两房',
-										'value': '两房'
-									},
-									{
-										'title': '三房',
-										'value': '三房'
-									},
-									{
-										'title': 'LOFT',
-										'value': 'LOFT'
-									},
-									{
-										'title': '复式',
-										'value': '复式'
-									},
-									{
-										'title': '别墅',
-										'value': '别墅'
-									},
-									{
-										'title': '大平层',
-										'value': '大平层'
-									},
-									{
-										'title': '商品装修',
-										'value': '商品装修'
-									},{
 										'title': '办公空间',
 										'value': '办公空间'
+									},
+									{
+										'title': '酒店会场',
+										'value': '酒店会场'
+									},
+									{
+										'title': '教育机构',
+										'value': '教育机构'
+									},
+									{
+										'title': '餐饮空间',
+										'value': '餐饮空间'
+									},
+									{
+										'title': '商铺特卖',
+										'value': '商铺特卖'
+									},
+									{
+										'title': '休闲娱乐',
+										'value': '休闲娱乐'
+									},
+									{
+										'title': '洋房别墅',
+										'value': '洋房别墅'
+									},{
+										'title': '工厂厂房',
+										'value': '工厂厂房'
 									}
 							]						
-					},
-					{
-						'title': '风格',
-						'isMutiple': false,
-						'isSort': true,
-						'key': 'style',
-						'defaultSelectedIndex':0,
-						'detailList': [
-									{
-										'title': '全部',
-										'value': '全部'
-									},
-									{
-										'title': '现代',
-										'value': '现代'
-									},
-									{
-										'title': '美式',
-										'value': '美式'
-									},
-									{
-										'title': '欧式',
-										'value': '欧式'
-									},
-									{
-										'title': '中式',
-										'value': '中式'
-									},
-									{
-										'title': '北欧',
-										'value': '北欧'
-									},
-									{
-										'title': '混搭',
-										'value': '混搭'
-									},
-									{
-										'title': '新古典',
-										'value': '新古典'
-									},
-									{
-										'title': '简欧',
-										'value': '简欧'
-									},{
-										'title': '工业',
-										'value': '工业'
-									},{
-										'title': '后现代',
-										'value': '后现代'
-									}
-							]								
 					}
 				]
 			}
@@ -248,14 +197,14 @@
 		components:{
 			nList,
 			swiperDot
-		},
-		
+		},	
 		onNavigationBarButtonTap(e) {
 			uni.navigateTo({
 				url:'../search/company'
 			})
 		},
-		methods:{		
+		methods:{
+			
 			result(val) 
 			{
 				// console.log('filter_result:' + JSON.stringify(val));
@@ -267,9 +216,9 @@
 			},
 			edFitment(index){
 				uni.navigateTo({
-					url: '../fitment/index?id=' + index
+					url: '../fitment/index?id=' + index,
 				})
-			}
+			},
 		}
 	}
 </script>
