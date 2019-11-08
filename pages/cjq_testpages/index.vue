@@ -1,0 +1,99 @@
+<template>
+    <view>
+          <view class='add' @tap='add'></view>
+        <cirl :title="title" :ptitle='ptitle' :isShowKey='isShowKey'></cirl>
+        
+        <person :isMy='false' :list="test" @dianzan='isdianzan' @isGoMine='isGoMine'></person>
+      
+        <view class="btm_last"></view>
+        
+    </view>
+</template>
+
+<script>
+let data1 = require('../../components/Community/data_cjq.json')
+import cirl from '../../components/Community/circle'
+import person from '../../components/Community/person'
+
+export default {
+    components:{cirl,person},
+    data(){
+        return{
+            test:[],
+            // isP:Number,
+            title:'装修日记',
+            ptitle:'12354住友已加入',
+            isShowKey:false
+        }
+    },
+    onLoad:function(option){
+        // console.log(option.txt)
+        // this.isP = option.isP
+        // console.log(option.title)
+        this.title = option.title
+        this.ptitle = option.ptitle
+        // console.log(this.title)
+    },
+    mounted() {
+        this.test = data1
+
+    },
+    watch: {
+        // isP:function(a,b){
+        //     a = parseInt(a)
+        //     console.log(a)
+        //    if(a === 1){
+        //     //    this.title = '#烟花计划有奖征集#'
+        //     //    this.ptitle = '12354 围观'
+        //     //    this.isShowKey = true
+        //    }
+        // }
+    },
+    methods: {
+        isdianzan(index){
+            // console.log(index)
+            this.test[index].dianzan = ! this.test[index].dianzan 
+            if(this.test[index].dianzan){
+                this.test[index].num2 --
+            }else{
+                this.test[index].num2 ++
+            }
+        },
+        isGoMine(isGomine){
+            if(isGomine === 0){
+                var num = Math.floor(Math.random()*2-1)+1
+                uni.navigateTo({
+                        url: '../../pages/cjq_testpages/mine?isMy='+num
+                });
+            }
+        },
+        add(){
+            uni.navigateTo({
+                url:'../../pages/community/write_post/write_post'
+            })
+        }
+    },
+}
+</script>
+
+<style lang="scss" scoped>
+    .btm_last{
+        width: 100%;
+        height: 100upx;
+
+    }
+  .add{
+        width: 89upx;
+        height: 89upx;
+        background: #C17B7D;
+        border-radius: 50%;
+        z-index: 9999;
+        position: fixed;
+        right: 30upx;
+        bottom: 200upx;
+        background-image: url('../../static/img/cjq-about/mine_photo/add.png');
+        background-repeat: no-repeat;
+        background-position: 24upx
+        
+    }
+</style>

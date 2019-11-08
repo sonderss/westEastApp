@@ -1,0 +1,72 @@
+<template>
+	<view>
+		<uni-popup ref='pop' type="bottom" :custom="false" :radius="true" :smallradius="true" :contitle="title">
+			<view >
+				<view class="head">
+					<view @tap="cancel">
+						取消
+					</view>
+					<view @tap="publish">
+						发布
+					</view>
+				</view>
+			</view>
+		</uni-popup>		
+	</view>
+</template>
+
+<script>
+	import uniPopup from '@/components/uni-popup/uni-popup.vue';
+	export default{
+		data(){
+			return{
+				title:'',
+				replay:''
+			}
+		},
+		components:{
+			uniPopup
+		},
+		methods:{
+			Apper(res){
+				if(res){
+					this.title="我要写评论..."
+				}else{
+					this.title="回复"+this.replay
+				}
+				this.$refs.pop.open();
+			},
+			Givename(data){
+				this.replay=data
+			},
+			publish(){
+				this.$emit('fabu',this.$refs.pop.convalue)
+				this.$refs.pop.close();
+				this.$refs.pop.convalue=''
+			},
+			cancel(){
+				this.$refs.pop.close();
+			}
+		}
+	}
+</script>
+<style scoped lang="scss">
+	.head{
+		
+		display: flex;
+		justify-content: space-between;
+		box-sizing: border-box;
+		padding: 22upx;
+		font-size: 30upx;
+		color:#3C3C3C;
+		border-bottom: 1px solid #dedede;
+	}
+	.content{
+		width: 100%;
+		box-sizing: border-box;
+		padding: 22upx;
+		// textarea{
+		// 	color: #3C3C3C;
+		// }
+	}
+</style>
