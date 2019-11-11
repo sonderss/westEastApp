@@ -1,0 +1,248 @@
+<template>
+    <view class="content">
+        <sl-filter :themeColor="themeColor" :menuList="menuList" @result="result" :independence='true'></sl-filter>
+        <view class="main">
+            <view class="main_item" style="margin:20upx" v-for="(item,index) in data" :key="index">
+                 <view class="img_view">
+                    <image style="" :src='item.pic' />
+                </view>
+                <view class="right_content">
+                    <view class="title_content">
+                        <text>{{item.title}}</text>
+                         <text style="font-size:20upx;margin-top:20upx">{{item.pti}}</text>
+                     </view>
+                   
+                     <view class="botm_content" >
+                         
+                         <text class="tag" v-for='(i,a) in item.tags' :key='a'>{{i}}</text>
+                          <!-- <text class="tag">24小时</text>
+                           <text class="tag">专业搬家</text> -->
+                     </view>
+                </view>
+                  <image style="width:38upx;height:38upx;margin-right:40upx;margin-top:8upx" :src='item.tel' />
+            </view>
+               
+        </view>
+        <view class="btm">
+已全部加载完毕啦
+        </view>
+    </view>
+</template>
+
+<script>
+    import slFilter from '../../components/songlazy-sl-filter/sl-filter/sl-filter.vue';
+    export default {
+        components: {
+            slFilter
+        },
+        data() {
+            return {
+                data:[
+                    {
+                        pic:'../../static/img/cjq-about/yunshu/01.png',
+                        title:'广州纵横物流运输车队专业 提供各式货车及物流专线...',
+                        pti:'服务区域：天河区、白云区、番禺区',
+                        tags:['正规报价','24小时','专业搬家'],
+                        tel:'../../static/img/cjq-about/yunshu/ph.jpg'
+                    },
+                      {
+                        pic:'../../static/img/cjq-about/yunshu/02.png',
+                        title:'广州纵横物流运输车队专业 提供各式货车及物流专线...',
+                        pti:'服务区域：天河区、白云区、番禺区',
+                        tags:['正规报价','24小时','专业搬家'],
+                        tel:'../../static/img/cjq-about/yunshu/ph.jpg'
+                    },
+                      {
+                        pic:'../../static/img/cjq-about/yunshu/03.png',
+                        title:'广州纵横物流运输车队专业 提供各式货车及物流专线...',
+                        pti:'服务区域：天河区、白云区、番禺区',
+                        tags:['正规报价','24小时','专业搬家'],
+                        tel:'../../static/img/cjq-about/yunshu/ph.jpg'
+                    },
+                      {
+                        pic:'../../static/img/cjq-about/yunshu/04.png',
+                        title:'广州纵横物流运输车队专业 提供各式货车及物流专线...',
+                        pti:'服务区域：天河区、白云区、番禺区',
+                        tags:['正规报价','24小时','专业搬家'],
+                        tel:'../../static/img/cjq-about/yunshu/ph.jpg'
+                    },
+                      {
+                        pic:'../../static/img/cjq-about/yunshu/05.png',
+                        title:'广州纵横物流运输车队专业 提供各式货车及物流专线...',
+                        pti:'服务区域：天河区、白云区、番禺区',
+                        tags:['正规报价','24小时','专业搬家'],
+                        tel:'../../static/img/cjq-about/yunshu/ph.jpg'
+                    }
+                ],
+                themeColor: '#EEEEEE',
+                filterResult: '',
+                menuList: [
+                    {
+                        'title': '广州',
+                        'key': 'single',
+                        'isMutiple': false,
+                        'detailTitle': '',
+                        'detailList': [{
+                                'title': '全部',
+                                'value': ''
+                            },
+                            {
+                                'title': '海珠区',
+                                'value': 'test_1'
+                            },
+                            {
+                                'title': '越秀区',
+                                'value': 'test_2'
+                            },
+                            {
+                                'title': '白云区',
+                                'value': 'test_3'
+                            },
+                            {
+                                'title': '荔湾区',
+                                'value': 'test_4'
+                            },
+                            {
+                                'title': '黄浦区',
+                                'value': 'test_5'
+                            },
+                             {
+                                'title': '番禺区',
+                                'value': 'test_5'
+                            },
+                             {
+                                'title': '天河区',
+                                'value': 'test_5'
+                            },
+                             {
+                                'title': '花都区',
+                                'value': 'test_5'
+                            },
+                             {
+                                'title': '南沙区',
+                                'value': 'test_5'
+                            },
+                             {
+                                'title': '从化',
+                                'value': 'test_5'
+                            },
+                             {
+                                'title': '增城',
+                                'value': 'test_5'
+                            }
+                        ]
+                    },
+                    {
+                        'title': '筛选',
+                        'detailTitle': '服务类型',
+                        'isSort':true,
+                        'isMutiple': true,
+                        'key': 'jobType',
+                        'detailList': [
+                            {
+                                'title': '不限',
+                                'value': 'uni-app'
+                            },
+                            {
+                                'title': '货运',
+                                'value': 'java'
+                            },
+                            {
+                                'title': '搬家',
+                                'value': 'web'
+                            },
+                            {
+                                'title': '其他',
+                                'value': 'Android'
+                            }
+                           
+                        ]
+
+                    },
+                ]
+            }
+        },
+        onLoad() {
+
+        },
+        methods: {
+            result(val) {
+                console.log('filter_result:' + JSON.stringify(val));
+                this.filterResult = JSON.stringify(val, null, 2)
+            }
+        }
+    }
+</script>
+<style lang="scss" scoped>
+.main{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+flex-direction: column;
+.main_item{
+    width: 100%;
+    height: 183upx;
+  
+   display: flex;
+
+   
+}
+.img_view{
+    width: 183upx;
+    height: 183upx;
+    float: left;
+    image{
+        width: 100%;
+        height: 100%;
+    }
+}
+.right_content{
+    flex: 1;
+     display: flex;
+     
+     flex-direction: column;
+ justify-content: space-around;
+
+    float: right;
+  
+    flex-direction: column;
+    font-size:32upx;
+    font-family:PingFang SC;
+    font-weight:500;
+    color:rgba(90,90,90,1);
+    line-height:33upx;
+   
+    
+    .botm_content{
+        display: flex;
+          margin-left:20upx ;
+        .tag{
+            width:127upx;
+height:38upx;
+background:rgba(255,241,241,1);
+border-radius:10upx;
+margin-right: 20upx;
+text-align: center;
+color: #B8696B;
+font-size: 24upx;
+line-height: 38upx
+        }
+    }
+}
+}    
+.title_content{
+    display: flex;
+    flex-direction: column;
+    margin-left:20upx 
+}
+.btm{
+display: flex;
+justify-content: center;
+align-items: center;
+height:30upx;
+font-size:22upx;
+font-family:PingFang SC;
+font-weight:400;
+color:rgba(151,151,151,1);
+}
+</style>
