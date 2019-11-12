@@ -14,7 +14,7 @@
 </template>
 
 <script>
-	let data = require('./data.json');
+	let data = require('../checkmanager/data.json');
 	import unipop from '@/components/uni-popup/uni-popup.vue'
 	import checkManager from '@/components/check-manager/check-manager.vue'
 	export default{
