@@ -1,0 +1,107 @@
+{
+	"list": [{
+			"id": 301,
+			"image": "/static/img/home/jiazhuang/01.jpg",
+			"title": "米家互联网空调1.5匹变频冷暖",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},
+		{
+			"id": 302,
+			"image": "/static/img/home/jiazhuang/02.jpg",
+			"title": "美的(Midea)M1-L213B 21升快捷微波炉",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 229
+		},
+		{
+			"id": 303,
+			"image": "/static/img/home/jiazhuang/03.jpg",
+			"title": "格兰仕家用23升平板加热",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},
+		{
+			"id": 304,
+			"image": "/static/img/home/jiazhuang/04.jpg",
+			"title": "米家波轮洗衣机全自动1S",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},
+		{
+			"id": 305,
+			"image": "/static/img/home/jiazhuang/05.jpg",
+			"title": "小天鹅(LittleSwan) 10公斤变频滚筒洗衣机",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},
+		{
+			"id": 306,
+			"image": "/static/img/home/jiazhuang/06.jpg",
+			"title": "创维(SKYWORTH)滚筒洗衣机全自动",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},{
+			"id":307,
+			"image": "/static/img/home/jiazhuang/07.jpg",
+			"title": "松下(Panasonic)旋转式微波炉",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},{
+			"id": 308,
+			"image": "/static/img/home/jiazhuang/08.jpg",
+			"title": "奥克斯(KONKA)波轮洗衣机",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},{
+			"id": 309,
+			"image": "/static/img/home/jiazhuang/09.jpg",
+			"title": "威力20MX81-L微波炉家用小型机械式",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},{
+			"id": 310,
+			"image": "/static/img/home/jiazhuang/10.jpg",
+			"title": "美的(Midea)微波炉家用21L经典款",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},{
+			"id": 311,
+			"image": "/static/img/home/jiazhuang/11.gif",
+			"title": "TCL空调 1.5匹 定频冷暖",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},{
+			"id": 312,
+			"image": "/static/img/home/jiazhuang/12.jpg",
+			"title": "海尔(Haier)8公斤全自动波轮",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},{
+			"id": 313,
+			"image": "/static/img/home/jiazhuang/13.jpg",
+			"title": "康佳(KONKA)4公斤全自动",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		},{
+			"id": 314,
+			"image": "/static/img/home/jiazhuang/14.jpg",
+			"title": "小天鹅10公斤变频滚筒洗衣机",
+			"price": "1899-3599",
+			"address" :"广州 供应商",
+			"height" : 289
+		}
+	]
+}
