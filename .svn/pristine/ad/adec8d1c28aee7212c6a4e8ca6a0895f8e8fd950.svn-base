@@ -1,0 +1,264 @@
+<template>
+<view>
+    <view style="display:flex">
+        <view class="top_select">
+                <text v-for="(i,n) in tArr" :key="n" @tap='chioce(n)' :class="result ===n ? 'result':'result1'" ref='list_data'>
+                    {{i}}
+                </text>
+                <!-- <view class="select">
+                    
+                </view> -->
+        </view>
+        <view class="select_com">
+             <slFilter   :themeColor="themeColor"  :guanbi="guanbi" :menuList="menuList" @result="result1" :independence='true'></slFilter>
+        </view>
+     </view>  
+     <view class="main">
+            <view class="card" v-for="(item,index) in list" :key="index">
+                <view style="width:340upx;height:300upx">
+                     <image mode='widthFix'  style="width:100%;height:100%" :src="item.img"/>
+                </view>
+                <view class="btm_content">
+                    <text class="title">{{item.title}}</text>
+                   <view class="desc_content">
+                        <text style="color:#B86969;font-size:24upx">{{item.price}}</text>
+                         <text style="font-size:20upx;color:#7E7E7E">{{item.num}}</text>
+                          <text style="color:#333333;font-size:20upx">{{item.area}}</text>
+                   </view>
+                </view>
+               
+                
+            </view>
+            
+     </view>
+</view>
+</template>
+
+<script>
+import slFilter from '../../components/sl-filter/sl-filter.vue'
+export default {
+    components:{slFilter},
+    data(){
+        return{
+            list:[
+                {
+                    img:'https://i.loli.net/2019/11/19/TGloZr2qyOPcu8B.png',
+                    title:'实木床1.8米现代简约双人床',
+                    price:'￥1899',
+                    num:'12人付款',
+                    area:'广东广州'
+
+                },
+                {
+                    img:'https://i.loli.net/2019/11/19/TGloZr2qyOPcu8B.png',
+                    title:'实木床1.8米现代简约双人床8米现代简约双人床',
+                    price:'￥1899',
+                    num:'12人付款',
+                    area:'广东广州'
+
+                },
+                {
+                    img:'https://i.loli.net/2019/11/19/TGloZr2qyOPcu8B.png',
+                    title:'实木床1.8米现代简约双人床',
+                    price:'￥1899',
+                    num:'12人付款',
+                    area:'广东广州'
+
+                },
+                {
+                    img:'https://i.loli.net/2019/11/19/TGloZr2qyOPcu8B.png',
+                    title:'实木床1.8米现代简约双人床',
+                    price:'￥1899',
+                    num:'12人付款',
+                    area:'广东广州'
+
+                },
+                 {
+                    img:'https://i.loli.net/2019/11/19/TGloZr2qyOPcu8B.png',
+                    title:'实木床1.8米现代简约双人床',
+                    price:'￥1899',
+                    num:'12人付款',
+                    area:'广东广州'
+
+                },
+                 {
+                    img:'https://i.loli.net/2019/11/19/TGloZr2qyOPcu8B.png',
+                    title:'实木床1.8米现代简约双人床',
+                    price:'￥1899',
+                    num:'12人付款',
+                    area:'广东广州'
+
+                },
+                 {
+                    img:'https://i.loli.net/2019/11/19/TGloZr2qyOPcu8B.png',
+                    title:'实木床1.8米现代简约双人床',
+                    price:'￥1899',
+                    num:'12人付款',
+                    area:'广东广州'
+
+                },
+            ],
+            tArr:['背景墙面装饰','布艺','皮艺','工艺摆设'],
+            result:0,
+            themeColor: '#EEEEEE',
+            filterResult:"",
+            guanbi:'',
+            menuList:[  {
+                        'title': '全部',
+                        'detailTitle': '',
+                        'isSort':true,
+                        'isMutiple': true,
+                      
+                        'key': 'jobType',
+                        'detailList': [
+                            {
+                                'title': '背景墙面装饰',
+                                'value': 'uni-app'
+                            },
+                            {
+                                'title': '布艺',
+                                'value': 'java'
+                            },
+                            {
+                                'title': '皮艺',
+                                'value': 'web'
+                            },
+                            {
+                                'title': '工艺摆设',
+                                'value': 'Android'
+                            },
+                              {
+                                'title': '大件摆设品',
+                                'value': 'thing'
+                            },
+                              {
+                                'title': '装饰画',
+                                'value': 'cao'
+                            },
+                              {
+                                'title': '灯',
+                                'value': 'deng'
+                            },
+                             {
+                                'title': '地板',
+                                'value': 'ban'
+                            },
+                            {
+                                'title': '花瓶',
+                                'value': 'ban1'
+                            }
+                           
+                        ]
+
+                    }
+            ]
+        }
+    },
+    methods: {
+        chioce(n){
+            this.result = n
+            this.guanbi = false
+            setTimeout(() => {
+                this.guanbi = ''
+            }, 100);
+        },
+        result1(val) {
+                console.log('filter_result:' + JSON.stringify(val));
+                this.filterResult = JSON.stringify(val, null, 2)
+        },
+    },
+}
+</script>
+
+<style lang="scss" scoped>
+    .top_select{
+        width: 70%;
+        height: 80upx;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: #F7F7F7 1px solid;
+		background-color: #FFFFFF;
+        color: #404040;
+        font-size: 30upx;
+        padding: 0 15upx;
+        position: relative;
+        .result{
+             line-height: 80upx;
+            height: 80upx;
+            text-align: center;
+            color: #C17B7D;
+        }
+        .result:after{
+            display: block;
+            content: '';
+            height:4upx;
+            background:rgba(193,123,125,1);
+            border-radius:2upx;
+           
+            
+        }
+        .result1{
+             line-height: 80upx;
+            height: 80upx;
+            text-align: center;
+        }
+        .select{
+            width: 1%;
+            height: 50upx;
+         
+        }
+    }
+    .select_com{
+      
+     
+         width:30%
+
+    }
+    .main{
+        width: 100%;
+      
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 20upx 20upx;
+        .card{
+            width:340upx;
+            height:406upx;
+            background:rgba(253,253,253,1);
+            box-shadow:-3upx 15upx 38upx 0upx rgba(221,221,221,0.58);
+            border-radius:10upx;
+            margin-bottom: 20upx;
+            display: flex;
+            flex-direction: column;
+        }
+        .btm_content{
+            width: 100%;
+            height: 106upx;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            .title{
+                width:309upx;
+                height:40upx;
+                font-size:24upx;
+                font-family:PingFang SC;
+                font-weight:400;
+                color:rgba(51,51,51,1);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .desc_content{
+                width: 309upx;
+                height: 30upx;
+             
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                 margin-left: -5upx
+            }
+        }
+    }
+</style>
