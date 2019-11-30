@@ -1,0 +1,499 @@
+<template>
+	<view>
+		<view class="header">
+			<view class="shopInfo uni-flex">
+				<view class="shopInfo-img"><image lazy-load :src="item.img"  class="is-response"></image></view>
+				<view class="shopInfo-introduce">
+					<view class="detail">
+						<view ><text class="text-overflow_2-xzh">{{item.title}}</text></view>
+						<text v-for="(item2,j,index) in item.parameter" :key="j" class="detailColor">{{index==Object.keys(item.parameter).length-1?item2:item2+'/'}}</text>
+						<view class="details"><text>￥{{item.price}}</text><text>✖{{item.good_num}}</text></view>
+					</view>	
+				</view>
+			</view>
+			<view class="shopInfo_02">
+				<text>申请数量</text>
+				<view>
+					<view @tap="reduce">
+						<image src="/static/img/jian.png" mode=""></image>
+					</view>
+					<view>
+						{{shopnumber}}
+					</view>
+					<view @tap="add">
+						<image src="/static/img/jia.png" mode=""></image>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="shopInfo_03">
+			<text>售后类型</text>
+			<view @tap="choosesaleAfter">
+				<text>{{saletype}}</text>>
+			</view>
+		</view>
+		<view class="shopInfo_04">
+			<text>申请原因</text>
+			<view @tap="chooseapply">
+				<text>{{applytype}}</text>>
+			</view>
+		</view>
+		<view class="shopInfo_05">
+			<view class="title">
+				<text>问题描述</text>
+			</view>
+			<view class="textarea_content" >
+				<textarea class="textarea_init" @input="change"  :maxlength="500"  placeholder-style='color: #dedede' placeholder="请填写申请售后服务的具体描述" v-model="convalue"></textarea>
+			</view>
+			<view class="number">
+				<text>{{wordcount}}/500</text>
+			</view>
+		</view>
+		<view class="shopInfo_06">
+			<view class="title">
+				<text>上传凭证(最多3张)</text>
+			</view>
+			<view class="imglist">				
+				<view class="imgcontent" v-for="(x,index) in imglist" :key='index'>
+					<image :src="x" ></image>
+					<image src="/static/img/guanbi.png" @tap="detailimg(index)"></image>
+				</view>
+				<view class="addimg" v-if="imglist.length==3?false:true">
+					<image src="/static/img/addImg.jpg"  @tap="chooseimg"></image>
+				</view>
+			</view>
+		</view>
+		<view class="shopInfo_07">
+			<view class="title">
+				<text>联系方式</text>
+			</view>
+			<view class="contact">
+				<view>
+					<text>联系人</text>
+					<input v-model="linkpeople" confirm-type='done' class="uni-input uni-popel" type="text" placeholder="请输入联系人" placeholder-style="color:#959595" />					
+				</view>
+				<view>
+					<text>联系电话</text>
+					<input v-model="linkphone" class="uni-input" type="text" placeholder="请输入联系电话" placeholder-style="color:#959595"/>				
+				</view>
+			</view>
+		</view>
+		<view class="submit">
+			<view class="submit_btn" @tap="submit">
+				<text>提交</text>
+			</view>
+			<view class="warning">
+				<text>*提交服务单后，售后专员可能与您电话沟通，请保持手机畅通。</text>
+			</view>
+		</view>
+		<uni-pop ref="pop" type="bottom">
+			<view v-if="isshow">
+				<view class="pop_header">
+					<text>选择售后原因</text>
+					<image src="/static/img/close.png" @tap="close"></image>
+				</view>
+				<view class="list_style">
+					<radio-group @change="radioChange">
+						<label class="pop_content" v-for="(item, index) in items" :key="item.value">
+							<view style="margin-right: 20upx;">
+								<radio :value="item.value" :checked="index === current" />
+							</view>
+							<view>{{item.name}}</view>
+						</label>
+					</radio-group>
+				</view>
+				<view class="bottom">
+					<view class="sure" @tap="sure(current)">
+						<text>确认</text>
+					</view>
+				</view>			
+			</view>
+			<view v-else>
+				<view class="pop_header">
+					<text>选择售后类型</text>
+					<image src="/static/img/close.png" @tap="close"></image>
+				</view>
+				<view class="list_style">
+					<radio-group @change="radioChange">
+						<label class="pop_content" v-for="(item, index) in salelist" :key="item.value">
+							<view style="margin-right: 20upx;">
+								<radio :value="item.value" :checked="index === currents" />
+							</view>
+							<view>{{item.name}}</view>
+						</label>
+					</radio-group>
+				</view>
+				<view class="bottom">
+					<view class="sure" @tap="sure(currents)">
+						<text>确认</text>
+					</view>
+				</view>			
+			</view>
+		</uni-pop>
+	</view>
+</template>
+
+<script>
+	import uniPop from '@/components/uni-popup/uni-popup'
+	export default{
+		data(){
+			return{
+				shopnumber:1,
+				totalnumber:7,
+				isshow:true,
+				current: 0,
+				currents: 0,
+				linkphone:'',
+				linkpeople:'',
+				imglist:[],
+				wordcount:0,
+				convalue:'',
+				saletype:'请选择售后类型',
+				applytype:'请选择申请原因',
+				item:{
+						ordernumber:12354856187,
+						ordertime:"2019-11-15 17:00",
+						"img":"/static/img/list_img1.jpg",
+						"goods_id":"1",
+						"good_num":1,
+						"title":"北欧风格布艺转角沙发",
+						"price":715,
+						"parameter":{
+							"颜色":"红色",
+							"尺寸":"760*589*125mm",
+							"安装":'不安装'
+						},
+						"tips_txt":"该商品已超过售后期"
+				},
+				items: [
+					{
+						value: 'Mistake',
+						name: '发错货'
+					},
+					{
+						value: 'Commoditybad',
+						name: '商品破损'
+					},
+					{
+						value: 'Nowant',
+						name: '不想要了'
+					},
+					{
+						value: 'Nodescription',
+						name: '商品与页面描述不符'
+					},
+					{
+						value: 'Missingparts',
+						name: '缺少件'
+					}
+				],
+				salelist: [
+					{
+						value: 'tui',
+						name: '退货'
+					},
+					{
+						value: 'huan',
+						name: '换货'
+					}
+				]			
+			}
+		},
+		components:{
+			uniPop
+		},
+		methods:{
+			reduce(){			
+				if(this.shopnumber<=1){
+					this.shopnumber=1
+					this.toastTip("亲，不能再少了")
+				}else{
+					this.shopnumber--;
+				}
+			},
+			add(){
+				if(this.shopnumber>=this.totalnumber){
+					this.shopnumber=this.totalnumber
+					this.toastTip("已经到顶了")
+				}else{
+					this.shopnumber++
+				}
+			},
+			toastTip(res){
+				uni.showToast({
+				    title: res,
+				    duration: 500,
+					icon:'none'
+				});
+			},
+			choosesaleAfter(){				
+				this.isshow=true
+				this.$refs.pop.open()
+			},
+			chooseapply(){
+				this.isshow=false
+				this.$refs.pop.open()				
+			},
+			change(e){
+				this.wordcount=e.detail.cursor
+			},
+			chooseimg(){
+				let that=this
+				uni.chooseImage({
+				    count: 3,
+				    success(res) {
+						res.tempFilePaths.forEach(item=>{
+							that.imglist.unshift(item)
+						})
+				    }
+				});
+			},
+			detailimg(num){
+				this.imglist.splice(num,1)
+			},
+			submit(){
+				uni.navigateTo({
+					url:'/pages/submitSuccess/subsuccess'
+				})
+			},
+			sure(res){
+				if(this.isshow){
+					this.saletype=this.items[res].name
+					this.$refs.pop.close()
+				}else{
+					this.applytype=this.salelist[res].name
+					this.$refs.pop.close()
+				}			
+			},
+			close(){
+				this.$refs.pop.close()
+			},
+			radioChange(evt) {
+				if(this.isshow){
+					for (let i = 0; i < this.items.length; i++) {
+						if (this.items[i].value === evt.target.value) {
+							this.current = i;
+							break;
+						}
+					}
+				}else{
+					for (let i = 0; i < this.salelist.length; i++) {
+						if (this.salelist[i].value === evt.target.value) {
+							this.currents = i;
+							break;
+						}
+					}
+				}			
+				
+			}
+		}
+	}
+</script>
+<style>
+	page{
+		background: #f2f2f2;
+	}
+</style>
+<style scoped lang="scss">
+	
+	.pop_header{
+		border-bottom: 1px solid #dedede;
+		text-align: center;
+		height: 100upx;
+		justify-content: center;
+		position: relative;
+		display: flex;
+		align-items: center;
+		>text{
+			font-size: 30upx;
+			color: #272727;
+		}
+		image{
+			position: absolute;
+			right: 40upx;
+			top: 30upx;
+			width: 38upx;
+			height: 38upx;
+		}
+	}
+	.header,.shopInfo_03,.shopInfo_04,.shopInfo_05,.shopInfo_06,.shopInfo_07{
+		box-sizing: border-box;
+		padding:30upx 22upx 30upx 22upx;
+		background: #ffffff;
+	}
+	.shopInfo{padding-bottom:20upx;width:100%;border-bottom: 1px solid #dedede;}
+	.shopInfo-img{width:162upx;height:162upx;border-radius: 20upx;overflow: hidden;margin-right: 20upx;}
+	.is-response{width:100%;height: 100%;}
+	.shopInfo-introduce{justify-content:space-between;width:70%;}
+	.detail{font-size:24upx;color:#333;flex:1;}
+	.text-overflow_2-xzh{color: #333333;font-size: 26upx;margin: 8upx 0;}
+	.detail .detailColor{color:#707070;font-size: 24upx;}
+	.details{display: flex;justify-content: space-between;margin-top: 40upx;color: #333333;font-size: 26upx;}
+	.shopInfo_02{
+		padding-top: 20upx;
+		color: #333333;
+		font-size: 26upx;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		>view{
+			display: flex;
+			align-items: center;
+			image{
+				width: 34upx;
+				height: 34upx;
+			}
+			>view{
+				margin:0 10upx
+			}
+		}
+	}
+	.shopInfo_03,.shopInfo_04{
+		margin-top:10upx;
+		color: #333333;
+		font-size: 26upx;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		>view{
+			>text{
+				margin-right: 20upx;
+			}
+		}
+	}
+	.shopInfo_04{
+		margin-top: 1px;
+	}
+	.shopInfo_05{
+		margin-top: 10upx;
+		padding-bottom: 0;
+	}
+	.number{
+		position: absolute;
+		bottom: 10upx;
+		right: 30upx;
+	}
+	.textarea_content{
+		margin-top: 24upx;
+		width: 100%;
+		border: 1px solid #BFBFBF;
+		border-radius: 10upx;
+		color: #333333;		
+	}
+	.textarea_init{
+		font-size: 28upx;
+		padding: 10upx 0;
+		padding-bottom: 40upx;
+		text-indent: 1em;
+		width: 100%;
+		color:#3C3C3C
+	}
+	.shopInfo_06,.shopInfo_07,.shopInfo_05{
+		color: #333333;
+		font-size: 26upx;
+		position: relative;
+	}
+	.shopInfo_06{
+		padding-bottom: 0;
+	}
+	.shopInfo_07{
+		padding-bottom: 10upx;
+	}
+	.imgcontent{
+		width: 181upx;
+		height: 181upx;
+		position: relative;
+		margin-right: 20upx;
+		>image:nth-child(1){
+			border-radius: 10upx;
+			width: 100%;
+			height: 100%;
+		}
+		>image:nth-child(2){
+			width: 32upx;
+			height: 32upx;
+			position: absolute;
+			right: 0;
+			top: 0;
+			transform: translate(30%,-30%);
+		}
+	}
+	.addimg{
+		width: 181upx;
+		height: 181upx;
+		image{
+			border-radius: 10upx;
+			width: 100%;
+			height: 100%;
+		}
+	}
+	.imglist{
+		margin-top: 25upx;
+		display: flex;
+	}
+	.uni-input{
+		// background: red;	
+		height:66upx;
+		font-size: 26upx;
+	}
+	.uni-popel{
+		padding-left: 24upx;
+	}
+	.contact{
+		>view{
+			margin:20upx 0;
+			border: 1px solid #BFBFBF;
+			border-radius: 10upx;
+			display:flex;
+			align-items: center;
+			text-indent: 20px;
+		}
+	}
+	.bottom{
+		padding: 20upx 22upx;
+		box-sizing: border-box;
+	}
+	.submit{		
+		width: 100%;	
+		padding: 0 22upx;
+		padding-bottom: 40upx;
+		background: #ffffff;
+		box-sizing: border-box;
+	}
+	.sure{
+		font-size: 30upx;
+		letter-spacing: 10upx;
+		border-radius: 10upx;		
+		background: #C17B7D;
+		height: 88upx;
+		text-align: center;
+		line-height: 88upx;
+		color: #ffffff;
+	}
+	.submit_btn{
+		height: 88upx;
+		text-align: center;
+		line-height: 88upx;
+		color: #ffffff;
+		font-size: 30upx;
+		letter-spacing: 16upx;
+		border-radius: 10upx;		
+		background: #C17B7D;
+	}
+	.warning{
+		color: #959595;
+		font-size: 22upx;
+		text-align: center;
+		margin-top: 30upx;
+	}
+	.list_style{
+		padding-left: 55upx;
+	}
+	.pop_content{
+		display: flex;
+		align-items: center;
+		margin:30upx 0;
+		font-size: 26upx;
+		color: #272727;
+	}
+</style>
