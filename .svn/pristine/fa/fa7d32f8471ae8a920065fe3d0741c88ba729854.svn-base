@@ -2,47 +2,15 @@
 	<view>
 		<view style="padding: 0upx 0upx;">
 			<view class="filter-content" v-for="(item, index) in menuList" :key="index" v-if="menuIndex == index">
-				<view  v-if="item.isSort">
-					<view>
-						<view class="seltitle">设计师类型</view>
-						<view class="filter-content-detail">
-							<text v-for="(detailItem,idx) in selectDetailList" :key="idx"  
-							class="filter-content-detail-item-default" 
-							:style="{'background-color':detailItem.isSelected?'#FFF1F1':themeColor,'color':detailItem.isSelected?'#B8696B':'#3B3B3B'}"
-							 @tap="itemTap(idx,selectDetailList,item.isMutiple,item.key)">
-								{{detailItem.title}}
-							</text>
-						</view>
-					</view>
-					<view>
-						<view class="seltitle">风格</view>
-						<view class="filter-content-detail">
-							<text v-for="(detailItem,idx) in selectDetailList2" :key="idx"  
-							class="filter-content-detail-item-default" 
-							:style="{'background-color':detailItem.isSelected?'#FFF1F1':themeColor,'color':detailItem.isSelected?'#B8696B':'#3B3B3B'}"
-							 @tap="itemTap(idx,selectDetailList2,item.isMutiple,menuList[3].key)">
-								{{detailItem.title}}
-							</text>
-						</view>
-					</view>				
-				</view>
-				<view v-else>
-					<view  class="filter-content-detail">
-						<text v-for="(detailItem,idx) in selectDetailList" :key="idx"
-						class="filter-content-detail-item-default" 
+				<view>
+					<view class="filter-content-detail">
+						<text v-for="(detailItem,idx) in selectDetailList" :key="idx"  
+						:class="{'filter-content-detail-item-default':index==0||index==2?true:false,'filter-content-detail-item-default-two':index==1?true:false,'ftSelected':index==1&&detailItem.isSelected?true:false}" 
 						:style="{'background-color':detailItem.isSelected?'#FFF1F1':themeColor,'color':detailItem.isSelected?'#B8696B':'#3B3B3B'}"
 						 @tap="sortTap(idx,selectDetailList,item.key)">
 							{{detailItem.title}}
 						</text>
-					</view>			
-				</view>
-				<view class="filter-content-footer" v-if="index==2">
-					<view  @tap="resetClick(menuList)">
-						<text>重置</text>
-					</view>
-					<view @tap="sureClick">
-						<text>确定</text>
-					</view>
+					</view>				
 				</view>
 			</view>
 		</view>
@@ -132,10 +100,6 @@
 			},
 			menuTabClick(index) {
 				this.menuIndex = index;
-				if(index===2){
-					this.selectDetailList2 = this.menuList[index+1].detailList;
-					this.selectedKey2 = this.menuList[index+1].detailList;
-				}
 				this.selectDetailList = this.menuList[index].detailList;
 				this.selectedKey = this.menuList[index].key;
 				
@@ -186,36 +150,6 @@
 					'isReset': false
 				}
 				this.$emit("confirm", obj);
-			},
-			resetClick(list) {
-				// list.forEach((item)=>{
-				// 	for (let i = 0; i < item.detailList.length; i++) {
-				// 		if (0 == i) {
-				// 			item.detailList[i].isSelected = true;
-				// 		} else {
-				// 			item.detailList[i].isSelected = false;
-				// 		}
-				// 	}
-				// })
-				// //重置操作
-				// this.$store.state.changedCity="广州"
-				
-				// this.$set(this.selectedTitleObj,"city",'广州')
-				// this.$set(this.selectedTitleObj,"space",'擅长空间')
-				// this.$set(this.selectedTitleObj,"designtype",'筛选')
-				// this.$set(this.selectedTitleObj,"style",'全部')
-				
-				// this.$set(this.result,"city",'广州')
-				// this.$set(this.result,"space",'全部')
-				// this.$set(this.result,"designtype",'全部')
-				// this.$set(this.result,"style",'全部')
-				// let obj = {
-				// 	'result': this.result,
-				// 	'titles': this.selectedTitleObj,
-				// 	'isReset': true
-				// }				
-
-				this.$emit("colse", false);
 			}
 		}
 	}
