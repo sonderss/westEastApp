@@ -1,0 +1,163 @@
+<template>
+	<view>
+		<scroll-view class="top-menu-view">
+			<block v-for="(menuTab,index) in menuTabs" :key="index">
+				<view class="menu-one-view" @click="swichMenu(index)">
+					<view :class="[currentTab==index ? 'button' : '']">
+						<view class="menu-one-txt">{{menuTab.name}}</view>
+					</view>
+				</view>
+			</block>
+		</scroll-view>
+		<view class="swiper_content">
+			<swiper :current="currentTab" class="swiper-box-list" duration="300" @change="swiperChange">
+				<swiper-item @touchmove.stop class="swiper_item">
+					<scroll-view class="swiper-one-list" scroll-y="true" @scrolltolower="loadMore(currentTab)">
+						<like-case :list="adornList"></like-case>
+					</scroll-view>
+				</swiper-item>
+				<swiper-item @touchmove.stop>
+					<scroll-view class="swiper-one-list" scroll-y="true" @scrolltolower="loadMore(currentTab)">
+						<like-case :list="designList"></like-case>
+					</scroll-view>
+				</swiper-item>
+				<swiper-item @touchmove.stop>
+					<scroll-view class="swiper-one-list" scroll-y="true" @scrolltolower="loadMore(currentTab)">
+						<like-case :list="buildList"></like-case>
+					</scroll-view>
+				</swiper-item>
+			</swiper>
+		</view>
+	</view>
+</template>
+
+<script>
+	import likeCase from '@/components/like-case/like-case.vue'
+	export default {
+		components: {
+			likeCase,
+		},
+		data() {
+			return {
+				menuTabs: [{
+					name: '装修公司'
+				}, {
+					name: '设计公司'
+				}, {
+					name: '建筑公司'
+				}],
+				currentTab: 0,
+				adornList: [{
+						src: '/static/img/like_case/1.png',
+						title: '130㎡轻奢美式，邂逅美好的浪漫生活',
+						content: '居众装饰',
+						headImg: '/static/img/like_case/2.png',
+						start: '4'
+					},
+					{
+						src: '/static/img/like_case/3.png',
+						title: '130㎡轻奢美式，邂逅美好的浪漫生活',
+						headImg: '/static/img/like_case/2.png',
+						content: '居众装饰',
+						start: '5'
+					},
+					{
+						src: '/static/img/like_case/4.png',
+						title: '130㎡轻奢美式，邂逅美好的浪漫生活',
+						headImg: '/static/img/like_case/2.png',
+						content: '居众装饰',
+						start: '3'
+					},
+				],
+				designList: [{
+						src: '/static/img/like_case/5.png',
+						title: '130㎡轻奢美式，邂逅美好的浪漫生活',
+						content: '居众装饰',
+						headImg: '/static/img/like_case/2.png',
+						start: '4'
+					},
+					{
+						src: '/static/img/like_case/6.png',
+						title: '130㎡轻奢美式，邂逅美好的浪漫生活',
+						headImg: '/static/img/like_case/2.png',
+						content: '居众装饰',
+						start: '5'
+					},
+					{
+						src: '/static/img/like_case/7.png',
+						title: '130㎡轻奢美式，邂逅美好的浪漫生活',
+						headImg: '/static/img/like_case/2.png',
+						content: '居众装饰',
+						start: '3'
+					},
+				],
+				buildList: [{
+						src: '/static/img/like_case/8.png',
+						title: '130㎡轻奢美式，邂逅美好的浪漫生活',
+						content: '居众装饰',
+						headImg: '/static/img/like_case/2.png',
+						start: '4'
+					},
+					{
+						src: '/static/img/like_case/9.png',
+						title: '130㎡轻奢美式，邂逅美好的浪漫生活',
+						headImg: '/static/img/like_case/2.png',
+						content: '居众装饰',
+						start: '5'
+					},
+				],
+			}
+		},
+		onLoad() {
+
+		},
+		computed: {
+
+		},
+		methods: {
+			swichMenu: async function(current) {
+				if (this.currentTab == current) {
+					return false;
+				} else {
+					this.currentTab = current;
+				}
+			},
+			swiperChange: async function(e) {
+				let index = e.target.current;
+				this.currentTab = index;
+			},
+			bindClick(value) {
+				uni.showToast({
+					title: `点击了${value.text}按钮`,
+					icon: 'none'
+				})
+			},
+			onSend: function(id) {
+				uni.navigateTo({
+					url: './send_comment?id=' + id
+				})
+			},
+			loadMore: function(index) {
+
+			},
+		}
+	}
+</script>
+<style scoped>
+	@import "../../components/like-case/like-case.css";
+
+	.swiper_content {
+		padding-top: 20upx;
+		background: #f2f2f2;
+		position: fixed;
+		left: 0;
+		right: 0;
+		// #ifdef H5  
+		top: 150upx;
+		// #endif
+		// #ifdef APP
+		top: 65upx;
+		// #endif
+		bottom: 0
+	}
+</style>
