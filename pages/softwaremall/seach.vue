@@ -2,10 +2,8 @@
 <view>
          <view class="main" style="overflow:hidden">
               <view class="main_top">
-                  <!-- @input='input' -->
-                  <input type='text'  @confirm='testGo'  class="searchInput" confirm-type='搜索' v-model="value" placeholder="例如简约，压缩，单人床" />
-                  <view  @tap='close'></view>
-                  <!--  -->
+                  <input type='text'  @confirm='testGo' class="searchInput" v-model="value" placeholder="例如简约，压缩，单人床"/>
+                  <view class="close_search_title" @tap='close'></view>
                   <text @tap='goBack'>  取消</text>
               </view>
               <!-- 未搜索到 -->
@@ -14,32 +12,32 @@
                     <text>暂未搜索到结果</text>
               </view>
                 <!-- 搜索结果 -->
-              <view class="result" v-if="isResult1">
+              <!-- <view class="result" v-if="isResult1"> -->
                   <!-- 历史搜索 -->
-                     <view class="hot_search" style="margin-top:100upx">
+                     <!-- <view class="hot_search" style="">
                         <text class="hot_title" >历史搜索</text>
                           <view class="hot_result_view">
-                                 <view class="hot_result" @tap='history_search(item.title)' v-for="(item,index) in history_result" :key="index">
+                                 <view class="hot_result" v-for="(item,index) in history_result" :key="index">
                                 <text>{{item.title}}</text>
                             </view>
                           </view>
                          
                         
                         
-                    </view>
+                    </view> -->
                     <!-- 热门搜索 -->
-                    <view class="hot_search">
+                    <!-- <view class="hot_search">
                         <text class="hot_title" >热门搜索</text>
                           <view class="hot_result_view">
-                                 <view class="hot_result" @tap='history_search(item)' v-for="(item,index) in hot_result" :key="index">
+                                 <view class="hot_result" v-for="(item,index) in hot_result" :key="index">
                                 <text>{{item}}</text>
                             </view>
                           </view>
                          
                         
                         
-                    </view>
-              </view>
+                    </view> -->
+              <!-- </view> -->
               <!-- 如果搜索到结果-》渲染 -->
               <view class="result_view" v-if="isResult3">
                     <view class="result_view_top1" >
@@ -82,7 +80,7 @@
                             
                     </view>
                     <view class="main1">
-                                <view class="card" v-for="(item,index) in list" :key="index" @tap="goDetail(item.id)">
+                                <view class="card" v-for="(item,index) in data" :key="index" @tap="goDetail(item.id)">
                                     <view style="width:340upx;height:300upx">
                                         <image mode='widthFix'  style="width:100%;height:100%" :src="item.pic"/>
                                     </view>
@@ -168,6 +166,47 @@ export default {
 
                 // },
             ],
+            data:[{
+                city: "广州",
+                collection: 0,
+                id: 5,
+                pic: "http://192.168.1.140:5005/file/fapi/pic/goods/goods_01.jpg",
+                price: "200.00",
+                sales: 6,
+                title: "席梦思床垫",
+                visitcount: 86,
+            },
+            {
+                city: "苏州",
+                collection: 0,
+                id: 4,
+                pic: "http://192.168.1.140:5005/file/fapi/pic/goods/goods_02.jpg",
+                price: "200.00",
+                sales: 10,
+                title: "席梦思床垫",
+                visitcount: 86,
+            },
+            {
+                city: "加州",
+                collection: 0,
+                id: 3,
+                pic: "http://192.168.1.140:5005/file/fapi/pic/goods/goods_03.jpg",
+                price: "200.00",
+                sales: 6,
+                title: "席梦思床垫",
+                visitcount: 86,
+            },
+            {
+                city: "杭州",
+                collection: 0,
+                id: 1,
+                pic: "http://192.168.1.140:5005/file/fapi/pic/goods/goods_04.jpg",
+                price: "200.00",
+                sales: 20,
+                title: "席梦思床垫",
+                visitcount: 86,
+            }
+            ],
             result:[],
             value:'',
             hot_result:[
@@ -196,24 +235,22 @@ export default {
             a:[]
         }
     },
+    onLoad(option){
+        this.value = option.key
+    },
     methods: {
-        history_search(title){
-            uni.navigateTo({
-                url:'./seach?key='+title
-            })
-        },
         testGo(){
-            uni.navigateTo({
-                url:'./seach?key='+this.value
-            })
+            this.input(this.value)
         },
         input(e){
             // console.log(e.detail.value)
-            this.value = e.detail.value
+            // this.value = e.detail.value
+            this.value = e
+
             var that = this
            
               var a = this.search(this.value)
-            // console.log(a)
+             console.log(a)
            // 这里要检查输入框是否为空，然后做下一步操作
            var isImpty = util.is_empty( this.value)
             if(isImpty){
@@ -261,6 +298,7 @@ export default {
         search(key){
             return this.list.filter(item=>{
                 if(item.title.includes(key)){
+                    console.log(item.title)
                     return item
                 }
             })
@@ -272,14 +310,14 @@ export default {
         }
     },
     mounted(){
-        api.getHotKeys().then(res=>{
-            // console.log(res.data.data)
-            this.hot_result = res.data.data
-        })
+        // api.getHotKeys().then(res=>{
+        //     // console.log(res.data.data)
+        //     this.hot_result = res.data.data
+        // })
          //获取商品列表
             let param={
-                    condition: 1,//查询条件
-                    paratype: 3, //查询类型 1 按关键字查询 2 按品牌查询 3按商品类型查询 4 根据商品id 查询对应的相关商品
+                    condition: this.value,//查询条件
+                    paratype: 1, //查询类型 1 按关键字查询 2 按品牌查询 3按商品类型查询 4 根据商品id 查询对应的相关商品
                     pageindex:1,
                     pagesize:20,
                     orderfield:'POPULAR',
@@ -287,9 +325,10 @@ export default {
             }
             api.getGoodsList(param).then(res=>{
                 console.log(res.data.data.list)
-                this.list = res.data.data.list
-              
+                 this.list = res.data.data.list
+                this.input(this.value)
             })
+
     }
 }
 </script>
@@ -298,9 +337,9 @@ export default {
 
     .main_top{
         width: 100%;
-       position: fixed;
+   
         height: 100upx;
-        margin-top: -20upx;
+   
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -308,8 +347,7 @@ export default {
          z-index: 9999;
          margin: 0 auto; 
          margin-left: 30upx;
-         margin-top: 40upx;
-         background: #fff;
+        margin-top: 40upx;
         .searchInput{
             width:588upx;
             height:70upx;
@@ -321,7 +359,7 @@ export default {
                 background-repeat: no-repeat;
                 background-size: 50upx;
                 background-position:20upx;
-                font-size: 20upx
+                font-size: 20upx;
         }
         text{
             width: 100upx;
@@ -338,7 +376,7 @@ export default {
     .result{
         width: 100%;
         border-bottom: 1upx solid #C5C5C5;
-        margin-top: 30upx;
+        // margin-top: 30upx;
         .hot_search{
             width: 100%;
             padding: 30upx;
@@ -471,7 +509,7 @@ export default {
             height:30upx;
             position: absolute;
                right: 150upx;
-                top: 38upx;
+                top: 80upx;
                 background-image: url('../../static/img/goods/close.png');
                 background-size: 30upx 30upx;
                 background-position: center;
