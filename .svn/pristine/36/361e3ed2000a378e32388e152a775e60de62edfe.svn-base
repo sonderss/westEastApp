@@ -41,22 +41,22 @@
 					<view class="classification uni-flex uni-column" >
 						<text style="display:flex;justify-content: flex-end;margin-right:36upx;">{{goods.abusae.describe}}</text>
 					</view>
-					<image style="padding-right:55upx" src="/static/img/goods/more.png"></image>
+					<image src="/static/img/goods/more.png"></image>
 				</view>
 					
-				<view class="choice uni-flex para abc" @click="cjq_togglePopup()" style="display: flex;align-items: center;">
+				<view class="choice uni-flex para abc" @click="togglePopup('parameter')" style="display: flex;align-items: center;">
 					<text class="sele"  style="color:#494949;font-size:30upx">{{goods.parameter.title}}</text>
 					<text class="parameter text-overflow_1-xzh" style="display:flex;justify-content: flex-end;margin-right:36upx;color:#949494">{{goods.parameter.describe}}</text>
-					<image style="padding-right:55upx" src="/static/img/goods/more.png"></image>
+					<image src="/static/img/goods/more.png"></image>
 				</view>
-				<view class="choice uni-flex para abc" style="border-bottom:15upx solid #F1F1F1" @click="cjq_goodschioce('choice')">
+				<view class="choice uni-flex para abc" style="border-bottom:15upx solid #F1F1F1" @click="togglePopup('choice')">
 					<text class="sele" style="color:#494949;font-size:30upx">{{goods.choice.title}}</text>
 					<view class="classification uni-flex uni-column" >
 						<text class="guige_line">{{text_guige_line}}</text>
-						<text  style="display:flex;justify-content: flex-end;margin-right:36upx;">{{goods.choice.cation}}</text>
+						<text style="display:flex;justify-content: flex-end;margin-right:36upx;">{{goods.choice.cation}}</text>
 					
 					</view>
-					<image style="padding-right:55upx" src="/static/img/goods/more.png"></image>
+					<image src="/static/img/goods/more.png"></image>
 				</view>
 			</view>	
 			<view class="evaluate" :style="pingjia? 'padding:20upx 3.5%' :'padding:10upx 3.5%' " @click="evaluate" id="pingjia">
@@ -69,11 +69,11 @@
 				<view class="yelp" style="margin-top:20upx"  v-if="pingjia ?true:false">
 					<view class="header uni-flex">
 						<view style="width:60upx;height:60upx;">
-							<image style="width:100%;height:100%" :src="!pingjia.userHeadPic ?'/static/img/myself/18.png': pingjia.userHeadPic"></image>
+							<image style="width:100%;height:100%" :src="pingjia ?pingjia.userHeadPic:'' "></image>
 						</view>
 						
 						<view class="right_pingjia">
-							<text class="text-overflow_1-xzh" style="margin-left:18upx;font-size:30upx">{{pingjia?pingjia.userName:'暂无'}}</text>
+							<text class="text-overflow_1-xzh" style="margin-left:18upx;font-size:30upx">{{pingjia?pingjia.userName:''}}</text>
 							<view class="time text-overflow_1-xzh" style="font-size:30upx;font-family:PingFang SC;font-weight:400;color:rgba(122,122,122,1);margin:0 10upx">
 							
 									<text >{{pingjia.createDate}}</text>
@@ -174,7 +174,7 @@
 				</view>	
 			</view>
 			<!-- 底部弹出弹窗 -->
-			<uni-popup ref="popup" type="bottom" :custom="false">
+			<uni-popup ref="popup" type="bottom" :custom="false" @change="change">
 				<view class="uni-choie" v-if="isSelect">
 					<view class="uni-choie-title uni-flex">
 						<text>{{goods.goodsPara.title}}</text>
@@ -188,30 +188,16 @@
 					</view>
 					<!-- <view class="complete" @click="close">完成</view> -->
 				</view>
-				
-			</uni-popup>
-            <!-- 规格选择 -->
-            <uni-popup  ref="popup123" type="bottom" :custom="false">
-                <view class="uni-choie">
+				<view class="uni-choie" v-else>
 					<view class="shop-info uni-flex">
-						<view class="shop-info-img"><image mode="widthFix" :src="goods.picture[0]"></image></view>
+						<view class="shop-info-img"><image mode="widthFix" src="/static/img/goods/shop-img.png"></image></view>
 						<view class="surplus uni-flex uni-column">
 							<text class="money">￥{{goods.price}}</text>
 							<text class="stock">库存：{{stock}}</text>
-							<view class="line_e">
-								<text class="line_e" style="margin-right:10upx;margin-top:10upx;font-size:24upx;font-family:PingFang SC;font-weight:400;color:rgba(51,51,51,1);" v-for="(item,index) in guige"  :key="index">
-									{{item.name}}:
-									 	<!-- <text :id="'data'+index">{{text_gg}}</text> -->
-										 <text class="line_e">
-											{{selectArr[index]}}
-										 </text>
-										<!-- <text v-if="index == colorId">{{item.extendField[sizeId].name}}</text> -->
-										
-										
-								</text>
-							
-								<!-- <text style="margin-top:10upx;font-size:24upx;font-family:PingFang SC;font-weight:400;color:rgba(51,51,51,1);"><text v-if="isChioce" style='margin-right:5upx'>{{chioce_text}}</text>颜色: {{chioce_text_color?chioce_text_color:guigeValueName}}</text>
-								<text style="margin-left:10upx;margin-top:10upx;font-size:24upx;font-family:PingFang SC;font-weight:400;color:rgba(51,51,51,1);">尺寸：{{chioce_text_size?chioce_text_size:guigeValueName1}}</text> -->
+							<view>
+								
+								<text style="margin-top:10upx;font-size:24upx;font-family:PingFang SC;font-weight:400;color:rgba(51,51,51,1);"><text v-if="isChioce" style='margin-right:5upx'>{{chioce_text}}</text>颜色: {{chioce_text_color}}</text>
+								<text style="margin-left:10upx;margin-top:10upx;font-size:24upx;font-family:PingFang SC;font-weight:400;color:rgba(51,51,51,1);">尺寸：{{chioce_text_size}}</text>
 							</view>
 							
 						</view>
@@ -223,43 +209,33 @@
 								<view class="box" v-for="(item,index1) in guige" :key="index1">
 									<view class="title">{{item.name}}</view>
 									<block v-for="(item2,index2) in item.extendField" :key="index2">
-										<text  @tap="cjq_chioceql(index1,index2)"  :class="{addclass:cjq_parameter_arr[index1] == index2}">{{item2.name}}</text>
+										<text  @tap="select_parameter(index1,index2)"  :class="{addclass:parameter_arr[index1]==index2}">{{item2.name}}</text>
 									</block>
+									
 								</view>
-                                <view class="box" v-if="otherCostItem.length > 0" >
-									<view v-for="(item,index) in otherCostItem" :key='index'>
-                                       <view class="title">{{item.name}}</view>
-                                       <block >
-										    
-										    <text :class=" isClass == 1 ? 'addclass' : '' " @tap='cjq_otherchice(1,item.id,item.extendField,index)' >￥{{item.extendField}}元</text>
-                                            <text :class=" isClass == 0 ? 'addclass' : '' " @tap='cjq_otherchice(0)'>不选择</text>
-									  </block>
-									</view>
-                                </view>
 								<text class="insufficient" v-if="insufficient">库存不足!!!</text>
 							</view>
-                            
-							<view class="cationTwo uni-flex cjq_buynum">
-								<!-- <scroll-view scroll-y="true" > -->
+							<view class="cationTwo uni-flex">
+								<scroll-view scroll-y="true" >
 									<text class="purchaseNum">购买数量</text>
 									<view class="number uni-flex">
 										<image @click="reduce" src="/static/img/goods/reduce.png"></image>
 										<text>{{number}}</text>
 										<image @click="add" src="/static/img/goods/add.png"></image>
 									</view>
-								<!-- </scroll-view> -->
+								</scroll-view>
 							</view>
 						</scroll-view>
 						
 					</view>
 					<view class="buy uni-flex" v-if="!buy_now">
-						<text @tap="stock <=0? null: cjq_addToCart(0)" :class="stock <=0? 'no_stock': 'join'" v-text="warp?'确定':'加入购物车' "></text>
+						<text @tap="addToCart(goods.id,goods.picture[0],goods.name,goods.title,goods.price,parameter_arr,number)" class="join" v-text="warp?'确定':'加入购物车' "></text>
 					</view>
 					<view class="buy uni-flex" v-else>
-						<text :class="stock <=0? 'no_stock': 'join'" style="color:#fff" @tap="stock <=0? null: cjq_addToCart(1)">确定</text>
+						<text class="join" style="color:#fff" @tap="addToCart(goods.id,goods.picture[0],goods.name,goods.title,goods.price,parameter_arr,number)">确定</text>
 					</view>
 				</view>
-            </uni-popup>
+			</uni-popup>
 			<!-- 分享 -->
 			<uni-popup ref='isShare' type="bottom" :custom="false">
 				<view class="cont">
@@ -306,7 +282,7 @@
 	import GuessLike from '@/components/guess-like/guess-like.vue'
 	import {mapState} from 'vuex'
 	import api from '../../apis/goods/goods'
-   import request from '../../apis/request'
+
 	export default {
 		components: {
 			uniPopup,
@@ -321,7 +297,7 @@
 				num_dot:1,
 				chioce_text_color:'',
 				chioce_text_size:'',
-				chioce_text:'',
+				chioce_text:'请选择',
 				ptd_top:Number,
 				pinglun_top:Number,
 				about_top:Number,
@@ -329,12 +305,7 @@
 				isChioce:true,
 				pingjia:{},
 				plNum:0,
-                text_guige_line:'',
-                otherCostItem:[],
-                isClass:1,
-				guigeId:'',
-				guigeValueName:'',
-				guigeValueName1:'',
+				text_guige_line:'',
 				list:[
                 {
                     img:'../../static/img/cjq-about/like1.jpg',
@@ -380,21 +351,11 @@
 				stock:'2000',
 				insufficient:false,
 				iscollection:false,
-                parameter_arr:[],
-                cjq_parameter_arr:[0,0],
+				parameter_arr:[],
 				shopName:'谁谁的店',
 				shop_id:'2',
 				guige:[],
-                tuwen:'',
-                colorId : 0,
-				sizeId : 0,
-				selectArr: [], // 存放被选中的值
-				selectArrID:[],//存放被选中的ID
-                otherId:'',
-                guigeValue:[],
-                shuxing:[],
-				extendFieldPrice:'',
-				text_gg:'',
+				tuwen:'',
 				server:[
 					{img:'https://i.loli.net/2019/11/22/2T8IgqwOZ159Vlu.png',name:'30天无忧退货',extendField:'自收到商品之日起，支持7天无理由退货。'},
 					{img:'https://i.loli.net/2019/11/22/TmH8UxivNd1Qbuk.png',name:'48小时快速退款',extendField:'收到退货包裹并确认无误后，将在48小时内办理退款，退款将原路返回，不同支付方式处理时间不同，预计1-5个工作日到账。'},
@@ -516,16 +477,7 @@
 						}
 						console.log(res)
 						this.goods.picture = res.data.data.arrayPics //轮播图
-						// if(this.goods.picture.length === 0 || this.goods.picture === null){
-						// 		uni.showToast({
-						// 			icon:'none',
-						// 			title:'后台数据有误，请即时反馈给平台',
-						// 			duration:2000
-						// 		})
-						// 		this.isDetail = true
-						// 		return
-						// }
-						if(!res.data.data.arrayPics ||  res.data.data.arrayPics.length<=0){
+						if(this.goods.picture.length === 0 || this.goods.picture === null){
 								uni.showToast({
 									icon:'none',
 									title:'后台数据有误，请即时反馈给平台',
@@ -534,6 +486,7 @@
 								this.isDetail = true
 								return
 						}
+
 						this.goods.price = res.data.data.price  //价格
 						this.goods.title = res.data.data.title //名称
 						var tags = ''
@@ -550,57 +503,11 @@
 						this.goods.area = res.data.data.city //地点
 						this.goods.paynum = res.data.data.payNum //购买人数
 						 this.server = res.data.data.sexplain   //服务说明内容
-                         this.goods.abusae.describe = res.data.data.sexplain[0].shotName  //服务说明简短名称
+						 this.goods.abusae.describe = res.data.data.sexplain[0].shotName  //服务说明简短名称
 						 this.goods.goodsPara.list = res.data.data.parameter  //商品参数
 						//  this.goods.goods_parameter = res.data.data.specifications 
 						 this.guige = res.data.data.specifications   //商品规格
-						//  if(this.guige.length != 0){
-						// 	this.colorId = this.guige[0].extendField[0].id
-						// 	this.sizeId = this.guige[1].extendField[0].id
-						// 	this.guigeValueName = this.guige[0].extendField[0].name
-						// 	this.guigeValueName1 = this.guige[1].extendField[0].name
-
-
-						//  }
-                         
-						// 初始化选择的规格名称
-						  let ids = '';
-                          for(let i = 0;i<this.guige.length;i++){
-							  this.selectArr.push(this.guige[i].extendField[0].name);
-							  this.selectArrID.push(this.guige[i].extendField[0].id);
-							//   this.shuxing.push(this.guige[i].name)
-							  ids += this.selectArrID[i]+',';
-                          }
-                          if(this.guige.length != 0){
-							  	let param123 = {
-									id:this.itemid,
-									ids:ids
-								}
-								api.getGoods(param123).then(res=>{
-									console.log('mounted::获取商品规格id',res)
-									this.guigeId = res.data.data.id
-									this.stock  =res.data.data.count
-								}).catch(err=>{
-									uni.showToast({
-										icon:'none',
-										title:"商品规格ID获取失败",
-										duration:2000
-									})
-									return
-								})
-						  }else{
-
-						  }
-                            
-                         this.pingjia = res.data.data.newestComment   //用户评价
-						 this.otherCostItem = res.data.data.otherCostItem //其他服务（安装）
-						 for(let i = 0;i<this.otherCostItem.length;i++){
-							  this.otherId =  this.otherId + this.otherCostItem[i].id+','
-							  this.extendFieldPrice += this.otherCostItem[0].extendField
-						 }
-                        //   this.otherId = this.otherCostItem[0].id
-                        //   this.extendFieldPrice = this.otherCostItem[0].extendField
-                          console.log( this.extendField)
+						 this.pingjia = res.data.data.newestComment   //用户评价
 						 this.plNum = res.data.data.commentSummary.tolComment  //评价总数量
 						//  console.log(this.pingjia)
 						 this.pinpai.push(res.data.data.brand)  //品牌
@@ -644,8 +551,7 @@
 					// },1500)
 					
 				}
-            })
-                
+			})
 		},
 		computed:{
 			...mapState(['collections','buy_now_obj'])
@@ -662,466 +568,227 @@
 		onPageScroll:function(e){
 				this.scrollTop = e.scrollTop
 				// console.log('监听页面滑动：'+e.scrollTop)
+
 		},
 		methods: {
-            cjq_togglePopup(){
-                this.$refs.popup.open();
-            },
-            //选择商品规格
-            cjq_goodschioce(){
-                 this.$refs.popup123.open();
-            },
-            //点击商品规格
-            cjq_chioceql(i,j){
-				this.$set(this.cjq_parameter_arr,i,j)
-				var ids = ''
-				for(let g = 0; g<this.guige.length;g++){
-					console.log(this.guige[g])
-					//  this.chioce_text_color = this.guige[i].extendField[j].name
-					this.selectArr[i] = this.guige[i].extendField[j].name
-					this.selectArrID[i] = this.guige[i].extendField[j].id
-					ids += this.selectArrID[g]+','
-				}
+			hidePop(){
+				this.$refs.isShare.close();
+			},
+			buy_now_fun(id,img,name,title,price,parameter,number){
 				
-				let param = {
-					id:this.itemid,
-					ids:ids,
-               	}
-				console.log(param)
-                api.getGoods(param).then(res=>{
-                    console.log(res)
-                    this.stock = res.data.data.count
-                    this.goods.price = res.data.data.price
-                    this.guigeId = res.data.data.id
-                    
-                }).catch(err => {
-					uni.showToast({
-						icon:'none',
-						title:'商品规格ID获取失败',
-						duration:2000
-					})
-					return
-				})
-				// if(i === 0){
-				// 	//颜色
-				// 	var a = this.guige[i]
-				// 	var b = a.extendField[j].extendField //
-				// 	var c = a.extendField[j].name
-                //     this.chioce_text_color =c
-                //     this.guigeValue[0] = c
-                //     this.isChioce = false
-                //     this.colorId = this.guige[i].extendField[j].id;
-				// // console.log(this.chioce_text_color)
-				// this.text_guige_line = this.chioce_text_color +this.chioce_text_size
-				// }
-				// if(i === 1){
-				// 	//尺寸
-				// 	var a = this.guige[i]
-				// 	var b = a.extendField[j].extendField
-				// 	var c = a.extendField[j].name
-                //     this.chioce_text_size = c
-                //      this.guigeValue[1] = c 
-                //     this.isChioce = false
-                //     this.sizeId = this.guige[i].extendField[j].id;
-				// 	// console.log(this.chioce_text_size)
-				// 	this.text_guige_line = this.chioce_text_color +this.chioce_text_size
+			},
+			//添加购物车
+			addToCart(id,img,name,title,price,parameter,number){
+				//goods.id,goods.picture[0],goods.name,goods.title,goods.price,parameter_arr,number
+				console.log(title)
+				let _shop_index=-1;
+				let _goods_index=-1;
+				// console.log(parameter)
+				var _parameter_index=0;
+				let _select_all=true
+				if(parameter.length<this.guige.length && this.guige.length>0){
+					
 
-                // }
-                
-                
-               
-            },
-            //其他服务选择样式
-            cjq_otherchice(n,otherId,extendFieldPrice,index){
-                if(n === 1){
-					this.isClass = 1;
-					if( parseInt(this.otherId)  != parseInt(otherId) ){
-						this.otherId = otherId + this.otherId +','
-					}
-					// console.log(this.otherId)
-					if(parseInt( this.extendFieldPrice) != parseInt(extendFieldPrice)){
-							this.extendFieldPrice+= extendFieldPrice
-					}
-                     
-                }
-                if(n === 0){
-                    this.isClass = 0;
-					// this.otherId = this.otherId. //删除取消的那一个服务ID
-					 this.otherId = this.otherId.replace(/,/,'').split('').splice(index,0).join()+','
-                      this.extendFieldPrice = '' //
-                }
-            },
-            //添加购物车
-            cjq_addToCart(){
-				 this.$refs.popup123.close();
-				uni.showLoading({
-					title:'添加中'
-				})
-                if(this.warp){
-					let goods = [
-						 {
-							spuid: parseInt(this.itemid),
-							skuid: this.guigeId,
-							num: this.number,
-							othercostids: this.otherId
-						 }
-					]
-					// console.log(JSON.stringify(goods))
-					api.enterOrders(JSON.stringify(goods)).then(res=>{
-						console.log(res)
-						if(res.statusCode === 200){
-							uni.hideLoading()
-							if(res.data.status === 0){
-								uni.showToast({
-									icon:'none',
-									title:'添加成功',
-									duration:2000
-								})
-								//这里的data是确认订单所返回的订单数据
-								this.$store.commit('buy_goods',res.data.data)
-								setTimeout(()=>{
-									uni.navigateTo({
-								    	url: '../confirmationOrder/confirmationOrder'
-									});
-								},2000)
-								return
-							}else if(res.data.status === 3){
-								uni.showToast({
-									icon:'none',
-									title:'提交失败',
-									duration:2000
-								})
-								return
-							}else{
-								uni.showToast({
-									icon:'none',
-									title:'系统异常，请稍后重试',
-									duration:2000
-								})
-							}
-
-							return
-						}
-						if(res.statusCode === 401){
-							uni.hideLoading()
+					_select_all=false
+				}
+				for(let k=0;k<this.guige.length;k++){
+					if(parameter[k]==undefined){
+						_select_all=false
+						_parameter_index=k;
+						break;
+					} 
+				}
+				if(!_select_all){
+							this.$refs.popup.close()
+							// this.help.toast('请选择'+this.goods.goods_parameter[_parameter_index].title);
 							uni.showToast({
 								icon:'none',
-								title:'未登录，或登录已失效',
+								title:'请选择'+this.guige[_parameter_index].name,
 								duration:2000
 							})
-							setTimeout(()=>{
-								uni.navigateTo({
-									url:'../auth/login/login'
-								})
-							},2000)
-							return
-						}
-						uni.hideLoading()
-						uni.showToast({
-							icon:'none',
-							title:"系统错误，请稍后再试",
-							duration:2000
-						})
-						return
-
-					}).catch(err=>{
-						uni.hideLoading();
-						uni.showToast({
-							icon:'none',
-							title:'网络未连接，请连接网络后再试',
-							duration:2000
-						})
-						return
-					})
-                    // let goods = {
-                    //     name:this.goods.name,//商品名称
-                    //     goods_id:parseInt(this.itemid), //商品ID
-                    //     img:this.goods.picture[0],//商品图片
-                    //     price:this.goods.price,//商品价格
-                    //     otherSer:[this.extendFieldPrice,this.otherId],//是否服务费用
-                    //     parameter:this.selectArr,//商品的规格
-                    //     good_num:this.number,//商品的数量
-                    //     shuxing:this.shuxing,//商品规格所需的属性
-                    // }
-                    // console.log(goods)
-                    // this.$store.commit('buy_goods',goods)
-                 
-                    // uni.navigateTo({
-				    //     url: '../confirmationOrder/confirmationOrder?itemid='+2
-				    // });
-                    return
-				}
-                let entitiy = {
-                    spuId:parseInt(this.itemid) ,
-                    skuId: this.guigeId,
-                    num: this.number,
-                    otherCostIds: `${this.otherId}`
-                }
-                entitiy = JSON.stringify(entitiy)
-                console.log(entitiy)
-                api.addCart(entitiy).then(res=>{
-                    console.log(res )
-                    if(res.statusCode === 200){
-                        uni.hideLoading()
-                         if(res.data.status === 0){
-                             uni.showToast({
-                                 icon:'none',
-                                 title:res.data.msg,
-                                 duration:2000
-                             })
-                         }else{
-                             uni.showToast({
-                                 icon:'none',
-                                 title:res.data.msg,
-                                 duration:2000
-                             })
-                         }
-                    }else if(res.statusCode === 401){
-						uni.hideLoading()
-                        uni.showToast({
-                            icon:'none',
-                            title:'未登录或登录已过期',
-                            duration:2000
-                        })
-                        setTimeout(()=>{
-                            uni.reLaunch({
-                                url:'../auth/login/login1'
-                            })
-                        },2000)
-					}else{
-						uni.hideLoading()
-                        uni.showToast({
-                            icon:'none',
-                            title:'系统错误，请稍后再试',
-                            duration:2000
-						})
-						return
-					}
-                }).catch(err=>{
-                    uni.hideLoading()
-                    uni.showToast({
-                        icon:'none',
-                        title:'请检查网络后再试',
-                        duration:2000
-                    })
-                    return
-                })
-               
-
-            },
-			// hidePop(){
-			// 	this.$refs.isShare.close();
-			// },
-			// buy_now_fun(id,img,name,title,price,parameter,number){
-				
-			// },
-			// //添加购物车
-			// addToCart(id,img,name,title,price,parameter,number){
-			// 	//goods.id,goods.picture[0],goods.name,goods.title,goods.price,parameter_arr,number
-			// 	console.log(title)
-			// 	let _shop_index=-1;
-			// 	let _goods_index=-1;
-			// 	// console.log(parameter)
-			// 	var _parameter_index=0;
-			// 	let _select_all=true
-			// 	if(parameter.length<this.guige.length && this.guige.length>0){
-					
-
-			// 		_select_all=false
-			// 	}
-			// 	for(let k=0;k<this.guige.length;k++){
-			// 		if(parameter[k]==undefined){
-			// 			_select_all=false
-			// 			_parameter_index=k;
-			// 			break;
-			// 		}
-			// 	}
-			// 	if(!_select_all){
-			// 				this.$refs.popup.close()
-			// 				// this.help.toast('请选择'+this.goods.goods_parameter[_parameter_index].title);
-			// 				uni.showToast({
-			// 					icon:'none',
-			// 					title:'请选择'+this.guige[_parameter_index].name,
-			// 					duration:2000
-			// 				})
 						
 					
-			// 		return
-			// 	}
+					return
+				}
 				
-			// 	let _num=0
-			// 	let all_obj=this.help.load('userCart')
-			// 	if(this.is_empty(all_obj)){
-			// 		all_obj=[]
-			// 	}
+				let _num=0
+				let all_obj=this.help.load('userCart')
+				if(this.is_empty(all_obj)){
+					all_obj=[]
+				}
 				
-			// 	let _id=id
-			// 	let _parameter={}
-			// 	for(let i=0;i<this.guige.length;i++ ){
-			// 		_parameter[this.guige[i].name]=this.guige[i].extendField[parameter[i]].name
-			// 		console.log(_parameter[this.guige[i].name])
-			// 	}
-			// 	for(let j in _parameter){
-			// 		_id+=_parameter[j]
-			// 	}
-			// 	let obj={}
+				let _id=id
+				let _parameter={}
+				for(let i=0;i<this.guige.length;i++ ){
+					_parameter[this.guige[i].name]=this.guige[i].extendField[parameter[i]].name
+					console.log(_parameter[this.guige[i].name])
+				}
+				for(let j in _parameter){
+					_id+=_parameter[j]
+				}
+				let obj={}
 				
-			// 	for(let i in all_obj){
-			// 		if(all_obj[i].shop_id==this.shop_id){
-			// 			_shop_index=i
-			// 			break;
-			// 		}
-			// 	}
-			// 	// if(_shop_index<0){
-			// 	// 	_shop_index=all_obj.length;
-			// 	// }
+				for(let i in all_obj){
+					if(all_obj[i].shop_id==this.shop_id){
+						_shop_index=i
+						break;
+					}
+				}
+				// if(_shop_index<0){
+				// 	_shop_index=all_obj.length;
+				// }
 				
-			// 	if(_shop_index>-1){
-			// 		obj=all_obj[_shop_index]
-			// 	}
+				if(_shop_index>-1){
+					obj=all_obj[_shop_index]
+				}
 				
-			// 	console.log(obj)
-			// 	this.$store.commit('getCart',obj)
-			// 	if(this.buy_now){
-			// 		obj={}
-			// 	}
+				console.log(obj)
+				this.$store.commit('getCart',obj)
+				if(this.buy_now){
+					obj={}
+				}
 				
-			// 	if(this.is_empty(obj)){
-			// 		obj={}
-			// 		obj['shop_id']=this.shop_id
-			// 		obj['shopname']=this.shopName
-			// 		obj['freight']='10.00'
-			// 		obj['haschecked']= true
-			// 		obj['goods_list']=[]
-			// 		_num=number
-			// 		_goods_index=0
-			// 	}else{
-			// 		console.log('111')
-			// 		for(let i in obj['goods_list']){
-			// 			if(obj['goods_list'][i]._id==_id){
-			// 				console.log('吻合')
-			// 				_goods_index=i
-			// 				break;
-			// 			}
-			// 		}
-			// 		console.log(_goods_index)
-			// 		// if(_goods_index<0){
-			// 		// 	_goods_index=obj['goods_list'].length;
-			// 		// }
+				if(this.is_empty(obj)){
+					obj={}
+					obj['shop_id']=this.shop_id
+					obj['shopname']=this.shopName
+					obj['freight']='10.00'
+					obj['haschecked']= true
+					obj['goods_list']=[]
+					_num=number
+					_goods_index=0
+				}else{
+					console.log('111')
+					for(let i in obj['goods_list']){
+						if(obj['goods_list'][i]._id==_id){
+							console.log('吻合')
+							_goods_index=i
+							break;
+						}
+					}
+					console.log(_goods_index)
+					// if(_goods_index<0){
+					// 	_goods_index=obj['goods_list'].length;
+					// }
 					
-			// 		console.log(obj['goods_list'].length)
-			// 		console.log(_goods_index)
+					console.log(obj['goods_list'].length)
+					console.log(_goods_index)
 					
-			// 		if(!this.is_empty(obj['goods_list'][_goods_index])){
-			// 			_num=Number(obj['goods_list'][_goods_index].good_num)
-			// 			_num+=number
-			// 		}else{
-			// 			_num=number
-			// 		}
-			// 	}
+					if(!this.is_empty(obj['goods_list'][_goods_index])){
+						_num=Number(obj['goods_list'][_goods_index].good_num)
+						_num+=number
+					}else{
+						_num=number
+					}
+				}
 				
-			// 	let _goods_obj={
-			// 		"_id":_id,
-			// 		"checked":true,
-			// 		"goods_id":id,
-			// 		"good_num":_num,
-			// 		"img":img,
-			// 		"name":name,
-			// 		"title":title,
-			// 		"price":price,
-			// 		"checked": true,
-			// 		"parameter":_parameter
-			// 	}
-			// 	if(_goods_index>-1){
-			// 		obj['goods_list'][_goods_index]=_goods_obj
-			// 	}else{
-			// 		obj['goods_list'].unshift(_goods_obj)
-			// 	}
+				let _goods_obj={
+					"_id":_id,
+					"checked":true,
+					"goods_id":id,
+					"good_num":_num,
+					"img":img,
+					"name":name,
+					"title":title,
+					"price":price,
+					"checked": true,
+					"parameter":_parameter
+				}
+				if(_goods_index>-1){
+					obj['goods_list'][_goods_index]=_goods_obj
+				}else{
+					obj['goods_list'].unshift(_goods_obj)
+				}
 				
-			// 	if(_shop_index>-1){
-			// 		all_obj[_shop_index]=obj;
-			// 	}else{
-			// 		all_obj.unshift(obj)
-			// 	}
-			// 	this.show_price_parameter=false;
+				if(_shop_index>-1){
+					all_obj[_shop_index]=obj;
+				}else{
+					all_obj.unshift(obj)
+				}
+				this.show_price_parameter=false;
 				
-			// 	if(this.buy_now){
-			// 		all_obj=[]
-			// 		all_obj[0]=obj
-			// 		this.$store.dispatch('save',{'buy_now_obj':all_obj})
-			// 		uni.navigateTo({
-			// 		    url: '../confirmationOrder/confirmationOrder?buy_now=true'
-			// 		});
-			// 	}else{
-			// 		this.help.save('userCart',all_obj)
-			// 		this.userCart=this.help.load('userCart')
-			// 		console.log(JSON.stringify(this.help.load('userCart')))
-			// 		this.join_success()
-			// 	}
-			// 	// help.remove('userCart')
+				if(this.buy_now){
+					all_obj=[]
+					all_obj[0]=obj
+					this.$store.dispatch('save',{'buy_now_obj':all_obj})
+					uni.navigateTo({
+					    url: '../confirmationOrder/confirmationOrder?buy_now=true'
+					});
+				}else{
+					this.help.save('userCart',all_obj)
+					this.userCart=this.help.load('userCart')
+					console.log(JSON.stringify(this.help.load('userCart')))
+					this.join_success()
+				}
+				// help.remove('userCart')
 			
-			// },
+			},
 			
-			// select_parameter: function(i,j){
-			// 	this.$set(this.parameter_arr,i,j)
-			// 	// console.log(i,j)
-			// 	var color = ''
-			// 	var size = ''
-			// 	if(i === 0){
-			// 		//颜色
-			// 		var a = this.guige[i]
-			// 		var b = a.extendField[j].extendField //
-			// 		var c = a.extendField[j].name
-			// 		this.chioce_text_color =c
-			// 		this.isChioce = false
-			// 	// console.log(this.chioce_text_color)
-			// 	this.text_guige_line = this.chioce_text_color +this.chioce_text_size
-			// 	}
-			// 	if(i === 1){
-			// 		//尺寸
-			// 		var a = this.guige[i]
-			// 		var b = a.extendField[j].extendField
-			// 		var c = a.extendField[j].name
-			// 		this.chioce_text_size = c
-			// 		this.isChioce = false
-				
-			// 		this.text_guige_line = this.chioce_text_color +this.chioce_text_size
+			select_parameter: function(i,j){
+				this.$set(this.parameter_arr,i,j)
+				 console.log(this.parameter_arr)
+				var color = ''
+				var size = ''
+				if(i === 0){
+					//颜色
+					var a = this.guige[i]
+					var b = a.extendField[j].extendField //
+					var c = a.extendField[j].name
+					this.chioce_text_color =c
+					this.isChioce = false
+				// console.log(this.chioce_text_color)
+				this.text_guige_line = this.chioce_text_color +this.chioce_text_size
+				}
+				if(i === 1){
+					//尺寸
+					var a = this.guige[i]
+					var b = a.extendField[j].extendField
+					var c = a.extendField[j].name
+					this.chioce_text_size = c
+					this.isChioce = false
+					// console.log(this.chioce_text_size)
+					this.text_guige_line = this.chioce_text_color +this.chioce_text_size
 
-			// 	}
-				
+				}
+				// if(i === 2){
+				// 	//是否安装
+
+				// }
 			
-			// },
+			},
 			loadGoodsInfo:function(){
 				//请求数据，如果返回有数据loadGoods:true,如果没有loadGoods:false
 				this.loadGoods = true;
 			},
-			// onBack:function(){
-			// 	uni.navigateBack();
-			// },
-			// togglePopup(open,type) {
-			// 	if(open === 'choice'){
-			// 		this.isSelect = false;
-			// 	}else if(open === 'parameter'){
-			// 		this.isSelect = true;
-			// 	}
-			// 	if(type==1){
-			// 		this.warp = true;
-			// 	}else{
-			// 		this.warp = false;
-			// 	}
-			// 	this.$refs.popup.open();
-			// },
+			onBack:function(){
+				uni.navigateBack();
+			},
+			togglePopup(open,type) {
+				if(open === 'choice'){
+					this.isSelect = false;
+				}else if(open === 'parameter'){
+					this.isSelect = true;
+				}
+				if(type==1){
+					this.warp = true;
+				}else{
+					this.warp = false;
+				}
+				this.$refs.popup.open();
+			},
 			close:function(){
-				this.$refs.popup123.close();
+				this.$refs.popup.close();
 			},
 			joinCat:function(){
-                this.warp = false
-				this.$refs.popup123.open();
 				
+				this.warp = true;
+				this.buy_now = false;
+			    
+				this.togglePopup('choice',1);
 			},
-			// change:function(e) {
-			// 	this.flag=e.show
-			// },
+			change:function(e) {
+				this.flag=e.show
+			},
 			reduce:function(){
 				if(this.number < 2){
 					return false;
@@ -1129,70 +796,73 @@
 				this.number--;
 			},
 			add:function(){
-				if(this.number >= 10){
+				if(this.number >= this.stock){
 					return false;
 				}
 				this.number++;
 			},
-			// check:function(current,number){
-			// 	if (this.currentTab == current) {
-			// 		return false;
-			// 	} else {
-			// 		this.currentTab = current;
-			// 		if(number == ''){
-			// 			this.stock = 0;
-			// 			this.insufficient = true;
-			// 			this.number = 0;
-			// 			return false;
-			// 		}
-			// 		this.insufficient = false;
-			// 		this.stock = number;
-			// 		this.number = 1;
-			// 	}
-			// },
-			// join_success:function(){
-			// 	this.$refs.popup.close();
-			// 	uni.showToast({
-			// 		icon:'none',
-			// 		title:"添加购物车成功",
-			// 		// image:"/static/img/goods/success.png",
-			// 		duration: 2000
-			// 	});
-			// 	console.log('已添加')
-			// 	this.$store.commit('getCart',false)
-			// 	console.log(this.$store.state.shop_goods_list)
-			// },
+			check:function(current,number){
+				if (this.currentTab == current) {
+					return false;
+				} else {
+					this.currentTab = current;
+					if(number == ''){
+						this.stock = 0;
+						this.insufficient = true;
+						this.number = 0;
+						return false;
+					}
+					this.insufficient = false;
+					this.stock = number;
+					this.number = 1;
+				}
+			},
+			join_success:function(){
+				this.$refs.popup.close();
+				uni.showToast({
+					icon:'none',
+					title:"添加购物车成功",
+					// image:"/static/img/goods/success.png",
+					duration: 2000
+				});
+				console.log('已添加')
+				this.$store.commit('getCart',false)
+				console.log(this.$store.state.shop_goods_list)
+			},
 			evaluate:function(){
 				uni.navigateTo({
-				    url: '../comment/comment?itemid='+parseInt(this.itemid)
+				    url: '../comment/comment?itemid='+5
 				});
 			},
 			buyImmediately:function(){
-                this.warp = true
-                this.$refs.popup123.open();
-				// this.warp = true;
-				// this.buy_now = true;
-				// this.togglePopup('choice',1);
-				// return
-				// uni.navigateTo({
-				//     url: '../confirmationOrder/confirmationOrder?itemid='+2
-				// });
+				this.warp = true;
+				this.buy_now = true;
+				this.togglePopup('choice',1);
+				return
+				uni.navigateTo({
+				    url: '../confirmationOrder/confirmationOrder?itemid='+2
+				});
 			},
-			// jumpUri:function(e){
-			// 	uni.navigateTo({
-			// 	    url: 'goodsinfo?itemid='+e
-			// 	});
-			// },
+			jumpUri:function(e){
+				uni.navigateTo({
+				    url: 'goodsinfo?itemid='+e
+				});
+			},
 			collection:function(title,img,price){ //收藏
-
-				let param = {
-					ids:this.itemId
+				let date = {goodsId:this.itemid,title:title,img:img,price:price};
+				let collections = [];
+				if(this.iscollection){
+					for(let i=0;i<this.collections.length;i++){
+						if(date.goodsId == this.collections[i].goodsId){
+							this.collections.splice(i,1);
+						}
+					}					
+					this.$store.dispatch("save",{'collections':this.collections});
+				}else{	
+					collections = this.collections.concat(date);
+					this.$store.dispatch("save",{'collections':collections});
 				}
-				api.addCollection(param).then(res=>{
-					console.log(res)
-				})
-				this.iscollection = !this.iscollection
-				
+				this.iscollection = !this.iscollection;
 			},
 			share_weixin:function(){
 				// console.log('分享为微信好友')
@@ -1219,44 +889,32 @@
 				// 	}
 					
 				// })
-				// #ifdef H5
-					this.$refs.isShare.close();
-					uni.showToast({
-						icon:'none',
-						title:'请在移动端使用此功能',
-						duration:2000
-					})
-					return
-				// #endif
-				// #ifdef APP-PLUS
-					uni.share({
-						provider: 'weixin',
-						scene: "WXSceneSession",
-						type: 5,//分享到小程序
-						imageUrl: 'https://i.loli.net/2019/10/10/iTlXILpdY8Dtqnh.jpg',
-						title: '精美装修风格',
-						miniProgram: {
-							id: 'gh_a052a07884ba',//gh_516f4b722cdd  wxf9a4b6e22b5929fc   c632d946366588be96dacabe55da6dc3   gh_81ab097eae6e
-							path: 'pages/detail/goodsinfo?itemid=2',
-							type: 2,//体验版
-							webUrl: 'http://uniapp.dcloud.io'
-						},
-						success: ret => {
-							console.log(JSON.stringify(ret));
-						},
-						fail: err => {
-							console.log(JSON.stringify(err))
-							this.$refs.isShare.close();
-							uni.showToast({
-								icon:'none',
-								title:'客户端未安装',
-								duration:2000
-							})
-							return false
-						}
-					});
-				// #endif
-
+				uni.share({
+					provider: 'weixin',
+					scene: "WXSceneSession",
+					type: 5,//分享到小程序
+					imageUrl: 'https://i.loli.net/2019/10/10/iTlXILpdY8Dtqnh.jpg',
+					title: '精美装修风格',
+					miniProgram: {
+						id: 'gh_a052a07884ba',//gh_516f4b722cdd  wxf9a4b6e22b5929fc   c632d946366588be96dacabe55da6dc3   gh_81ab097eae6e
+						path: 'pages/detail/goodsinfo?itemid=2',
+						type: 2,//体验版
+						webUrl: 'http://uniapp.dcloud.io'
+					},
+					success: ret => {
+						console.log(JSON.stringify(ret));
+					},
+					fail: err => {
+						console.log(JSON.stringify(err))
+						this.$refs.isShare.close();
+						uni.showToast({
+							icon:'none',
+							title:'客户端未安装',
+							duration:2000
+						})
+						return false
+					}
+				});
 			},
 			share_pyquan:function(){
 				// console.log('分享到朋友圈')
@@ -1282,15 +940,6 @@
 				// 	}
 					
 				// })
-				// #ifdef H5
-					this.$refs.isShare.close();
-					uni.showToast({
-						icon:'none',
-						title:'请在移动端使用此功能',
-						duration:2000
-					})
-					return
-				// #endif
 				uni.share({
 					provider: 'weixin',
 					scene: "WXSenceTimeline",
@@ -1332,7 +981,7 @@
 				uni.switchTab({
 					url: '../../pages/cart/cart'
 				});
-				// this.$store.commit('setTabBar',0)
+				this.$store.commit('setTabBar',0)
 			},
 			getMoD:function(index){
 				var that = this
@@ -1391,12 +1040,12 @@
 					
 					});
 			},
-			pt_img_view(index){
-				 uni.previewImage({
-						urls: this.goods.goodsinfo,
+			// pt_img_view(index){
+			// 	 uni.previewImage({
+			// 			urls: this.goods.goodsinfo,
 					
-				});
-			}
+			// 	});
+			// }
 		}
 	}
 </script>
@@ -1523,15 +1172,8 @@ overflow: hidden;
 		  line-height: 60upx;
 		  align-items: center
 	   }
-	   .cjq_buynum{
-           display: flex
-       }
-      .no_stock{width:100%;line-height:72upx;text-align:center;font-size:26upx;color:#fff;border-radius:36upx;background:#B7B7B7;}
-       .line_e{
-		   width: 100%;
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			text-align: left
+	   #pingjia{
+   
+
 	   }
 </style>

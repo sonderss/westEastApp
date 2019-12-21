@@ -1,0 +1,505 @@
+<template >
+	<view class="body" >
+		<view class="cart_con" v-if="shop_goods_list.length>0">
+			<view class="shop_id">
+				<view class="shop_id1" v-for="(item2,i) in shop_goods_list" :key="i">
+					<checkbox-group @change="checkboxChange($event,i)" >
+						<view class="uni-list-cell uni-list-cell-pd" >
+							<view class="goods_flex">
+								<label class="goods_flex">
+									<checkbox color="#C17B7D"   />
+									<view class="ximg" :style="{'background':'url('+item2.spuPic+') center center/cover no-repeat'}"></view>
+								</label>
+								<view class="goods_attribute">
+									<view class="goods_title">{{item2.spuName}}</view>
+									<view style="dilplay:flex;;">
+										<text class="attribute" >{{item2.specifiCations}}</text>
+									</view>
+									<!-- <text>安装服务:10</text> -->
+									<view class="number_price">
+										
+										<view>￥{{item2.price}}</view>
+										<view class="num_box">
+											<image class="number_btn" src="/static/img/reduce_btn.png" @tap="reduce(i)"></image>
+											<view class="number">{{item2.number}}</view>
+											<image class="number_btn" src="/static/img/add_btn.png" @tap="add(i)"></image>
+										</view>
+									</view>
+								</view>
+							</view>
+						</view>
+						<view class="xian"></view>
+						
+					</checkbox-group>
+					<!-- <checkbox-group @change="checkboxChange($event,i)" >
+						<view class="uni-list-cell uni-list-cell-pd" v-for="(item2,j) in item.goods_list" :key="j">
+							<view class="goods_flex">
+								<label class="goods_flex">
+									<checkbox color="#C17B7D" :checked="item2.checked" :value="i+'_'+j"  />
+									<view class="ximg" :style="{'background':'url('+item2.img+') center center/cover no-repeat'}"></view>
+								</label>
+								<view class="goods_attribute">
+									<view class="goods_title">{{item2.title}}</view>
+									<view style="dilplay:flex;;">
+										<text class="attribute"  v-for="(item3,k) in item2.parameter" :key="k">{{k}}:{{item3}}</text>
+									</view>
+									
+									<view class="number_price">
+										
+										<view>￥{{item2.price}}</view>
+										<view class="num_box">
+											<image class="number_btn" src="/static/img/reduce_btn.png" @tap="reduce(i,j)"></image>
+											<view class="number">{{item2.good_num}}</view>
+											<image class="number_btn" src="/static/img/add_btn.png" @tap="add(i,j)"></image>
+										</view>
+									</view>
+								</view>
+							</view>
+						</view>
+						<view class="xian"></view>
+						
+					</checkbox-group> -->
+				</view>
+			</view>
+		</view>
+		<view v-else class="no_goods">
+			<image src="/static/img/icon_cart2.png" class="icon_cart2"></image>
+			<view class="nogoods_tips">空空如也....</view>
+			<view class="go_store" @tap='goBuy'>去逛逛</view>
+		</view>
+		<!-- <guess-like style="margin-top:50upx;" @jump='jump' v-if="shop_goods_list.length<=0" :content="goods.like"></guess-like> -->
+		<guess-like style="margin-top:50upx;" @jump='jump' :content="goods.like"></guess-like>
+
+	    <!-- <text v-if="$store.state.shop_goods_list"  class="noshop">已经到底啦~</text>  -->
+		<view class="total_box" :class="total_box_margin?'margin100':''"  :style="[{'marginBottom' : this.$store.state.setTabBar === 0 ?'0':'80upx'},{'position':this.$store.state.setTabBar === 0 ?'fixed':'total_box'}]" v-if="shop_goods_list.length>0">
+			<checkbox-group  @change="total_all_checkboxChange" >
+				<label class="select_all">
+					<!-- :checked="total_all_select" -->
+					<checkbox color="#C17B7D"  />
+					<text>全选</text>
+				</label>
+			</checkbox-group>
+			<view class="order_btn" v-if="!is_edit">
+				<text>合计：</text>
+				<text style="color: #C17B7D;">￥{{all_total_price}}</text>
+				<view class="btn" @tap="link_order">结算({{select_number}})</view>
+			</view>
+			<view class="order_btn" v-else>
+				<view class="flower" @tap="add_flower">移入收藏夹</view>
+				<view class="delete" @tap="delete_fun">删除</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import {
+		mapState,
+		mapMutations,
+		mapActions
+	} from 'vuex';
+	import GuessLike from '@/components/guess-like/guess-like.vue'
+	import gapi from '../../apis/goods/goods'
+	export default {
+		components:{
+			GuessLike
+		},
+
+		data() {
+			return {
+				is_edit:false,
+				select_index:0,
+				total_box_margin:false,
+				isShowLike:'', //猜你喜欢
+				// userCart: this.help.load('userCart'),
+				shop_goods_list:[],
+				goods:{
+					"like":[{
+						"good_id":1,
+						"img":"/static/img/goods/shopImg.jpg",
+						"title":"实木床1.8米现代简约双人床",
+						"price":"1200",
+						"payment":"12",
+						"add":"广州",
+						"supply":"供货商"
+					},{
+						"good_id":2,
+						"img":"/static/img/goods/shopImg.jpg",
+						"title":"实木床1.8米现代简约双人床",
+						"price":"2200",
+						"payment":"8",
+						"add":"深圳",
+						"supply":"供货商"
+					},{
+						"good_id":3,
+						"img":"/static/img/goods/shopImg.jpg",
+						"title":"实木床1.8米现代简约双人床",
+						"price":"3200",
+						"payment":"5",
+						"add":"湖北",
+						"supply":"供货商"
+					}]
+				}
+			}
+		},
+		onTabItemTap(e){
+			if(e.text === '购物车' ){
+				this.$v.$login()
+			}
+		},
+		onReady() {
+		// console.log(this.goods.like)
+			if(this.shop_goods_list.length>0){
+			// 	console.log('应该显示')
+			//    this.isShowLike = false
+				    let buttons = '编辑'
+					// #ifdef APP-PLUS
+					var currentWebview = this.$mp.page.$getAppWebview();
+					// console.log(currentWebview)
+					var tn = currentWebview.getStyle().titleNView;
+					tn.buttons[0].text = buttons;     //[0] 按钮的下标
+					currentWebview.setStyle({
+						titleNView: tn
+					});
+				// #endif
+			}
+			if(this.shop_goods_list.length<=0){
+				// console.log('应该隐藏')
+				// this.isShowLike = true
+				   let buttons = ''
+					// #ifdef APP-PLUS
+					var currentWebview = this.$mp.page.$getAppWebview();
+					console.log(currentWebview)
+					var tn = currentWebview.getStyle().titleNView;
+					tn.buttons[0].text = buttons;     //[0] 按钮的下标
+					currentWebview.setStyle({
+						titleNView: tn
+					});
+				    // #endif
+			}
+		},
+		onLoad(option) {
+			this.$v.$login()
+	
+		// #ifdef H5
+			this.total_box_margin=true
+		
+		// #endif
+		},
+		onShow(){
+			this.shop_goods_list=this.help.load('userCart')
+			// console.log(JSON.stringify(this.shop_goods_list))
+			var isSetTabBar = this.$store.state.setTabBar
+			console.log(isSetTabBar)
+			if(isSetTabBar === 0){
+				uni.hideTabBar({
+					success:res=>{
+						console.log(res)
+					}
+				})
+			}
+		},
+		onHide(){
+			// console.log('hide')
+		},
+		mounted(){
+			// console.log(this.goods.like)
+			if(this.shop_goods_list.length>0){
+			// 	console.log('应该显示')
+			//    this.isShowLike = false
+			    this.$store.commit('getCart',false)
+			}
+			if(this.shop_goods_list.length<=0){
+				// console.log('应该隐藏')
+				// this.isShowLike = true
+				 this.$store.commit('getCart',true)
+			}
+			gapi.getMyCart().then(res=>{
+				console.log(res)
+				this.shop_goods_list = res.data.data
+			})
+		},
+		onNavigationBarButtonTap (e){
+			// #ifdef APP-PLUS
+			let webView = this.$mp.page.$getAppWebview();
+			// #endif
+			// 修改buttons  
+			// index: 按钮索引, style {WebviewTitleNViewButtonStyles }  
+			
+			if(e.index==0){
+				if(!this.is_edit){
+					this.is_edit=true
+					
+					// #ifdef APP-PLUS
+					webView.setTitleNViewButtonStyle(0, {
+					    text: '完成',  
+					});  
+					// #endif
+				}else{
+					this.is_edit=false
+					
+					// #ifdef APP-PLUS
+					webView.setTitleNViewButtonStyle(0, {
+					    text: '编辑',  
+					});  
+					// #endif
+				}
+			}
+		},
+		computed:{
+			...mapState(['shop_goods_list'])
+		},
+		watch:{
+		  shop_goods_list:function(a,b){
+			//   console.log(this)
+			  var that = this
+			  if(a.length > 0){
+					//   that.isShowLike = false
+					  that.$store.commit('getCart',false)
+					  // console.log(this.goods.like)
+		
+				    let buttons = '编辑'
+					// #ifdef APP-PLUS
+					var currentWebview = this.$mp.page.$getAppWebview();
+					console.log(currentWebview)
+					var tn = currentWebview.getStyle().titleNView;
+					tn.buttons[0].text = buttons;     //[0] 按钮的下标
+					currentWebview.setStyle({
+						titleNView: tn
+					});
+				    // #endif
+		
+			  }
+			  if(a.length<=0){
+				//   that.isShowLike = true
+				  that.$store.commit('getCart',true)
+				    let buttons = ''
+					// #ifdef APP-PLUS
+					var currentWebview = this.$mp.page.$getAppWebview();
+					console.log(currentWebview)
+					var tn = currentWebview.getStyle().titleNView;
+					tn.buttons[0].text = buttons;     //[0] 按钮的下标
+					currentWebview.setStyle({
+						titleNView: tn
+					});
+				    // #endif
+			  		}
+			 
+			 
+		  }
+		},
+		computed:{
+			// ...mapState(['is_ios','userPoint']),
+			// shop_total_price(){
+			// 	let _arr=[]
+			// 	for(let i=0;i<this.shop_goods_list.length;i++){
+			// 		let _price=0
+			// 		for(let j=0;j<this.shop_goods_list[i].goods_list.length;j++){
+			// 			if( this.shop_goods_list[i].goods_list[j].checked){
+			// 				_price+=Number(this.shop_goods_list[i].goods_list[j].price)*Number(this.shop_goods_list[i].goods_list[j].good_num)
+			// 			}
+			// 		}
+			// 		if(_price>0){
+			// 			_price+=Number(this.shop_goods_list[i].freight)
+			// 		}
+			// 		_arr.push(_price)
+			// 	}
+			// 	return _arr
+			// },
+			// all_total_price(){
+			// 	var _total_price=0
+			// 	for(let i=0;i<this.shop_total_price.length;i++){
+			// 		_total_price+=this.shop_total_price[i]
+			// 	}
+			// 	return _total_price
+			// },
+			// select_number(){
+			// 	let _number=0
+			// 	for(let i=0;i<this.shop_goods_list.length;i++){
+			// 		for(let j=0;j<this.shop_goods_list[i].goods_list.length;j++){
+			// 			if( this.shop_goods_list[i].goods_list[j].checked){
+			// 				_number++
+			// 			}
+			// 		}
+			// 	}
+			// 	return _number
+			// },
+			// shop_select_all(){
+			// 	let _arr=[]
+			// 	for(let i=0;i<this.shop_goods_list.length;i++){
+			// 		let _select=true
+			// 		for(let j=0;j<this.shop_goods_list[i].goods_list.length;j++){
+			// 			if(!this.shop_goods_list[i].goods_list[j].checked){
+			// 				_select=false
+			// 			}
+			// 		}
+			// 		_arr.push(_select)
+			// 	}
+			// 	return _arr
+			// },
+			// total_all_select(){
+			// 	let _true=true
+			// 	for(let i=0;i<this.shop_select_all.length;i++){
+			// 		if(!this.shop_select_all[i]){
+			// 			_true=false;
+			// 		}
+				// }
+			// 	return _true;
+			// }
+			
+		},
+		methods: {
+			link_order(){
+				// var obj = []
+				// uni.getStorage({
+				// 	key: 'userCart',
+				// 	success: function (res) {
+				// 		  obj = res.data
+				// 	}
+				// });
+				// this.$store.dispatch('save',{'buy_now_obj':obj})
+				// uni.navigateTo({
+				// 	url: '/pages/confirmationOrder/confirmationOrder?buy_now=true',
+				// 	success: res => {},
+				// 	fail: () => {},
+				// 	complete: () => {}
+				// })
+			},
+			add_flower(){},
+			delete_fun(){
+				let _number=this.select_number
+				let _txt='确认将'+_number+'个商品删除？'
+				this.help.confirm(_txt,()=>{
+					for(let i=this.shop_goods_list.length-1;i>=0;i--){
+						if(this.shop_select_all[i]){
+							this.shop_goods_list.splice(i,1)
+							// console.log(i)
+						}else{
+							for(let j=this.shop_goods_list[i].goods_list.length-1;j>=0;j--){
+								if(this.shop_goods_list[i].goods_list[j].checked){
+									this.shop_goods_list[i].goods_list.splice(j,1)
+								}
+							}
+						}
+					}
+					this.help.save('userCart',this.shop_goods_list)
+					console.log(this.shop_goods_list)
+					
+					if(this.shop_goods_list.length <=0){
+							this.$store.commit('getCart',true)
+					}else{
+						this.$store.commit('getCart',false)
+					}
+				},'提示',['确认', '我再想想'])
+				
+				
+			},
+			select_goods(e){
+				console.log(e)
+			},
+			checkboxChange: function (e,i) {
+				// let _haschecked=false;
+				// let items = this.shop_goods_list,
+				// 	values = e.detail.value;
+				// const item = items[i]
+				// for(let j=0;j<item.goods_list.length;j++){
+				// 	if(values.includes(i+'_'+j)){
+				// 		this.$set(item.goods_list[j],'checked',true)
+				// 	}else{
+				// 		this.$set(item.goods_list[j],'checked',false)
+				// 	}
+				// 	if(item.goods_list[j].checked){
+				// 		_haschecked=true
+				// 	}
+				// }
+				// this.$set(item,'haschecked',_haschecked)
+				
+				// this.help.save('userCart',this.shop_goods_list)
+			},
+			all_checkboxChange: function (e,i) {
+				// console.log(this.shop_select_all[i])
+				// let items = this.shop_goods_list
+				// const item = items[i]
+				
+				// if(this.shop_select_all[i]){
+				// 	for(let j=0;j<item.goods_list.length;j++){
+				// 		this.$set(item.goods_list[j],'checked',false)
+				// 		this.$set(item,'haschecked',false)
+				// 	}
+				// }else{
+				// 	for(let j=0;j<item.goods_list.length;j++){
+				// 		this.$set(item.goods_list[j],'checked',true)
+				// 		this.$set(item,'haschecked',true)
+				// 	}
+				// }
+				// this.help.save('userCart',this.shop_goods_list)
+				
+			},
+			total_all_checkboxChange: function (e) {
+				// let _selecct=true
+				// let items = this.shop_goods_list
+				
+				
+				// for(let i=0;i<items.length;i++){
+				// 	if(!this.shop_select_all[i]){
+				// 		_selecct=false
+				// 	}
+				// }
+				// if(_selecct){
+				// 	for(let i=0;i<items.length;i++){
+				// 		let item = items[i]
+				// 		for(let j=0;j<item.goods_list.length;j++){
+				// 			this.$set(item.goods_list[j],'checked',false)
+				// 			this.$set(item,'haschecked',false)
+				// 		}
+				// 	}
+				// }else{
+				// 	for(let i=0;i<items.length;i++){
+				// 		let item = items[i]
+				// 		for(let j=0;j<item.goods_list.length;j++){
+				// 			this.$set(item.goods_list[j],'checked',true)
+				// 			this.$set(item,'haschecked',true)
+				// 		}
+				// 	}
+				// }
+				// this.help.save('userCart',this.shop_goods_list)
+			},
+			
+			reduce: function(i,j){
+				let _num= this.shop_goods_list[i].number
+				if(_num>1){
+					_num--;
+					// this.shop_goods_list[i].goods_list[j].good_num=_num;
+					// this.$set(this.shop_goods_list[i].goods_list[j],'good_num',_num)
+					// this.help.save('userCart',this.shop_goods_list)
+				}
+				
+			},
+			add: function(i,j) {
+				let _num=this.shop_goods_list[i].number
+				_num++;
+				// this.shop_goods_list[i].goods_list[j].good_num=_num;
+				// this.$set(this.shop_goods_list[i].goods_list[j],'good_num',_num)
+				// this.help.save('userCart',this.shop_goods_list)
+			},
+			jump(gid){
+				// console.log(gid)
+				// uni.navigateTo({
+				// 	url: '../../pages/detail/goodsinfo?itemid='+gid
+				// });
+			},
+			goBuy(){
+				// uni.navigateTo({
+					
+				// 	url:'../../pages/softwaremall/index?title=软装商城'+'&gid=1'+'&id=1'
+					
+				// })
+			}
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	@import 'cart.scss';
+
+</style>

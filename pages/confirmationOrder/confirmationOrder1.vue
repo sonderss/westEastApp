@@ -7,36 +7,18 @@
 						<image style="width:100%;height:100%;display:block" class="addIcon" src="../../static/img/cjq-about/addre.png"></image>
 					</view>
 					<view class="addDetail">
-						<view class="warp uni-flex uni-column" v-if="address.length>0" @click="receiving ">
-							<view><text>{{address[myAdress].name}}</text><text class="phone">{{address[myAdress].phone}}</text></view>
-							<text class="add">{{address[myAdress].address}}{{address[myAdress].area}}</text>
+						<view class="warp uni-flex uni-column" v-if="address" @click="receiving ">
+							<view><text>张三</text><text class="phone">18896636555</text></view>
+							<text class="add">广东省广州市番禺区天安科技园</text>
 						</view>
 						<view class="warp uni-flex uni-column" v-else @click="addto"><text>添加收货地址</text></view>
 					</view>
 					<image class="addArrow" src="/static/img/confirmation/addArrow.png"></image>
 				</view>
 				<view class="each-order">
-					<view class="each-order-content"   v-if="userCart?userCart:false" >
-						 <view class="shopName text-overflow_1-xzh" ><text>商品信息</text></view>
-						<view class="shopInfo uni-flex" v-for="(item,index) in userCart.goodsList" :key='index'>
-							<view  class="shopInfo-img"><image lazy-load :src="item.spuPic" mode="widthFix" class="is-response"></image></view>
-							<view class="shopInfo-introduce uni-flex uni-column">
-								<view class="detail">
-									<view><text class="text-overflow_2-xzh">{{item.spuName}}</text></view>
-									<view><text class="detailColor">{{item.specifiCations}}</text></view>
-								</view>
-								
-								<view class="goods_test"  style="font-size:26upx;font-family:PingFang SC;font-weight:400;color:rgba(51,51,51,1);">
-									<view ><text>￥{{item.price}}</text></view>
-									<view><text><text style="font-size:12upx;margin-right:10upx">X</text> {{item.number}}</text></view>
-								</view>							
-							</view>
-						</view>
-					</view>
-					
-					<!-- <view class="each-order-content" v-for="(item,i) in userCart" :key="i" >
-						
-						<view class="shopInfo uni-flex" v-for="(item2,j) in item.goodsList" :key="j">
+					<view class="each-order-content" v-for="(item,i) in userCart" :key="i" >
+						<view class="shopName text-overflow_1-xzh" v-if="item.haschecked"><text>{{item.shopname}}</text></view>
+						<view class="shopInfo uni-flex" v-for="(item2,j) in item.goods_list" :key="j">
 							<view  v-if="item2.checked" class="shopInfo-img"><image lazy-load :src="item2.img" mode="widthFix" class="is-response"></image></view>
 							<view class="shopInfo-introduce uni-flex uni-column">
 								<view class="detail">
@@ -50,14 +32,14 @@
 								</view>							
 							</view>
 						</view>
-					</view> -->
+					</view>
 					<!-- 这里根据有没有购买的商品显示 -->
 					<view >
-							<!-- 优惠券信息 暂时没有数据-->
+							<!-- 优惠券信息 -->
 							<view class="gods_test" >
 									<text  style="font-size:30upx;font-family:PingFang SC;font-weight:400;color:rgba(78,78,78,1);margin-left:20upx">优惠券</text>
 									<view class="gods_test1">
-											<text style="font-size:26upx;font-family:PingFang SC;font-weight:400;color:rgba(148,148,148,1);margin-right:10upx">0张可用</text>
+											<text style="font-size:26upx;font-family:PingFang SC;font-weight:400;color:rgba(148,148,148,1);margin-right:10upx">5张可用</text>
 											<image src='../../static/img/goods/more.png' style="width:14upx;height:27upx;margin-right:10upx"/>
 									</view>
 									
@@ -125,8 +107,6 @@
 	
 	import uniPopup from '@/components/uni-popup/uni-popup.vue'
 	import requestPayment from '@/components/request-payment/request-payment.vue'
-	import papi from '../../apis/goods/goods'
-	import uapi from '../../apis/user/user'
 	export default {
 		components: {
 			uniPopup,
@@ -137,20 +117,17 @@
 				scrollHeight:0,
 				login:true,
 				payment:true,
+				address:false,
 				userCart:{},
 				buy_now: false,
 				view_price:0,
 				gods_cont_data:[
 					{name:'商品合计',price:0},
-					{name:'服务费用',price:0.00},
-					// {name:'运费',price:0.00},
+					{name:'安装服务',price:0.00},
+					{name:'运费',price:0.00},
 					{name:'优惠券',price:0.00}
 				],
 				isShhowCont:false,
-				address:[],//地址ID
-				myAdress:0,
-				isbill:'',//是否开发票
-				goodsId:'',//订单ID
 			}
 		},
 		onReady() {
@@ -159,51 +136,36 @@
 			  that.calculateScrollViewHeight()
 			}, 100)
 		},
-		onShow(){
-		
-				
-		},
 		onLoad(e) {
 			if(e.buy_now){
 				this.buy_now=e.buy_now
 			}
-			// console.log(this.$store.state.goods_info_buy)
-			var arr = []
-			this.userCart =  this.$store.state.goods_info_buy
-			console.log(this.userCart)
-			uapi.getReceivAddress(this)
-			// console.log(this.address)
+			this.userCart=this.help.load('userCart')
+			
 		},
 		onHide(){
 			this.$store.dispatch('save',{'buy_now_obj':{}})
 		},
 		mounted(){
-
+			if(this.buy_now){
+				this.userCart=this.buy_now_obj
+				
 				//  console.log(this.buy_now_obj)
 				//  console.log(this.buy_now_obj[0].goods_list)
 				// this.gods_cont_data[0].price = this.buy_now_obj[0].goods_list[0].price  价格
 				//  this.gods_cont_data[2].price = this.buy_now_obj[0].freight*1   //运费
-				// for(let i=0;i<this.buy_now_obj.length;i++){
-					//   for(let j=0;j<this.buy_now_obj[i].goods_list.length;j++){
-							// this.view_price =  (this.userCart.price * this.userCart.good_num) + (this.userCart.otherSer[0]*1)
-							// console.log(this.view_price )
-							// this.gods_cont_data[0].price += this.userCart.price *this.userCart.good_num // 商品合计
-									console.log(this.userCart.cost.GoodSum)
-									this.gods_cont_data[0].price = this.userCart.cost.goodSum
-									this.gods_cont_data[1].price = this.userCart.cost.serverCost
-									this.gods_cont_data[2].price = this.userCart.cost.discount
-									this.view_price = this.userCart.cost.sumAmount
-									this.goodsId =  this.userCart.id
-									console.log(this.gods_cont_data[0])
-							
-							
-					//   }
-					//    this.gods_cont_data[2].price += this.buy_now_obj[i].freight*1   //快递费用
-					//    if(this.buy_now_obj[i].goods_list.length > 1){
-					// 	   	this.view_price -= this.buy_now_obj[i].freight*(this.buy_now_obj[i].goods_list.length-1)  //去掉同商家同商品重复快递费用
-					//    }
-				// }
-		
+				for(let i=0;i<this.buy_now_obj.length;i++){
+					  for(let j=0;j<this.buy_now_obj[i].goods_list.length;j++){
+							   this.view_price += (this.buy_now_obj[i].goods_list[j].price * this.buy_now_obj[i].goods_list[j].good_num) + this.buy_now_obj[i].freight*1 
+							   this.gods_cont_data[0].price += this.buy_now_obj[i].goods_list[j].price * this.buy_now_obj[i].goods_list[j].good_num // 商品合计
+							   
+					  }
+					   this.gods_cont_data[2].price += this.buy_now_obj[i].freight*1   //快递费用
+					   if(this.buy_now_obj[i].goods_list.length > 1){
+						   	this.view_price -= this.buy_now_obj[i].freight*(this.buy_now_obj[i].goods_list.length-1)  //去掉同商家同商品重复快递费用
+					   }
+				}
+
 
 				// for(let i = 0;i<this.buy_now_obj[0].goods_list.length;i++){
 				// //   console.log(this.buy_now_obj[0].goods_list[i])
@@ -218,9 +180,33 @@
 				// this.view_price -= this.buy_now_obj[0].freight*(this.buy_now_obj[0].goods_list.length-1)  //去掉
 				// this.gods_cont_data[2].price = this.buy_now_obj[0].freight*1   //快递费用
 				
-			
+			}
 		},
 		computed :{
+			...mapState(['buy_now_obj']),
+			shop_total_price(){
+				let _arr=[]
+				for(let i=0;i<this.userCart.length;i++){
+					let _price=0
+					for(let j=0;j<this.userCart[i].goods_list.length;j++){
+						if( this.userCart[i].goods_list[j].checked){
+							_price+=Number(this.userCart[i].goods_list[j].price)*Number(this.userCart[i].goods_list[j].good_num)
+						}
+					}
+					if(_price>0){
+						_price+=Number(this.userCart[i].freight)+100
+					}
+					_arr.push(_price)
+				}
+				return _arr
+			},
+			all_total_price(){
+				var _total_price=0
+				for(let i=0;i<this.shop_total_price.length;i++){
+					_total_price+=this.shop_total_price[i]
+				}
+				return _total_price
+			},
 		},
 		methods: {
 			alipay(){
@@ -244,98 +230,28 @@
 				})
 			},
 			submitOrder:function(){
-				uni.showLoading({
-					title:'订单提交中'
-				})
-				let param = {
-					id:this.goodsId,
-					addid:this.address[this.myAdress].id,
-					isbill:0,
-					disids:''
-				}
-				console.log(param)
-				papi.postGods(param).then(res=>{
-					console.log(res)
-					if(res.statusCode === 200){
-						uni.hideLoading()
-						if(res.data.status === 0){
-							uni.showToast({
-								icon:'none',
-								title:res.data.msg,
-								duration:800
-							})
-							setTimeout(()=>{
-								uni.navigateTo({
-									url:'../pay_pages/postpay?money_pay='+this.view_price 
-								})
-							},800)
-							return
-						}else if(res.data.status === 3){
-							uni.showToast({
-								icon:'none',
-								title:res.data.msg,
-								duration:800
-							})
-							return
-						}
-							uni.showToast({
-								icon:'none',
-								title:'系统异常，请稍后重试',
-								duration:800
-							})
-						return
-					}else if(res.statusCode === 401){
-						uni.hideLoading()
+				if(this.is_empty(this.login)){ //未登录
+					uni.navigateTo({
+						url: '/pages/auth/login/login'
+					})
+				}else{ //已登陆
+					//提交后台，有后台返回提交商品价格，再显示支付方式，payment:true执行支付，payment:false为提交失败
+					uni.showToast({
+					    title: '订单正在提交中，请稍等...',
+						icon:'none',
+					    duration: 1000,
+					});
+					if(this.is_empty(this.payment)){
+						uni.hideToast();
 						uni.showToast({
+						    title: '订单提交失败，请重新提交',
 							icon:'none',
-							title:'暂未登录或已过期，请重新登录',
-							duration:800
-						})
-						setTimeout(()=>{
-							uni.navigateTo({
-								url:'../auth/login/login1'
-							})
-						},800)
-						return
+						    duration: 1000,
+						});
+					}else{
+						this.pay();
 					}
-					uni.hideLoading()
-					uni.showToast({
-						icon:'none',
-						title:'系统异常，请稍后重试',
-						duration:800
-					})
-					return
-				}).catch(err=>{
-					uni.hideLoading()
-					uni.showToast({
-						icon:'none',
-						title:'系统异常，请稍后重试',
-						duration:800
-					})
-					return
-				})
-				// if(this.is_empty(this.login)){ //未登录
-				// 	uni.navigateTo({
-				// 		url: '/pages/auth/login/login'
-				// 	})
-				// }else{ //已登陆
-				// 	//提交后台，有后台返回提交商品价格，再显示支付方式，payment:true执行支付，payment:false为提交失败
-				// 	uni.showToast({
-				// 	    title: '订单正在提交中，请稍等...',
-				// 		icon:'none',
-				// 	    duration: 1000,
-				// 	});
-				// 	if(this.is_empty(this.payment)){
-				// 		uni.hideToast();
-				// 		uni.showToast({
-				// 		    title: '订单提交失败，请重新提交',
-				// 			icon:'none',
-				// 		    duration: 1000,
-				// 		});
-				// 	}else{
-				// 		this.pay();
-				// 	}
-				// }
+				}
 			},
 			pay:function(){
 				this.$refs.popup.open();
@@ -352,9 +268,7 @@
 				});
 			},
 			receiving:function(){
-				uni.navigateTo({
-					url:'../address/address?isBuyInfo=0'
-				})
+				
 			},
 			addto:function(){
 				uni.navigateTo({
@@ -363,7 +277,7 @@
 			},
 			goFapiao(){
 				 uni.navigateTo({
-					 url:'../../pages/invoice/invoice?buyGoods=0'
+					 url:'../../pages/invoice/invoice'
 				 })
 			}
 		}
