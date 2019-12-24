@@ -767,11 +767,8 @@
 
 	@import 'cart.scss';
 .cartBar{
-/*  #ifdef  H5 */
-	bottom: 80upx;
-/*  #endif  */
-	/*  #ifdef  APP-PLUS  */
+
 	bottom: 0
-/*  #endif  */
+
 }
 </style>
