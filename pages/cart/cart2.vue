@@ -77,7 +77,7 @@
 			<checkbox-group  @change="allChange($event)">
 				<label class="select_all" @tap='allSelect'>
 					<!-- :checked="total_all_select" -->
-                     <view style="float:left;margin-top:6upx"  :class="isAll ? 'cjq_q2':'cjq_q'" ></view>
+                     <view style="float:left;margin-top:6upx"  :class="test_ ? 'cjq_q':(isAll?'cjq_q2':'cjq_q') " ></view>
 					<!-- <checkbox color="#C17B7D" :checked ="test_ ? false : isAll"  value='all_' /> -->
 					<text style="float:left;" >全选</text>
 				</label>
@@ -226,6 +226,20 @@
 			// }
 			this.getData()
 			this.test_ = true
+			if(this.shop_goods_list.length<=0){
+				// console.log('应该隐藏')
+				// this.isShowLike = true
+					// #ifdef APP-PLUS
+				   let buttons = ''
+					var currentWebview = this.$mp.page.$getAppWebview();
+					console.log(currentWebview)
+					var tn = currentWebview.getStyle().titleNView;
+					tn.buttons[0].text = buttons;     //[0] 按钮的下标
+					currentWebview.setStyle({
+						titleNView: tn
+					});
+				    // #endif
+			}
 		},
 		onHide(){
 			// console.log('hide')
@@ -317,7 +331,34 @@
 		},
 		watch:{
             shop_goods_list:function(a,b){
-                  console.log(a)
+				  console.log(a)
+				  if(a.length <= 0){
+					  	if(this.shop_goods_list.length<=0){
+							// console.log('应该隐藏')
+							// this.isShowLike = true
+								// #ifdef APP-PLUS
+							let buttons = ''
+								var currentWebview = this.$mp.page.$getAppWebview();
+								console.log(currentWebview)
+								var tn = currentWebview.getStyle().titleNView;
+								tn.buttons[0].text = buttons;     //[0] 按钮的下标
+								currentWebview.setStyle({
+									titleNView: tn
+								});
+								// #endif
+						}
+				  }else{
+					  	// #ifdef APP-PLUS
+							let buttons = '编辑'
+							var currentWebview = this.$mp.page.$getAppWebview();
+							// console.log(currentWebview)
+							var tn = currentWebview.getStyle().titleNView;
+							tn.buttons[0].text = buttons;     //[0] 按钮的下标
+							currentWebview.setStyle({
+								titleNView: tn
+							});
+						// #endif
+				  }
             }
           
 		},
@@ -585,14 +626,15 @@
 					title:'收藏中'
 				})
 				var ids = ''
+				if(this.arrs.length === 0){
+					this.isSetDel = false
+				}
 				for(let i = 0 ;i<this.shop_goods_list.length;i++){
 					 if(this.arrs.includes(i+'_') && this.arrs.length != 0){
 							ids += this.shop_goods_list[i].spuId + ','
 							this.isSetDel = true
 					 }
-					 if(this.arrs.length === 0){
-						 this.isSetDel = false
-					 }
+					 
 				}
 					// let param = {
 					// 	ids
@@ -601,11 +643,20 @@
 
 			},
 			payGoods(){
+				if(this.arrs.length == 0){
+						uni.showToast({
+							icon:"none",
+							title:'请选择商品',
+							duration:2000
+						})
+						return
+				}
 				uni.showLoading({
 					title:'确认中'
 				})
 				var orderArrs = []
 				for(let i = 0;i<this.shop_goods_list.length;i++){
+					
 					if(this.arrs.includes(i+'_')){
 						let param = {
 							spuid: this.shop_goods_list[i].spuId,
@@ -615,14 +666,7 @@
 						}
 						orderArrs.push(param)
 					}
-					if(this.arrs.length == 0){
-						uni.showToast({
-							icon:"none",
-							title:'请选择商品',
-							duration:2000
-						})
-						return
-					}
+				
 				}
 				gapi.enterOrders(JSON.stringify(orderArrs)).then(res=>{
 					console.log(res)
@@ -721,6 +765,7 @@
 				})
             },
             chioce_c(isChioce,index){
+				this.test_ = false
                 if(!isChioce && !this.arrs.includes(index+'_')){
                     this.arrs.push(index+'_')
                      this.saveIndex.push(index)
@@ -744,6 +789,7 @@
             allSelect(){
                this.arrs = []
 				this.blo = !this.blo
+				this.test_ = false
                if(this.blo){
                     for(let i =0;i<this.shop_goods_list.length;i++){
                        this.$set(this.shop_goods_list[i],'checked',true)
@@ -767,8 +813,11 @@
 
 	@import 'cart.scss';
 .cartBar{
-
+/*  #ifdef  H5 */
+	bottom: 80upx;
+/*  #endif  */
+	/*  #ifdef  APP-PLUS  */
 	bottom: 0
-
+/*  #endif  */
 }
 </style>

@@ -2,17 +2,19 @@
 	<view class="body" >
 		<view class="cart_con" v-if="shop_goods_list.length>0">
 			<view class="shop_id">
-				<view class="shop_id1" v-for="(item2,i) in shop_goods_list" :key="i">
-					<checkbox-group @change="checkboxChange($event,i)" >
-						<view class="uni-list-cell uni-list-cell-pd" >
+				<view class="shop_id1" v-for="(item2,j) in shop_goods_list" :key="j">
+					<checkbox-group>
+                        <!--  @change="checkboxChange($event,j)"   -->
+						<view class="uni-list-cell uni-list-cell-pd">
 							<view class="goods_flex">
-								<label class="goods_flex">
-									<checkbox color="#C17B7D"   />
+								<label class="goods_flex_cj" @tap='chioce_c(item2.checked?true:false,j)' >
+									 <view :id='j' :class="[item2.checked ? 'cjq_q1' : 'cjq_q']"></view>
+									<!-- <checkbox color="#C17B7D"  :checked='item2.checked'  :value ="j+'_'"/> -->
 									<view class="ximg" :style="{'background':'url('+item2.spuPic+') center center/cover no-repeat'}"></view>
 								</label>
 								<view class="goods_attribute">
 									<view class="goods_title">{{item2.spuName}}</view>
-									<view style="dilplay:flex;;">
+									<view style="display:flex;">
 										<text class="attribute" >{{item2.specifiCations}}</text>
 									</view>
 									<!-- <text>安装服务:10</text> -->
@@ -20,9 +22,9 @@
 										
 										<view>￥{{item2.price}}</view>
 										<view class="num_box">
-											<image class="number_btn" src="/static/img/reduce_btn.png" @tap="reduce(i)"></image>
+											<image class="number_btn" src="/static/img/reduce_btn.png" @tap='reduce(j)'></image>
 											<view class="number">{{item2.number}}</view>
-											<image class="number_btn" src="/static/img/add_btn.png" @tap="add(i)"></image>
+											<image class="number_btn" src="/static/img/add_btn.png" @tap='addnum(j)'></image>
 										</view>
 									</view>
 								</view>
@@ -68,27 +70,32 @@
 			<view class="go_store" @tap='goBuy'>去逛逛</view>
 		</view>
 		<!-- <guess-like style="margin-top:50upx;" @jump='jump' v-if="shop_goods_list.length<=0" :content="goods.like"></guess-like> -->
-		<guess-like style="margin-top:50upx;" @jump='jump' :content="goods.like"></guess-like>
+		<guess-like  v-if="shop_goods_list.length<=0"  @jump='jump' :content="goods.like"></guess-like>
 
 	    <!-- <text v-if="$store.state.shop_goods_list"  class="noshop">已经到底啦~</text>  -->
-		<view class="total_box" :class="total_box_margin?'margin100':''"  :style="[{'marginBottom' : this.$store.state.setTabBar === 0 ?'0':'80upx'},{'position':this.$store.state.setTabBar === 0 ?'fixed':'total_box'}]" v-if="shop_goods_list.length>0">
-			<checkbox-group  @change="total_all_checkboxChange" >
-				<label class="select_all">
+		<view class="total_box"  :class="this.$store.state.setTabBar === 0?  '':'cartBar'"  v-if="shop_goods_list.length>0">
+			<checkbox-group  @change="allChange($event)">
+				<label class="select_all" @tap='allSelect'>
 					<!-- :checked="total_all_select" -->
-					<checkbox color="#C17B7D"  />
-					<text>全选</text>
+                     <view style="float:left;margin-top:6upx"  :class="test_ ? 'cjq_q':(isAll?'cjq_q2':'cjq_q') " ></view>
+					<!-- <checkbox color="#C17B7D" :checked ="test_ ? false : isAll"  value='all_' /> -->
+					<text style="float:left;" >全选</text>
 				</label>
 			</checkbox-group>
 			<view class="order_btn" v-if="!is_edit">
 				<text>合计：</text>
-				<text style="color: #C17B7D;">￥{{all_total_price}}</text>
-				<view class="btn" @tap="link_order">结算({{select_number}})</view>
+				<text style="color: #C17B7D;">￥{{show_list_change}}</text>
+				<view class="btn" @tap='payGoods'>结算({{settlement}})</view>
+                <!-- select_number -->
 			</view>
 			<view class="order_btn" v-else>
 				<view class="flower" @tap="add_flower">移入收藏夹</view>
-				<view class="delete" @tap="delete_fun">删除</view>
+				<!-- <view class="delete" @tap="delete_fun">删除</view> -->
+				<view class="delete" @tap='deleteItem'>删除</view>
+
 			</view>
 		</view>
+	
 	</view>
 </template>
 
@@ -104,19 +111,22 @@
 		components:{
 			GuessLike
 		},
-
 		data() {
 			return {
+                test_:'',
 				is_edit:false,
 				select_index:0,
 				total_box_margin:false,
 				isShowLike:'', //猜你喜欢
 				// userCart: this.help.load('userCart'),
 				shop_goods_list:[],
+				isSetDel:'',
+                saveIndex:[],
+                isBlo:false,
 				goods:{
 					"like":[{
 						"good_id":1,
-						"img":"/static/img/goods/shopImg.jpg",
+						"img":"/static/img/goods/goods_01.jpg",
 						"title":"实木床1.8米现代简约双人床",
 						"price":"1200",
 						"payment":"12",
@@ -124,7 +134,7 @@
 						"supply":"供货商"
 					},{
 						"good_id":2,
-						"img":"/static/img/goods/shopImg.jpg",
+						"img":"/static/img/goods/goods_02.jpg",
 						"title":"实木床1.8米现代简约双人床",
 						"price":"2200",
 						"payment":"8",
@@ -132,14 +142,25 @@
 						"supply":"供货商"
 					},{
 						"good_id":3,
-						"img":"/static/img/goods/shopImg.jpg",
+						"img":"/static/img/goods/goods_03.jpg",
+						"title":"实木床1.8米现代简约双人床",
+						"price":"3200",
+						"payment":"5",
+						"add":"湖北",
+						"supply":"供货商"
+					},{
+						"good_id":4,
+						"img":"/static/img/goods/goods_04.jpg",
 						"title":"实木床1.8米现代简约双人床",
 						"price":"3200",
 						"payment":"5",
 						"add":"湖北",
 						"supply":"供货商"
 					}]
-				}
+                },
+				arrs:[],
+				isAlla:false,
+				test_:false
 			}
 		},
 		onTabItemTap(e){
@@ -152,8 +173,8 @@
 			if(this.shop_goods_list.length>0){
 			// 	console.log('应该显示')
 			//    this.isShowLike = false
-				    let buttons = '编辑'
 					// #ifdef APP-PLUS
+				    let buttons = '编辑'
 					var currentWebview = this.$mp.page.$getAppWebview();
 					// console.log(currentWebview)
 					var tn = currentWebview.getStyle().titleNView;
@@ -166,8 +187,8 @@
 			if(this.shop_goods_list.length<=0){
 				// console.log('应该隐藏')
 				// this.isShowLike = true
-				   let buttons = ''
 					// #ifdef APP-PLUS
+				   let buttons = ''
 					var currentWebview = this.$mp.page.$getAppWebview();
 					console.log(currentWebview)
 					var tn = currentWebview.getStyle().titleNView;
@@ -179,49 +200,68 @@
 			}
 		},
 		onLoad(option) {
-			this.$v.$login()
-	
+            uni.showLoading({
+                title:'加载中'
+            })
+			// this.$v.$login()
 		// #ifdef H5
-			this.total_box_margin=true
+			// this.total_box_margin=true
 		
 		// #endif
+			
 		},
 		onShow(){
-			this.shop_goods_list=this.help.load('userCart')
+			// this.shop_goods_list=this.help.load('userCart')
 			// console.log(JSON.stringify(this.shop_goods_list))
-			var isSetTabBar = this.$store.state.setTabBar
-			console.log(isSetTabBar)
-			if(isSetTabBar === 0){
-				uni.hideTabBar({
-					success:res=>{
-						console.log(res)
-					}
-				})
+			// var isSetTabBar = this.$store.state.setTabBar
+			//  console.log(isSetTabBar)
+			// if(isSetTabBar === 0){
+			// 	uni.hideTabBar({
+			// 		success:res=>{
+			// 			console.log(res)
+			// 		}
+			// 	})
+			// }else{
+
+			// }
+			this.getData()
+			this.test_ = true
+			if(this.shop_goods_list.length<=0){
+				// console.log('应该隐藏')
+				// this.isShowLike = true
+					// #ifdef APP-PLUS
+				   let buttons = ''
+					var currentWebview = this.$mp.page.$getAppWebview();
+					console.log(currentWebview)
+					var tn = currentWebview.getStyle().titleNView;
+					tn.buttons[0].text = buttons;     //[0] 按钮的下标
+					currentWebview.setStyle({
+						titleNView: tn
+					});
+				    // #endif
 			}
 		},
 		onHide(){
 			// console.log('hide')
+			this.test_ = false
 		},
 		mounted(){
 			// console.log(this.goods.like)
 			if(this.shop_goods_list.length>0){
 			// 	console.log('应该显示')
 			//    this.isShowLike = false
-			    this.$store.commit('getCart',false)
+			    // this.$store.commit('getCart',false)
 			}
 			if(this.shop_goods_list.length<=0){
 				// console.log('应该隐藏')
 				// this.isShowLike = true
-				 this.$store.commit('getCart',true)
+				//  this.$store.commit('getCart',true)
 			}
-			gapi.getMyCart().then(res=>{
-				console.log(res)
-				this.shop_goods_list = res.data.data
-			})
+			this.getData()
 		},
 		onNavigationBarButtonTap (e){
 			// #ifdef APP-PLUS
-			let webView = this.$mp.page.$getAppWebview();
+			// let webView = this.$mp.page.$getAppWebview();
 			// #endif
 			// 修改buttons  
 			// index: 按钮索引, style {WebviewTitleNViewButtonStyles }  
@@ -247,259 +287,537 @@
 			}
 		},
 		computed:{
-			...mapState(['shop_goods_list'])
+			show_list_change(){
+                let all_total_price = 0
+                for(let i=0;i<this.shop_goods_list.length;i++){
+                    if(this.shop_goods_list[i].checked){
+                        all_total_price += Math.floor(parseInt(this.shop_goods_list[i].price) * this.shop_goods_list[i].number) 
+                        // console.log(all_total_price)
+                    }
+                    
+                }
+                return all_total_price
+            },
+            settlement(){
+                 let all_total_num = 0
+                for(let i=0;i<this.shop_goods_list.length;i++){
+                    if(this.shop_goods_list[i].checked){
+                        all_total_num ++
+                        // console.log(all_total_num)
+                    }
+                }
+                return all_total_num
+            },
+            isAll(){
+                 
+                if(this.arrs.length === this.shop_goods_list.length){
+                   this.isAlla = true
+                }else{
+                    this.isAlla = false
+                }
+                return this.isAlla
+            },
+            // isChange(){
+            //     let isChice= Boolean;
+            //     for(let i=0;i<this.shop_goods_list.length;i++){
+            //         if(this.shop_goods_list[i].checked){
+            //                 isChice = false
+            //         }else{
+            //             isChice = true
+            //         }
+            //     }
+            //     return isChice
+            // }
 		},
 		watch:{
-		  shop_goods_list:function(a,b){
-			//   console.log(this)
-			  var that = this
-			  if(a.length > 0){
-					//   that.isShowLike = false
-					  that.$store.commit('getCart',false)
-					  // console.log(this.goods.like)
-		
-				    let buttons = '编辑'
-					// #ifdef APP-PLUS
-					var currentWebview = this.$mp.page.$getAppWebview();
-					console.log(currentWebview)
-					var tn = currentWebview.getStyle().titleNView;
-					tn.buttons[0].text = buttons;     //[0] 按钮的下标
-					currentWebview.setStyle({
-						titleNView: tn
-					});
-				    // #endif
-		
-			  }
-			  if(a.length<=0){
-				//   that.isShowLike = true
-				  that.$store.commit('getCart',true)
-				    let buttons = ''
-					// #ifdef APP-PLUS
-					var currentWebview = this.$mp.page.$getAppWebview();
-					console.log(currentWebview)
-					var tn = currentWebview.getStyle().titleNView;
-					tn.buttons[0].text = buttons;     //[0] 按钮的下标
-					currentWebview.setStyle({
-						titleNView: tn
-					});
-				    // #endif
-			  		}
-			 
-			 
-		  }
-		},
-		computed:{
-			// ...mapState(['is_ios','userPoint']),
-			// shop_total_price(){
-			// 	let _arr=[]
-			// 	for(let i=0;i<this.shop_goods_list.length;i++){
-			// 		let _price=0
-			// 		for(let j=0;j<this.shop_goods_list[i].goods_list.length;j++){
-			// 			if( this.shop_goods_list[i].goods_list[j].checked){
-			// 				_price+=Number(this.shop_goods_list[i].goods_list[j].price)*Number(this.shop_goods_list[i].goods_list[j].good_num)
-			// 			}
-			// 		}
-			// 		if(_price>0){
-			// 			_price+=Number(this.shop_goods_list[i].freight)
-			// 		}
-			// 		_arr.push(_price)
-			// 	}
-			// 	return _arr
-			// },
-			// all_total_price(){
-			// 	var _total_price=0
-			// 	for(let i=0;i<this.shop_total_price.length;i++){
-			// 		_total_price+=this.shop_total_price[i]
-			// 	}
-			// 	return _total_price
-			// },
-			// select_number(){
-			// 	let _number=0
-			// 	for(let i=0;i<this.shop_goods_list.length;i++){
-			// 		for(let j=0;j<this.shop_goods_list[i].goods_list.length;j++){
-			// 			if( this.shop_goods_list[i].goods_list[j].checked){
-			// 				_number++
-			// 			}
-			// 		}
-			// 	}
-			// 	return _number
-			// },
-			// shop_select_all(){
-			// 	let _arr=[]
-			// 	for(let i=0;i<this.shop_goods_list.length;i++){
-			// 		let _select=true
-			// 		for(let j=0;j<this.shop_goods_list[i].goods_list.length;j++){
-			// 			if(!this.shop_goods_list[i].goods_list[j].checked){
-			// 				_select=false
-			// 			}
-			// 		}
-			// 		_arr.push(_select)
-			// 	}
-			// 	return _arr
-			// },
-			// total_all_select(){
-			// 	let _true=true
-			// 	for(let i=0;i<this.shop_select_all.length;i++){
-			// 		if(!this.shop_select_all[i]){
-			// 			_true=false;
-			// 		}
-				// }
-			// 	return _true;
-			// }
-			
+            shop_goods_list:function(a,b){
+				  console.log(a)
+				  if(a.length <= 0){
+					  	if(this.shop_goods_list.length<=0){
+							// console.log('应该隐藏')
+							// this.isShowLike = true
+								// #ifdef APP-PLUS
+							let buttons = ''
+								var currentWebview = this.$mp.page.$getAppWebview();
+								console.log(currentWebview)
+								var tn = currentWebview.getStyle().titleNView;
+								tn.buttons[0].text = buttons;     //[0] 按钮的下标
+								currentWebview.setStyle({
+									titleNView: tn
+								});
+								// #endif
+						}
+				  }else{
+					  	// #ifdef APP-PLUS
+							let buttons = '编辑'
+							var currentWebview = this.$mp.page.$getAppWebview();
+							// console.log(currentWebview)
+							var tn = currentWebview.getStyle().titleNView;
+							tn.buttons[0].text = buttons;     //[0] 按钮的下标
+							currentWebview.setStyle({
+								titleNView: tn
+							});
+						// #endif
+				  }
+            }
+          
 		},
 		methods: {
-			link_order(){
-				// var obj = []
-				// uni.getStorage({
-				// 	key: 'userCart',
-				// 	success: function (res) {
-				// 		  obj = res.data
-				// 	}
-				// });
-				// this.$store.dispatch('save',{'buy_now_obj':obj})
-				// uni.navigateTo({
-				// 	url: '/pages/confirmationOrder/confirmationOrder?buy_now=true',
-				// 	success: res => {},
-				// 	fail: () => {},
-				// 	complete: () => {}
-				// })
-			},
-			add_flower(){},
-			delete_fun(){
-				let _number=this.select_number
-				let _txt='确认将'+_number+'个商品删除？'
-				this.help.confirm(_txt,()=>{
-					for(let i=this.shop_goods_list.length-1;i>=0;i--){
-						if(this.shop_select_all[i]){
-							this.shop_goods_list.splice(i,1)
-							// console.log(i)
-						}else{
-							for(let j=this.shop_goods_list[i].goods_list.length-1;j>=0;j--){
-								if(this.shop_goods_list[i].goods_list[j].checked){
-									this.shop_goods_list[i].goods_list.splice(j,1)
-								}
-							}
-						}
-					}
-					this.help.save('userCart',this.shop_goods_list)
-					console.log(this.shop_goods_list)
-					
-					if(this.shop_goods_list.length <=0){
-							this.$store.commit('getCart',true)
-					}else{
-						this.$store.commit('getCart',false)
-					}
-				},'提示',['确认', '我再想想'])
-				
-				
-			},
-			select_goods(e){
-				console.log(e)
-			},
-			checkboxChange: function (e,i) {
-				// let _haschecked=false;
-				// let items = this.shop_goods_list,
-				// 	values = e.detail.value;
-				// const item = items[i]
-				// for(let j=0;j<item.goods_list.length;j++){
-				// 	if(values.includes(i+'_'+j)){
-				// 		this.$set(item.goods_list[j],'checked',true)
-				// 	}else{
-				// 		this.$set(item.goods_list[j],'checked',false)
-				// 	}
-				// 	if(item.goods_list[j].checked){
-				// 		_haschecked=true
-				// 	}
-				// }
-				// this.$set(item,'haschecked',_haschecked)
-				
-				// this.help.save('userCart',this.shop_goods_list)
-			},
-			all_checkboxChange: function (e,i) {
-				// console.log(this.shop_select_all[i])
-				// let items = this.shop_goods_list
-				// const item = items[i]
-				
-				// if(this.shop_select_all[i]){
-				// 	for(let j=0;j<item.goods_list.length;j++){
-				// 		this.$set(item.goods_list[j],'checked',false)
-				// 		this.$set(item,'haschecked',false)
-				// 	}
-				// }else{
-				// 	for(let j=0;j<item.goods_list.length;j++){
-				// 		this.$set(item.goods_list[j],'checked',true)
-				// 		this.$set(item,'haschecked',true)
-				// 	}
-				// }
-				// this.help.save('userCart',this.shop_goods_list)
-				
-			},
-			total_all_checkboxChange: function (e) {
-				// let _selecct=true
-				// let items = this.shop_goods_list
-				
-				
-				// for(let i=0;i<items.length;i++){
-				// 	if(!this.shop_select_all[i]){
-				// 		_selecct=false
-				// 	}
-				// }
-				// if(_selecct){
-				// 	for(let i=0;i<items.length;i++){
-				// 		let item = items[i]
-				// 		for(let j=0;j<item.goods_list.length;j++){
-				// 			this.$set(item.goods_list[j],'checked',false)
-				// 			this.$set(item,'haschecked',false)
-				// 		}
-				// 	}
-				// }else{
-				// 	for(let i=0;i<items.length;i++){
-				// 		let item = items[i]
-				// 		for(let j=0;j<item.goods_list.length;j++){
-				// 			this.$set(item.goods_list[j],'checked',true)
-				// 			this.$set(item,'haschecked',true)
-				// 		}
-				// 	}
-				// }
-				// this.help.save('userCart',this.shop_goods_list)
-			},
-			
-			reduce: function(i,j){
-				let _num= this.shop_goods_list[i].number
-				if(_num>1){
-					_num--;
-					// this.shop_goods_list[i].goods_list[j].good_num=_num;
-					// this.$set(this.shop_goods_list[i].goods_list[j],'good_num',_num)
-					// this.help.save('userCart',this.shop_goods_list)
+            //操作所选数组
+            setArrs(index){
+                // for(let i = 0;i<this.shop_goods_list.length;i++){
+                //     if(this.shop_goods_list[i].checked){
+                //         this.all_total_price += parseInt(this.shop_goods_list[i].price) * parseInt(this.shop_goods_list[i].number)
+                //     }
+                // }
+                
+            },
+            //计算总金额
+            // sumMoney(){
+
+            // },
+            checkboxChange(e,index){
+				var values = e.detail.value
+				this.saveIndex.push(index)
+				this.test_ = false
+                if(values.length!=0 && !this.arrs.includes(index+'_')){
+					this.arrs.push(values[0])
+					// this.arr.sort()
 				}
-				
-			},
-			add: function(i,j) {
-				let _num=this.shop_goods_list[i].number
-				_num++;
-				// this.shop_goods_list[i].goods_list[j].good_num=_num;
-				// this.$set(this.shop_goods_list[i].goods_list[j],'good_num',_num)
-				// this.help.save('userCart',this.shop_goods_list)
-			},
+				if(values.length == 0 ){
+					var i =  this.arrs.indexOf(index+'_')
+					// console.log(i)
+					if(i > -1){
+						this.arrs.splice(i,1)
+					}
+					
+				}
+                  console.log(this.arrs)
+                for(let i = 0;i<this.shop_goods_list.length;i++){
+                    if(this.arrs.includes(i+"_")){
+                        
+                        this.$set(this.shop_goods_list[i],'checked',true)
+                    }else{
+                        this.$set(this.shop_goods_list[i],'checked',false)
+                       
+                    }
+                }
+                
+            },
 			jump(gid){
-				// console.log(gid)
-				// uni.navigateTo({
-				// 	url: '../../pages/detail/goodsinfo?itemid='+gid
-				// });
+				console.log(gid)
+				uni.navigateTo({
+					url: '../../pages/detail/goodsinfo?itemid='+gid
+				});
 			},
 			goBuy(){
-				// uni.navigateTo({
+				uni.navigateTo({
 					
-				// 	url:'../../pages/softwaremall/index?title=软装商城'+'&gid=1'+'&id=1'
+					url:'../../pages/softwaremall/index?title=软装商城'+'&gid=1'+'&id=1'
 					
-				// })
-			}
-		}
+				})
+            },
+            reduce(index){
+                if( parseInt(this.shop_goods_list[index].number)  === 1){
+                        return
+                }
+                this.shop_goods_list[index].number --
+                
+                for(let i =0;i<this.shop_goods_list.length;i++){
+                    this.$set(this.shop_goods_list,'number',index)
+                }
+            },
+            addnum(index){
+                if( this.shop_goods_list[index].number >= 200){
+                        uni.showToast({
+                            icon:"none",
+                            title:'最多输入200',
+                            duration:2000
+                        })
+                        return
+                }
+                this.shop_goods_list[index].number ++
+                for(let i =0;i<this.shop_goods_list.length;i++){
+                    this.$set(this.shop_goods_list,'number',this.shop_goods_list[index].number)
+                }
+            },
+            allChange(e){
+                var values = e.detail.value
+				this.arrs = []
+				this.test_ = false
+               if(values.length!=0){
+                    for(let i =0;i<this.shop_goods_list.length;i++){
+                       this.$set(this.shop_goods_list[i],'checked',true)
+                       this.arrs.push(i+'_')
+                    }
+               }else{
+                   for(let i =0;i<this.shop_goods_list.length;i++){
+                       this.$set(this.shop_goods_list[i],'checked',false)
+                       this.arrs = []
+                    }
+               }
+                
+			},
+            deleteItem(){
+				uni.showLoading({
+					title:'删除中'
+				})
+				var that = this
+				var deleArrs = []
+				
+				console.log(this.arrs)
+                for(let i = 0 ;i<this.shop_goods_list.length;i++){
+                     if(this.arrs.includes(i+'_') && this.arrs.length != 0){
+                        let _number = this.settlement
+						let _txt='确认将'+_number+'个商品删除？'
+						let param = {
+                                    skuId:this.shop_goods_list[i].skuId,
+                                    spuId:this.shop_goods_list[i].spuId,
+                                    number:1,
+                                    otherCostIds:''
+						}
+						deleArrs.push(param)
+                        this.help.confirm(_txt,()=>{
+                           
+							deleArrs =JSON.stringify(deleArrs)
+							console.log(deleArrs)
+							gapi.deletGoods(deleArrs).then(res=>{
+									if(res.statusCode === 200){
+										uni.hideLoading()
+										if(res.data.status === 0){
+											uni.showToast({
+												icon:'none',
+												title:res.data.msg,
+												duration:2000
+											})
+											this.saveIndex.forEach(el => {
+												  this.shop_goods_list.splice(el,1)
+												 var iq = this.arrs.indexOf(el+'_')
+												 if(iq > -1){
+                                                    this.arrs.splice(iq,1)
+                                                   
+												 }
+											});
+											
+											return
+										}else{
+											uni.showToast({
+												icon:'none',
+												title:res.data.msg,
+												duration:2000
+											})
+											return
+										}
+									}else if(res.statusCode === 401){
+										uni.hideLoading()
+										    uni.showToast({
+												icon:'none',
+												title:'暂未登录或登录已过期',
+												duration:800
+											})
+											setTimeout(()=>{
+												uni.reLaunch({
+													url:'../auth/login/login1'
+												})
+											},800)
+											return
+									}else{
+										uni.hideLoading()
+										 	uni.showToast({
+												icon:'none',
+												title:'系统错误',
+												duration:800
+											})
+									}
+							})
+							.catch(err=>{
+								uni.hideLoading()
+								uni.showToast({
+									icon:'none',
+									title:'网络未连接，请连接网络',
+									duration:2000
+								})
+								return
+							})
+						
+						},'提示',['确认', '我再想想'])
+						uni.hideLoading()
+					 }else{
+						 uni.hideLoading()
+						uni.showToast({
+							icon:'none',
+							title:'请选择需要删除的商品',
+							duration:2000
+						})
+					 }
+				}
+				
+			
+			},
+			isSetArrs(param){
+				if(this.isSetDel){
+					// console.log(param)
+					gapi.addCollection(param).then(res=>{
+						console.log(res)
+						if(res.statusCode === 200){
+							uni.hideLoading()
+								if(res.data.status === 0){
+									    uni.showToast({
+											icon:'none',
+											title:res.data.msg,
+											duration:800
+										})
+								}else if(res.data.status === 3){
+										uni.showToast({
+											icon:'none',
+											title:res.data.msg,
+											duration:800
+										})
+								}else{
+									uni.showToast({
+										icon:'none',
+										title:res.data.msg,
+										duration:800
+									})
+								}
+						}else if(res.statusCode === 401){
+							uni.hideLoading()
+							uni.showToast({
+								icon:'none',
+								title:'暂未登录或登录已过期',
+								duration:800
+							})
+							setTimeout(()=>{
+								uni.reLaunch({
+									url:'../auth/login/login1'
+								})
+							},800)
+							return
+						}else{	
+							uni.hideLoading()
+							uni.showToast({
+								icon:'none',
+								title:'系统错误，请稍后重试',
+								duration:800
+							})
+							return
+						}
+					}).catch(err=>{
+						uni.hideLoading()
+						uni.showToast({
+							icon:'none',
+							title:'网络错误，请检查后重试',
+							duration:2000
+						})
+						return
+					})
+					return
+				}else{
+					uni.hideLoading()
+					uni.showToast({
+						icon:'none',
+						title:'请选择商品',
+						duration:2000
+					})
+				}
+			},
+			add_flower(){
+				uni.showLoading({
+					title:'收藏中'
+				})
+				var ids = ''
+				if(this.arrs.length === 0){
+					this.isSetDel = false
+				}
+				for(let i = 0 ;i<this.shop_goods_list.length;i++){
+					 if(this.arrs.includes(i+'_') && this.arrs.length != 0){
+							ids += this.shop_goods_list[i].spuId + ','
+							this.isSetDel = true
+					 }
+					 
+				}
+					// let param = {
+					// 	ids
+					// }
+					this.isSetArrs(ids)
+
+			},
+			payGoods(){
+				if(this.arrs.length == 0){
+						uni.showToast({
+							icon:"none",
+							title:'请选择商品',
+							duration:2000
+						})
+						return
+				}
+				uni.showLoading({
+					title:'确认中'
+				})
+				var orderArrs = []
+				for(let i = 0;i<this.shop_goods_list.length;i++){
+					
+					if(this.arrs.includes(i+'_')){
+						let param = {
+							spuid: this.shop_goods_list[i].spuId,
+							skuid: this.shop_goods_list[i].skuId,
+							num: this.shop_goods_list[i].number,
+							othercostids: this.shop_goods_list[i].othercostid
+						}
+						orderArrs.push(param)
+					}
+				
+				}
+				gapi.enterOrders(JSON.stringify(orderArrs)).then(res=>{
+					console.log(res)
+					if(res.statusCode === 200){
+						uni.hideLoading()
+						if(res.data.status === 0){
+							uni.showToast({
+								icon:"none",
+								title:'订单确认成功',
+								duration:2000
+							})
+							this.$store.commit('buy_goods',res.data.data)
+							uni.showLoading({
+								title:'加载中'
+							})
+							setTimeout(()=>{
+								 uni.hideLoading()
+								 uni.navigateTo({
+									 url:'../confirmationOrder/confirmationOrder'
+								 })
+							},2100)
+						}else{
+							uni.showToast({
+								icon:"none",
+								title:'异常情况，失败',
+								duration:2000
+							})
+							return
+						}
+					}else if(res.statusCode === 401){
+						uni.hideLoading()
+						return
+
+					}else{
+						uni.hideLoading()
+						return
+					}
+				}).catch(err=>{
+					uni.hideLoading()
+					uni.showToast({
+						icon:"none",
+						title:'网络错误，请检查后再试',
+						duration:2000
+					})
+					return
+				})
+
+			},
+			getData(){
+					gapi.getMyCart().then(res=>{
+					console.log(res)
+					if(res.statusCode === 200){
+						uni.hideLoading()
+						if(res.data.status  == 0){
+                            this.shop_goods_list = res.data.data
+                            for(let i=0;i< this.shop_goods_list.length;i++){
+                                this.$set(this.shop_goods_list[i],'checked',false)
+                            }
+							return
+						}else{
+						
+							return
+						}
+						return
+					}else if(res.statusCode === 401){
+							uni.hideLoading()
+							uni.showToast({
+								icon:'none',
+								title:'暂未登录，请先登录',
+								duration:2000
+							})
+							setTimeout(()=>{
+								uni.navigateTo({
+									url:'../auth/login/login1'
+								})
+							},2000)
+							return
+					}else{
+						uni.hideLoading()
+							uni.showToast({
+								icon:'none',
+								title:'系统异常，请稍后重试',
+								duration:2000
+							})
+							return
+					}
+					
+				}).catch(err=>{
+					uni.hideLoading()
+					uni.showToast({
+						icon:'none',
+						title:'系统异常，请稍后重试',
+						duration:2000
+					})
+					return
+				})
+            },
+            chioce_c(isChioce,index){
+				this.test_ = false
+                if(!isChioce && !this.arrs.includes(index+'_')){
+                    this.arrs.push(index+'_')
+                     this.saveIndex.push(index)
+                }
+                if(isChioce){
+                    var i =  this.arrs.indexOf(index+'_')
+                    if(i > -1){
+                        this.arrs.splice(i,1)
+                    }
+                    this.saveIndex.splice(index)
+
+                }
+                console.log(this.arrs)
+                if(this.shop_goods_list[index].checked){
+                    this.$set(this.shop_goods_list[index],'checked',false)
+                }else{
+                    this.$set(this.shop_goods_list[index],'checked',true)
+                }
+                console.log(this.shop_goods_list[index])
+            },
+            allSelect(){
+               this.arrs = []
+				this.blo = !this.blo
+				this.test_ = false
+               if(this.blo){
+                    for(let i =0;i<this.shop_goods_list.length;i++){
+                       this.$set(this.shop_goods_list[i],'checked',true)
+                       this.arrs.push(i+'_')
+                    }
+               }else{
+                   for(let i =0;i<this.shop_goods_list.length;i++){
+                       this.$set(this.shop_goods_list[i],'checked',false)
+                       this.arrs = []
+                    }
+               }
+                 
+            }
+        }
+        
 	}
 </script>
 
 <style lang="scss" scoped>
-	@import 'cart.scss';
+	// uni-page-body{background:#fff;width:100%;height:100%;}
 
+	@import 'cart.scss';
+.cartBar{
+/*  #ifdef  H5 */
+	bottom: 80upx;
+/*  #endif  */
+	/*  #ifdef  APP-PLUS  */
+	bottom: 0
+/*  #endif  */
+}
 </style>
